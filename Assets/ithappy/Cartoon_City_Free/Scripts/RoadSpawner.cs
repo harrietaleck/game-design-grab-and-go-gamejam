@@ -57,8 +57,8 @@ public class RoadSpawner : MonoBehaviour
     [Tooltip("World X position of the middle lane.")]
     public float laneCenterX = 0f;
 
-    [Tooltip("Number of lanes. This project uses 3.")]
-    public int laneCount = 3;
+    [Tooltip("Number of lanes.")]
+    public int laneCount = 4;
 
     [Tooltip("Legacy setting (no longer used). Obstacle count is controlled by oneThenTwoAlternating / twoObstacleRowChance.")]
     [Range(0f, 1f)]
@@ -85,6 +85,7 @@ public class RoadSpawner : MonoBehaviour
     void Start()
     {
         // If no handler is set, just behave like the original prototype.
+        laneCount = LaneMath.ClampLaneCount(laneCount);
         _nextRowObstacleCount = oneThenTwoAlternating ? 1 : 1;
         for (int i = 0; i < initialTiles; i++)
             SpawnTile();
@@ -186,9 +187,7 @@ public class RoadSpawner : MonoBehaviour
         {
             int laneIndex = laneIndices[i];
 
-            // PlayerLaneMovement uses: targetX = (currentLane - 1) * laneDistance.
-            // That means lanes are at: -laneDistance, 0, +laneDistance for 3 lanes.
-            float x = laneCenterX + (laneIndex - (laneCount - 1) * 0.5f) * laneDistance;
+            float x = LaneMath.GetLaneX(laneIndex, laneCount, laneDistance, laneCenterX);
             var pos = new Vector3(x, obstacleY, obstacleZ);
             CreateAndSetupObstacle(pos, tileParent);
         }

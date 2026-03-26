@@ -6,7 +6,7 @@ using UnityEngine;
 public class AIThiefLaneDodge : MonoBehaviour
 {
     [Header("Lane Setup")]
-    public int laneCount = 3;
+    public int laneCount = 4;
     public float laneDistance = 2.5f;
     public float laneCenterX = 0f;
 
@@ -45,6 +45,7 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     private void Start()
     {
+        laneCount = LaneMath.ClampLaneCount(laneCount);
         _currentLane = GetNearestLaneIndex(transform.position.x);
     }
 
@@ -176,6 +177,7 @@ public class AIThiefLaneDodge : MonoBehaviour
     {
         // For 3 lanes, this gives an intuitive priority:
         // current lane, then the nearest side lane, then the other side lane.
+        laneCount = LaneMath.ClampLaneCount(laneCount);
         int[] order = new int[laneCount];
         for (int i = 0; i < laneCount; i++)
             order[i] = i;
@@ -198,15 +200,12 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     private float GetLaneX(int laneIndex)
     {
-        // Lanes at: (laneIndex - (laneCount-1)/2) * laneDistance + laneCenterX
-        return laneCenterX + (laneIndex - (laneCount - 1) * 0.5f) * laneDistance;
+        return LaneMath.GetLaneX(laneIndex, laneCount, laneDistance, laneCenterX);
     }
 
     private int GetNearestLaneIndex(float x)
     {
-        float laneFloat = (x - laneCenterX) / laneDistance + (laneCount - 1) * 0.5f;
-        int laneIndex = Mathf.RoundToInt(laneFloat);
-        return Mathf.Clamp(laneIndex, 0, laneCount - 1);
+        return LaneMath.GetNearestLaneIndex(x, laneCount, laneDistance, laneCenterX);
     }
 
     public void OnHitObstacle()

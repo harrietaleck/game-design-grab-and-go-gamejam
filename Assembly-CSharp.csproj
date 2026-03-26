@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{FC16820E-0C67-9D47-AE48-FC59B26B80E3}</ProjectGuid>
+    <ProjectGuid>{501782AD-2F1C-6DDE-2DD5-0D2555506927}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\CameraFollowTarget.cs" />
     <Compile Include="Assets\Scripts\AIThiefLaneDodge.cs" />
     <Compile Include="Assets\Scripts\PlayerLaneMovement.cs" />
+    <Compile Include="Assets\Scripts\LaneMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ithappy\Cartoon_City_Free\Render_Pipeline_Convert\Render_Pipeline_Instructions_Unity_6.txt" />

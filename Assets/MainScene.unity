@@ -366,8 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c5176487a8ed84d8bc7f27c8422cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneCount: 3
-  laneDistance: 2.5
+  laneCount: 4
+  laneDistance: 3
   laneCenterX: 0
   laneMoveSpeed: 10
   moveForward: 1
@@ -539,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6c6988eaf333004bbe3f0ff438ebde8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneDistance: 2.5
+  laneDistance: 3
   moveSpeed: 10
   moveForward: 1
   forwardSpeed: 6
@@ -561,7 +561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 72f6f102958e7904ba44498d009427b2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.06
+      value: -9.06
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 72f6f102958e7904ba44498d009427b2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -679,9 +679,9 @@ MonoBehaviour:
   - {fileID: 5272454072200437660, guid: 4be47a48b47d6224ebb6430561872389, type: 3}
   - {fileID: 52932905164622209, guid: 640b94cf88de4ef459ce14645b2736d9, type: 3}
   - {fileID: 7008220107091041309, guid: 3f1f6417ccf4710439a85fdbe93885a5, type: 3}
-  laneDistance: 2.5
+  laneDistance: 3
   laneCenterX: 0
-  laneCount: 3
+  laneCount: 4
   obstacleChancePerLane: 0.35
   obstacleY: 0
   obstacleZWithinTile: 0.6

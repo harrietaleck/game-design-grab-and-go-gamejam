@@ -14,8 +14,8 @@ public class LaneObstacleSpawner : MonoBehaviour
     [Tooltip("World X position of the middle lane.")]
     public float laneCenterX = 0f;
 
-    [Tooltip("Number of lanes. Your project uses 3 by default.")]
-    public int laneCount = 3;
+    [Tooltip("Number of lanes.")]
+    public int laneCount = 4;
 
     [Header("Spawning")]
     public float spawnIntervalSeconds = 1.2f;
@@ -47,6 +47,7 @@ public class LaneObstacleSpawner : MonoBehaviour
 
     private void Start()
     {
+        laneCount = LaneMath.ClampLaneCount(laneCount);
         _nextSpawnTime = Time.time + 0.25f;
     }
 
@@ -89,7 +90,7 @@ public class LaneObstacleSpawner : MonoBehaviour
             return;
 
         int laneIndex = Random.Range(0, laneCount);
-        float x = laneCenterX + (laneIndex - (laneCount - 1) * 0.5f) * laneDistance;
+        float x = LaneMath.GetLaneX(laneIndex, laneCount, laneDistance, laneCenterX);
 
         float z = handlerTransform.position.z + spawnAheadZ + Random.Range(-spawnZJitter, spawnZJitter);
 
