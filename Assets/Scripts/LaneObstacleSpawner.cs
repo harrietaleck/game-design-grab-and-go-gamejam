@@ -133,6 +133,11 @@ public class LaneObstacleSpawner : MonoBehaviour
             // Ensure the collider actually matches something reasonable if we used primitives.
             box.size = Vector3.one;
         }
+        else if (col is MeshCollider mesh)
+        {
+            // Unity requires MeshColliders to be convex for triggers.
+            mesh.convex = true;
+        }
 
         col.isTrigger = true;
 

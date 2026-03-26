@@ -78,6 +78,7 @@ public class RoadSpawner : MonoBehaviour
     [Range(0.1f, 2f)]
     public float obstacleScaleMultiplier = 0.75f;
 
+
     private float nextSpawnZ = 0f;
     private readonly System.Collections.Generic.List<GameObject> _spawnedTiles = new();
     private int _nextRowObstacleCount = 1;
@@ -232,4 +233,5 @@ public class RoadSpawner : MonoBehaviour
 
         LaneObstacleSpawner.EnsureObstacleSetup(go);
     }
+
 }

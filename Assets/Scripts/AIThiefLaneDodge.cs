@@ -41,6 +41,9 @@ public class AIThiefLaneDodge : MonoBehaviour
     private int _currentLane = 1;
     private float _nextDecisionTime;
     private bool _caught;
+
+    public bool IsCaught => _caught;
+
     private float _emergencyLaneBoostUntil;
 
     private void Start()

@@ -5,13 +5,16 @@ public class LaneObstacle : MonoBehaviour
 {
     [Header("Hit Behavior")]
     [Tooltip("If the handler has PlayerLaneMovement, disable it on hit.")]
-    public bool disableHandlerMovementOnHit = true;
+    public bool disableHandlerMovementOnHit = false;
 
     [Tooltip("Destroy the obstacle when it is hit.")]
     public bool destroyOnHit = true;
 
     [Tooltip("If the AI thief bumps the obstacle, try an emergency lane change first. Only mark AI as caught if no safe lane exists.")]
     public bool allowAIEmergencyDodgeOnContact = true;
+
+    [Tooltip("Health damage dealt when player hits this obstacle.")]
+    public float healthDamage = 10f;
 
     [Tooltip("Invoked when the obstacle is hit by the handler.")]
     public UnityEvent onHit;
@@ -43,6 +46,14 @@ public class LaneObstacle : MonoBehaviour
         {
             if (disableHandlerMovementOnHit)
                 handlerMovement.enabled = false;
+            
+            // Apply health damage and show alert.
+            var hud = FindFirstObjectByType<HUDController>();
+            if (hud != null)
+            {
+                hud.AddHealth(-healthDamage);
+                hud.ShowAlert("WATCH OUT!");
+            }
         }
 
         onHit?.Invoke();
