@@ -1,0 +1,11 @@
+REFLECTION: GRAB & GO - LOOT ON THE RUN
+Harriet Maleck - ST10252836
+25 March 2026
+
+Developing "Grab & Go: Loot on the Run" during this three-day game jam provided valuable insights into AI-assisted game development and iterative problem-solving. The theme "You are not the main character" challenged me to create a dual-character system where the player supports an AI-controlled thief rather than directly controlling the protagonist.
+
+The most significant technical challenge involved implementing a reliable collectible pickup system. Initial attempts resulted in coins triggering from unrealistic distances (19+ units) due to oversized mesh colliders on imported prefabs. Through systematic debugging and collision analysis, I learned to override problematic prefab configurations programmatically, replacing them with properly-sized trigger colliders. This taught me the importance of validating third-party assets and implementing defensive coding practices.
+
+AI assistance proved valuable for rapid prototyping and debugging complex trigger interactions. However, I quickly learned that AI-generated solutions required thorough testing and often needed multiple iterations to achieve the desired gameplay feel. The process reinforced the importance of understanding underlying systems rather than blindly implementing suggestions.
+
+The project successfully demonstrates the core survival loop: timer pressure, collectible rewards, health management, and status feedback through a comprehensive HUD system. While features like tear gas resources and progressive difficulty remain unimplemented, the foundation supports future expansion and aligns with the design document's vision.
