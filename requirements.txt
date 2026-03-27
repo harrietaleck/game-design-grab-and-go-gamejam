@@ -1,0 +1,266 @@
+GRAB & GO: LOOT ON THE RUN - REQUIREMENTS
+===========================================
+
+PROJECT INFORMATION
+-------------------
+Project Name: Grab & Go: Loot on the Run
+Theme: "You are not the main character"
+Developer: Harriet Maleck (ST10252836)
+Development Period: March 24-26, 2026
+Platform: Windows PC
+Engine: Unity 2022.3+
+
+
+FUNCTIONAL REQUIREMENTS
+-----------------------
+
+FR1: PLAYER CONTROL SYSTEM
+- The player shall control a support character (getaway partner), not the thief
+- Player movement shall be limited to 4 discrete lanes
+- Input shall support keyboard (A/D keys and Arrow keys)
+- Lane switching shall be instantaneous with smooth position transitions
+- Player character shall move forward automatically at constant speed
+
+FR2: AI THIEF BEHAVIOR
+- The thief character shall run forward autonomously
+- The thief shall avoid obstacles using simple rule-based AI
+- The thief shall make lane-switching decisions independently
+- The thief shall maintain a configurable distance ahead of the player
+- The thief shall have a "caught" state when hitting obstacles
+
+FR3: COLLECTIBLE SYSTEM
+- The thief shall randomly drop collectible items during gameplay
+- Collectibles shall include multiple types with different values:
+  * Coins: Low value (1 point)
+  * Gold bars: High value (5 points)
+- Drop rates shall be weighted and configurable
+- Collectibles shall only be picked up by the player character
+- Collection shall be immediate upon player contact
+- Each collectible shall have an associated audio cue
+- Coins shall rotate continuously for visual distinction
+- Gold bars shall remain static (no rotation)
+
+FR4: OBSTACLE SYSTEM
+- Obstacles shall spawn randomly in lanes ahead of player
+- Obstacles shall include police vehicles (cars, buses)
+- Player collision with obstacles shall reduce health by configurable amount
+- Obstacles shall despawn after collision or when behind player
+- Obstacles shall use proper trigger colliders for detection
+- AI thief shall attempt emergency lane changes when approaching obstacles
+
+FR5: TIMER SYSTEM
+- A countdown timer shall represent police arrival/escape time
+- Default timer duration: 120 seconds (2 minutes)
+- Timer shall count down in real-time during gameplay
+- Timer shall display in MM:SS format
+- Timer color shall change based on remaining time:
+  * Cyan (normal): >30% remaining
+  * Orange (warning): 10-30% remaining
+  * Red (danger): <10% remaining
+- Timer shall trigger end condition when reaching 0:00
+
+FR6: HEALTH SYSTEM
+- Player shall have maximum health value (default: 100)
+- Health shall decrease when hitting obstacles
+- Health shall be displayed as slider bar and numeric value
+- Health damage per obstacle: 10 points (configurable)
+
+FR7: AUDIO SYSTEM
+- Game shall support two audio channels:
+  * Ambient: Continuous city soundscape
+  * Gameplay: Event-triggered sounds (pickups, collisions)
+- Ambient sounds shall play immediately on game start
+- Ambient playback shall be continuous with no gaps
+- Gameplay sounds shall have randomized intervals
+- Audio clips shall not repeat consecutively
+- Volume and pitch shall have random variation
+
+FR8: UI/HUD SYSTEM
+- HUD shall display 6 core elements simultaneously:
+  1. Escape timer (top center)
+  2. Thief status (top left)
+  3. Loot counter (top right)
+  4. Health bar (bottom left)
+  5. Alert feed (bottom center)
+  6. Controls hint (bottom right)
+- All UI elements shall update in real-time
+- Alert messages shall auto-hide after 0.5 seconds
+- Controls hint shall auto-hide after 10 seconds
+
+FR9: GAME FLOW CONTROL
+- Game shall start with menu screen displayed
+- Gameplay shall be paused until play button is clicked
+- Menu panel shall hide when gameplay begins
+- HUD panel shall be visible only during active gameplay
+- Gameplay components shall be disabled until game starts
+
+FR10: SCENE MANAGEMENT
+- Road tiles shall spawn ahead of player continuously
+- Road tiles shall despawn when behind player by threshold distance
+- Collectibles shall be parented to road tiles for automatic cleanup
+- Scene shall maintain stable active object count via despawning
+
+
+NON-FUNCTIONAL REQUIREMENTS
+---------------------------
+
+NFR1: PERFORMANCE
+- Game shall maintain 60 FPS on mid-range PC hardware
+- Maximum active obstacles: 40 simultaneous objects
+- Despawn distance: 120 units behind player
+- No memory leaks from spawning/despawning objects
+
+NFR2: RESPONSIVENESS
+- Player input shall have <16ms latency (one frame at 60 FPS)
+- Collectible pickup shall feel immediate (no visible delay)
+- UI updates shall occur within same frame as event
+- Lane switching shall complete within 0.2 seconds
+
+NFR3: USABILITY
+- Controls shall be intuitive and explained to player
+- Visual feedback for all player actions (pickups, collisions)
+- Audio feedback for all significant events
+- Color-coded UI elements for quick readability
+- No hidden mechanics or unclear objectives
+
+NFR4: MAINTAINABILITY
+- Code shall use single-responsibility components
+- Inspector-exposed variables for all tunable values
+- Centralized utilities for shared calculations (LaneMath)
+- Clear naming conventions throughout codebase
+- Comments for non-obvious implementation details
+
+NFR5: SCALABILITY
+- System shall support adding new collectible types easily
+- Drop table shall be data-driven via Inspector
+- Audio system shall scale with additional clips
+- Lane count shall be configurable (currently 4)
+
+NFR6: RELIABILITY
+- No null reference exceptions during normal gameplay
+- Graceful handling of missing Inspector references
+- Proper initialization order via Awake/Start pattern
+- Defensive programming for edge cases
+
+NFR7: COMPATIBILITY
+- Project shall build successfully for Windows platform
+- UI shall scale properly across different resolutions
+- Audio shall work with stereo and mono output devices
+- No platform-specific dependencies
+
+
+DESIGN CONSTRAINTS
+------------------
+
+DC1: THEME ALIGNMENT
+- Player must NOT directly control the thief (main character)
+- AI thief must make autonomous decisions
+- Player role limited to support actions only
+
+DC2: TECHNICAL CONSTRAINTS
+- Unity 2022.3+ required
+- Built-in Render Pipeline (no URP/HDRP dependency)
+- Standard physics system (no custom physics)
+- TextMesh Pro for UI text rendering
+
+DC3: TIME CONSTRAINTS
+- Core gameplay loop must be functional within 3 days
+- Polish features are secondary to functional core
+- Documentation required for submission
+
+DC4: ASSET CONSTRAINTS
+- Use free Unity Asset Store packages only
+- Low-poly art style for performance and rapid development
+- No custom 3D modeling required
+
+
+USER STORIES
+------------
+
+US1: As a player, I want to see an escape timer so I understand the urgency
+US2: As a player, I want to collect loot for a rewarding gameplay experience
+US3: As a player, I want visual feedback when I collect items so I know it worked
+US4: As a player, I want to see my health decrease when I hit obstacles
+US5: As a player, I want to know if the thief is safe or caught
+US6: As a player, I want controls explained so I can play immediately
+US7: As a player, I want a start menu so I can prepare before gameplay begins
+US8: As a player, I want audio feedback for immersion and event confirmation
+US9: As a player, I want the thief to dodge obstacles automatically
+US10: As a player, I want clear visual distinction between collectible types
+
+
+ACCEPTANCE CRITERIA
+-------------------
+
+AC1: Player can move between 4 lanes using A/D or arrow keys
+AC2: AI thief runs forward and attempts to dodge obstacles
+AC3: Thief drops coins and gold bars at random intervals
+AC4: Player collects items only when actually touching them
+AC5: Loot counter increases by correct value per item type
+AC6: Timer counts down from 2:00 with color changes
+AC7: Health bar decreases by 10 when hitting obstacles
+AC8: Alerts appear for pickups (+X) and collisions (WATCH OUT!)
+AC9: Thief status shows SAFE when running, CAUGHT when stopped
+AC10: Game starts paused with menu, resumes on Play button click
+AC11: Ambient sounds play continuously without long gaps
+AC12: Pickup sounds play when collecting items
+AC13: Coins spin continuously on Z-axis
+AC14: Gold bars remain static (no rotation)
+AC15: Obstacles despawn after collision or when out of view
+AC16: Collectibles despawn with parent road tiles
+AC17: Controls hint displays for 10 seconds then hides
+AC18: All UI elements update in real-time during gameplay
+AC19: No null reference errors during normal gameplay
+AC20: Build runs successfully with MainScene included
+
+
+DEPENDENCIES
+------------
+
+Unity Packages:
+- TextMesh Pro (UI text rendering)
+- Unity UI (Canvas, Button, Slider components)
+- Unity Physics (Collision detection)
+- Unity Audio (Sound playback)
+
+Asset Store Packages:
+- Cartoon City Free (Urban environment, vehicles)
+- Basic Treasure Coins (Coin models)
+- Money Pack (Gold bar models)
+- Space Explorer GUI Kit (UI elements)
+
+External Dependencies:
+- Mixamo (Character animations)
+- Google Fonts (Righteous font for UI)
+
+
+OUT OF SCOPE (FOR INITIAL RELEASE)
+-----------------------------------
+
+- Tear gas timer extension mechanic
+- Game over screen with final stats
+- Victory/defeat end states
+- Restart functionality
+- Progressive difficulty scaling
+- Power-up system
+- Combo multipliers
+- Near-miss bonuses
+- Screen shake effects
+- Particle effects
+- Trail renderers
+- Dynamic music system
+- Leaderboard/high scores
+- Save/load system
+- Multiple character options
+- Mobile platform support
+- Multiplayer functionality
+
+
+VERSION HISTORY
+---------------
+
+v1.0 (March 26, 2026) - Initial Release
+- Core gameplay loop functional
+- All FR1-FR9 requirements met
+- All acceptance criteria AC1-AC20 passed
+- Documentation complete
