@@ -187,6 +187,68 @@ The player operates as support, not the protagonist. The AI thief is the narrati
 - [Space Explorer GUI Kit](https://assetstore.unity.com/packages/2d/gui/icons/sleek-essential-ui-pack-170650) - UI elements
 - Mixamo - Character animations
 
+## AI Ethics Statement
+
+### AI Usage Disclosure
+
+This project was developed with significant AI assistance (Cursor AI with Claude Sonnet 4.5) as part of an exploration into AI-assisted game development. Transparency about this collaboration is essential for academic integrity and honest evaluation.
+
+**AI Contribution Scope:**
+- **Code Generation**: ~60-70% of initial code structures were AI-generated
+- **Debugging**: AI provided systematic debugging strategies and logging approaches
+- **Documentation**: README, implementation summary, and requirements documents were AI-assisted
+- **Design Consultation**: AI suggested technical patterns and architectural approaches
+
+**Human Contribution Scope:**
+- **Creative Direction**: All game concept, narrative, theme interpretation, and design decisions
+- **Code Validation**: All AI-generated code was tested, modified, and debugged through iteration
+- **Decision Making**: Final approval on all implementations, features, and scope decisions
+- **Problem Definition**: Identification of bugs, articulation of requirements, gameplay tuning
+
+### Attribution Practices
+
+**Transparency Measures:**
+1. All git commits include "Co-authored-by: Cursor" acknowledging AI contribution
+2. This README explicitly discloses AI assistance in credits section
+3. REFLECTION.txt provides comprehensive analysis of AI collaboration
+4. No AI-generated visual or audio assets used (only code assistance)
+
+**What AI Did NOT Create:**
+- Game concept and theme interpretation
+- Narrative and character roles
+- Visual style decisions
+- Gameplay feel and balance tuning
+- Asset selection and scene composition
+- Testing and quality validation
+
+### Ethical Considerations
+
+**Knowledge Dependency:**
+During development, I became aware of depending on AI for syntax and patterns I should learn independently. This creates a knowledge gap between implementation speed and deep understanding. Future projects will prioritize learning fundamentals before AI acceleration.
+
+**Authenticity Concerns:**
+While I directed all technical decisions and validated correctness, I did not personally type most code. This collaboration model is analogous to using advanced IDE tools or frameworks but raises questions about individual technical competency assessment in academic contexts.
+
+**Documentation Voice:**
+The professional quality of documentation reflects AI enhancement beyond my typical writing level. This disclosure ensures readers can fairly evaluate my natural capabilities versus AI-augmented output.
+
+### Commitment to Responsible AI Use
+
+**Future Practices:**
+1. **Understanding Over Speed**: Mandatory independent research before requesting AI assistance
+2. **Incremental Requests**: Build simple versions first, add complexity only if needed
+3. **Testing Validation**: Systematic verification of AI solutions rather than blind acceptance
+4. **Honest Attribution**: Granular disclosure of AI contribution per component
+5. **Skill Development**: Use AI as learning accelerator, not learning replacement
+
+**Educational Integrity:**
+This project represents a genuine exploration of AI-assisted development workflows while maintaining honest disclosure. All creative decisions, design choices, and final implementations were human-directed and validated. AI served as a powerful tool but not a replacement for developer judgment.
+
+### References
+- Cursor AI: https://cursor.com/
+- Claude Sonnet 4.5 by Anthropic
+- AI Assistance acknowledged per academic honesty requirements
+
 ## License
 
 Educational project developed for game jam submission. Assets retain their original licenses from Unity Asset Store.
