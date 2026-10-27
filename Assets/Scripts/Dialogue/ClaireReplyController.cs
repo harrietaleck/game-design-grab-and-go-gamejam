@@ -107,7 +107,7 @@ public class ClaireReplyController : MonoBehaviour
         _hideAt = Time.unscaledTime + optionsVisibleSeconds;
         _lastPromptAt = Time.unscaledTime;
         _promptsThisRun++;
-        _dialogue.UI.ShowOptions($"[1] {replies[0].text}   [2] {replies[1].text}   [3] {replies[2].text}");
+        _dialogue.UI.ShowOptions($"[1] {replies[0].text}   [2] {replies[1].text}\n[3] {replies[2].text}");
     }
 
     private void Update()

@@ -77,12 +77,12 @@ public class DistractionPulse : MonoBehaviour
         if (!CanUseNow) return false;
         if (ChargesLeft <= 0)
         {
-            if (hud != null) hud.ShowAlert("NO DISTRACTIONS LEFT");
+            if (hud != null) hud.ShowAlert("NO CHARGES");
             return false;
         }
         if (CooldownRemaining > 0f)
         {
-            if (hud != null) hud.ShowAlert($"DISTRACTION READY IN {Mathf.CeilToInt(CooldownRemaining)}");
+            if (hud != null) hud.ShowAlert($"WAIT {Mathf.CeilToInt(CooldownRemaining)}s");
             return false;
         }
 
@@ -95,7 +95,7 @@ public class DistractionPulse : MonoBehaviour
         if (pressure != null) pressure.Relieve(pressureRelief, suppressSeconds);
 
         ProceduralSfx.Play(ProceduralSfx.DistractionPulse, 0.8f);
-        if (hud != null) hud.ShowAlert($"DISTRACTION!  Police pressure -{Mathf.RoundToInt(pressureRelief)}");
+        if (hud != null) hud.ShowAlert("DISTRACTION!");
         GameEvents.Raise(GameEventType.DistractionUsed, ChargesLeft);
         Used?.Invoke();
         return true;

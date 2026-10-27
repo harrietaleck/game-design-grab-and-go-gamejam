@@ -56,8 +56,13 @@ public class HUDController : MonoBehaviour
     private float _lootPunchUntil;
     private Vector3 _lootBaseScale = Vector3.one;
 
+    private const string LegacyControlsHint = "A/D or <- ->";
+
     private void Awake()
     {
+        // MainScene still stores the old hint text; show the full current controls instead.
+        if (string.IsNullOrEmpty(controlsHint) || controlsHint == LegacyControlsHint)
+            controlsHint = "A/D move   SPACE distract   ESC pause";
         if (alertText != null) alertText.text = "";
         if (lootText != null) _lootBaseScale = lootText.transform.localScale;
         ResolveHealthLabel();

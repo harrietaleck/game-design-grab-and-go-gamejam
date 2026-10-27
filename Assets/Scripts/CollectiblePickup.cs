@@ -91,7 +91,7 @@ public class CollectiblePickup : MonoBehaviour
 
         var hud = FindFirstObjectByType<HUDController>();
         if (hud != null)
-            hud.ShowAlert(awardValue >= 5 ? $"+{awardValue}  GOLD STACK!" : $"+{awardValue}");
+            hud.ShowAlert(awardValue >= 5 ? $"+{awardValue} GOLD!" : $"+{awardValue}");
 
         LootPopup.Spawn(transform.position, awardValue);
 
