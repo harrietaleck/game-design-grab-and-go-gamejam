@@ -100,6 +100,9 @@ public class RoadSpawner : MonoBehaviour
     public float obstacleScaleMultiplier = 0.75f;
 
 
+    /// <summary>Raised after each road tile is created: (tile root, tile start Z, tile length). Used by CityDresser.</summary>
+    public event System.Action<GameObject, float, float> TileSpawned;
+
     private float nextSpawnZ = 0f;
     private readonly System.Collections.Generic.List<GameObject> _spawnedTiles = new();
     private int _nextRowObstacleCount = 1;
@@ -164,6 +167,9 @@ public class RoadSpawner : MonoBehaviour
 
         if (spawnObstaclesWithTiles)
             SpawnObstaclesForTile(tileStartZ, tileRoot.transform);
+
+        try { TileSpawned?.Invoke(tileRoot, tileStartZ, tileLength); }
+        catch (System.Exception e) { Debug.LogException(e); }
 
         nextSpawnZ += tileLength;
     }
