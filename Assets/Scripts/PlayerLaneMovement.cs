@@ -32,6 +32,9 @@ public class PlayerLaneMovement : MonoBehaviour
     public float forwardSpeed = 6f;
 
     private int currentLane;
+
+    /// <summary>The lane Claire is in or moving to.</summary>
+    public int CurrentLane => currentLane;
     private Vector3 targetPosition;
 
     void Awake()
