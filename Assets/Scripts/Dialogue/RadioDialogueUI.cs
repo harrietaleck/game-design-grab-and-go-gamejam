@@ -17,6 +17,9 @@ public class RadioDialogueUI : MonoBehaviour
 
     public bool IsShowing => _root != null && _root.activeSelf;
 
+    // Authoring size (1920x1080 units); RuntimeUI.Place converts it. Never re-use rt.sizeDelta (already converted).
+    private static readonly Vector2 BoxSize = new Vector2(900f, 235f);
+
     private GameObject _root;
     private TextMeshProUGUI _speaker;
     private TextMeshProUGUI _line;
@@ -32,7 +35,7 @@ public class RadioDialogueUI : MonoBehaviour
         var panel = RuntimeUI.CreatePanel(canvasRoot, "RadioDialogue (runtime)", new Color(0.02f, 0.04f, 0.1f, 0.82f));
         panel.raycastTarget = false;
         // Compact, top-left (under the status text) so it never covers the road or Claire.
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), new Vector2(900f, 235f), new Vector2(20f, -78f));
+        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -78f));
         _group = panel.gameObject.AddComponent<CanvasGroup>();
         _group.blocksRaycasts = false;
 
@@ -62,8 +65,8 @@ public class RadioDialogueUI : MonoBehaviour
     {
         if (_root == null) return;
         var rt = (RectTransform)_root.transform;
-        if (top) RuntimeUI.Place(rt, new Vector2(0.5f, 1f), rt.sizeDelta, new Vector2(0f, -20f));
-        else RuntimeUI.Place(rt, new Vector2(0f, 1f), rt.sizeDelta, new Vector2(20f, -78f));
+        if (top) RuntimeUI.Place(rt, new Vector2(0.5f, 1f), BoxSize, new Vector2(0f, -20f));
+        else RuntimeUI.Place(rt, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -78f));
     }
 
     public void Show(string speaker, string line)

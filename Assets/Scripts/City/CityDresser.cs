@@ -45,6 +45,9 @@ public class CityDresser : MonoBehaviour
     public bool skylineRow = true;
     public float skylineExtraOffset = 22f;
 
+    [Header("Props")]
+    public float maxBillboardHeight = 6.5f;
+
     [Header("Streaming")]
     public float spawnAhead = 170f;
     public float despawnBehind = 45f;
@@ -192,8 +195,12 @@ public class CityDresser : MonoBehaviour
         float landmarkYaw = landmarkSide < 0 ? 90f : -90f;
         if (index % 7 == 3)
             SpawnProp(Pick(_set.busStops), tile, new Vector3(landmarkSide * (edge + sidewalkWidth * 0.45f), _groundY, z0 + len * 0.5f), landmarkYaw);
-        else if (index % 5 == 1)
-            SpawnProp(Pick(_set.billboards), tile, new Vector3(landmarkSide * (edge + sidewalkWidth * 0.8f), _groundY, z0 + len * 0.5f), landmarkYaw);
+        else if (index % 9 == 5)
+        {
+            // Billboards in the pack are huge: cap their height and keep them at the back of the sidewalk.
+            var board = SpawnProp(Pick(_set.billboards), tile, new Vector3(landmarkSide * (edge + sidewalkWidth - 0.4f), _groundY, z0 + len * 0.5f), landmarkYaw);
+            LimitHeight(board, maxBillboardHeight);
+        }
         if (index % 12 == 6)
         {
             SpawnProp(Pick(_set.trafficLights), tile, new Vector3(-(edge + 0.5f), _groundY, z0 + 1f), 90f);
@@ -297,6 +304,18 @@ public class CityDresser : MonoBehaviour
         }
         go.transform.position += new Vector3(center.x - b.center.x, (_groundY + 0.15f) - b.max.y, center.z - b.center.z); // slight curb
         return go;
+    }
+
+    /// <summary>Uniformly shrinks a prop so it is no taller than maxHeight, keeping it on the ground.</summary>
+    private void LimitHeight(GameObject go, float maxHeight)
+    {
+        if (go == null) return;
+        var b = ComputeBounds(go);
+        if (b.size.y <= maxHeight || b.size.y <= 0.001f) return;
+        Vector3 basePoint = new Vector3(go.transform.position.x, _groundY, go.transform.position.z);
+        go.transform.localScale *= maxHeight / b.size.y;
+        b = ComputeBounds(go);
+        go.transform.position += new Vector3(0f, basePoint.y - b.min.y, 0f);
     }
 
     private static GameObject Pick(GameObject[] list)
