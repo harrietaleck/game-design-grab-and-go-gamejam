@@ -1,197 +1,94 @@
 # Grab & Go: Loot on the Run
 
-A fast-paced 3D endless runner where you support an AI-controlled thief escaping through a city. Developed for a game jam exploring the theme "You are not the main character."
+A 3D endless lane runner made for the game-jam theme **"You are not the main character."**
 
-## Game Concept
+**AJ** is the thief. He just pulled a heist and is sprinting through the city, dodging traffic on his own (gameplay AI).
+**You are Claire**, his getaway partner. You run behind him, grab the loot he drops, keep the police off his back and, when
+he gets caught, you are the one who has to save him. The supporting character decides whether the getaway works.
 
-You don't control the thief - you ARE the getaway partner running behind them, collecting dropped loot and ensuring their survival. The thief runs automatically using AI, dropping valuable items as they flee from police. Your job is to grab the loot, dodge obstacles, and keep the escape alive.
+Unity `6000.0.44f1` - URP 17 - Windows PC - C#
 
-## Controls
+## How to play
 
 | Input | Action | When |
 |---|---|---|
-| **A / Left Arrow** | Move one lane left | During a run |
-| **D / Right Arrow** | Move one lane right | During a run |
-| **Space** | Distraction Pulse (limited charges) | During a run |
-| **Space / Enter** or click **PLAY** | Start a run | Main menu |
+| **A / D** or **Left / Right** | Change lane (4 lanes) | During a run |
+| **Space** (or Shift) | Distraction Pulse - 3 per run | During a run |
+| **1 / 2 / 3** | Answer AJ on the radio (optional) | When options appear |
 | **Esc / P** | Pause / resume | During a run |
-| **R / Enter** | Retry | Results screen |
-| **Esc / M** | Back to main menu | Results screen |
+| **Space / Enter**, or click **PLAY** | Start | Main menu |
+| **R / Enter** - **Esc / M** | Retry - Main menu | Results screen |
 
-## Gameplay Features
+**Goal:** survive the **2:00** countdown with Claire alive and AJ free.
 
-### Core Systems
-- **4-Lane Movement**: Navigate across four traffic lanes
-- **AI Thief Behavior**: Autonomous thief with obstacle dodging
-- **Dynamic Collectibles**: Weighted random drops (coins worth 1, gold bars worth 5)
-- **Health System**: Take damage from obstacles, monitored via health bar
-- **Timer Countdown**: Escape timer with color-coded pressure (cyan → orange → red)
-- **Audio Director**: Ambient city sounds and gameplay audio cues
+- **Loot:** AJ drops gold coins (+1) and gold coin stacks (+5) behind him. Run over them to collect.
+- **Traffic:** every crash costs Claire 10 of her 100 health and raises **police pressure**.
+- **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
+  cools down after 3 calm seconds. At 100 the police grab AJ.
+- **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.
+- **Rescue:** if AJ is caught (no escape lane, or pressure maxed) he stops in his lane. Get into **his lane** before you
+  reach him. Same lane = he is free and sprints back ahead; wrong lane = the run ends.
 
-### HUD Elements
-- **Escape Timer** (Top Center): Countdown showing police arrival time
-- **Thief Status** (Top Left): SAFE or CAUGHT indicator
-- **Loot Counter** (Top Right): Total collected value
-- **Health Bar** (Bottom Left): Player survivability with numeric display
-- **Alert Feed** (Bottom Center): Real-time pickup and damage notifications
-- **Controls Hint** (Bottom Right): Input reminder (auto-hides)
+**Endings:** escaped (timer reaches 0, Claire alive, AJ free) - Claire down (0 health) - busted (missed rescue) -
+time up while AJ was caught. The results screen shows the outcome, reason, loot, coins, gold stacks, time survived,
+health, hits, rescues and personal bests.
 
-## Project Structure
+## Features
+- Single authoritative run controller (`GameStartFlow`): MainMenu / Playing / Paused / AJCaught / Results, one-time endings, retry and menu.
+- Fair, ramping obstacle rows: clean start, never all lanes blocked, every row reachable from the previous one, density grows over the run.
+- AJ's gameplay AI: look-ahead and urgent dodges, safe lane crossing, no lane flip-flopping, emergency dodge, caught state, post-rescue recovery.
+- AJ radio dialogue: prewritten lines that react to real events (offline), optional LLM lines through a secure backend, Claire reply options.
+- HUD: timer, AJ status, loot, Claire's health, police-pressure meter, distraction charges, rescue banner, alerts, flashes, loot popups, AJ name tag.
+- Main-menu how-to-play, first-run tips, personal bests (PlayerPrefs), resolution-independent UI.
 
+## Project layout
 ```
-game-design-grab/
-├── Assets/
-│   ├── Scripts/
-│   │   ├── LaneMath.cs                    # Lane calculation utility
-│   │   ├── PlayerLaneMovement.cs          # Player controller
-│   │   ├── AIThiefLaneDodge.cs           # AI thief behavior
-│   │   ├── CollectiblePickup.cs           # Pickup detection & rewards
-│   │   ├── CollectibleSpin.cs             # Coin rotation animation
-│   │   ├── ThiefCollectibleDropper.cs     # Random loot spawning
-│   │   ├── AudioDirector.cs               # Sound management
-│   │   ├── GameStartFlow.cs               # Menu/gameplay transition
-│   │   ├── HUDController.cs               # UI management
-│   │   ├── LaneObstacle.cs                # Obstacle collision behavior
-│   │   ├── LaneObstacleSpawner.cs         # Obstacle spawning system
-│   │   └── RoadSpawner.cs                 # Road tile generation
-│   ├── MainScene.unity                    # Main game scene
-│   ├── Sounds/                            # Audio assets
-│   ├── Space_Exploration_GUI_Kit/         # UI assets
-│   └── TextMesh Pro/                      # Text rendering
+Assets/
+  MainScene.unity              gameplay scene (build scene 0)
+  Scripts/                     core gameplay (GameStartFlow, HUDController, PlayerLaneMovement, AIThiefLaneDodge,
+                               ThiefCollectibleDropper, CollectiblePickup, LaneObstacle, LaneMath, AudioDirector, ...)
+  Scripts/Systems/             PolicePressure, DistractionPulse, RescueController, ProgressionStore, ProceduralSfx
+  Scripts/Dialogue/            AJDialogueController, DialogueFallbackLibrary, RadioDialogueUI, ClaireReplyController,
+                               DialogueAPIClient, AJPersonalityProfile
+  Scripts/UI/                  runtime-built UI (results, pause, HUD extras, menu guide, onboarding, popups)
+  Editor/BuildSceneSetup.cs    keeps MainScene as build scene 0 (menu: Grab & Go > Fix Build Scenes)
+  StreamingAssets/dialogue_config.json   LLM dialogue switch (disabled by default)
+  ithappy/.../RoadSpawner.cs   road tiles + fair obstacle rows (modified asset-pack script)
+Backend/                       optional Node.js dialogue server (keeps LLM API keys out of the game)
+Docs/                          regression checklist and development log
 ```
+New systems attach themselves to the `GamePlayCanvas` at runtime (`GameStartFlow.RegisterBootstrap`), so MainScene
+needed no manual wiring. Existing Inspector references and field names were kept.
 
-## Technical Highlights
+## Open, play, build
+1. Unity Hub -> **Add -> Add project from disk** -> select the `game-design-grab` folder (do not use *New project*).
+   Open it with Unity **6000.0.44f1**.
+2. Open `Assets/MainScene.unity` and press Play.
+3. Build: **File -> Build Profiles -> Windows**, confirm `MainScene` is scene 0 (ticked), build to a folder **outside** the
+   project. The first build needs a few GB of free disk space.
 
-### Lane System
-Centralized mathematical model for consistent lane positioning across player, AI, and spawning systems:
-```csharp
-float x = laneCenterX + (laneIndex - (laneCount - 1) * 0.5f) * laneDistance;
-```
+## Optional: LLM dialogue
+The game is fully playable offline with prewritten lines. To try generated lines, see [`Backend/README.md`](Backend/README.md):
+run `npm start` in `Backend/` (use `PROVIDER=mock` to test without a key), then set `"enabled": true` in
+`Assets/StreamingAssets/dialogue_config.json`. API keys live only in `Backend/.env` (git-ignored) - never in Unity or a build.
+If the service is off, slow or fails, AJ falls back to prewritten lines instantly.
 
-### Intelligent Collision Management
-- Convex mesh colliders for trigger support on vehicles
-- Tiny normalized colliders (0.015 local units) for precise pickup detection
-- Physics.IgnoreCollision prevents thief from collecting own drops
-- Spawn grace period (0.25s) prevents instant overlap collection
-
-### Parent-to-Tile Cleanup
-Collectibles spawn parented to road tiles, automatically despawning when tiles move out of view - no manual distance checks needed.
-
-### Unscaled Time for UI
-Timer uses `Time.unscaledDeltaTime` to maintain accurate countdown during pause/unpause transitions.
-
-## Development Stack
-
-- **Engine**: Unity 6 (`6000.0.44f1`), Universal Render Pipeline (URP 17.0.4)
-- **Language**: C#
-- **UI Framework**: Unity UI with TextMesh Pro
-- **Audio**: Unity Audio System with 2D spatial audio
-- **Physics**: Unity Physics with trigger-based collision detection
-
-## Setup Instructions
-
-### Prerequisites
-- Unity `6000.0.44f1` (open the project with this exact editor version)
-- TextMesh Pro (imported via Package Manager)
-
-### Running the Game
-
-1. Open project in Unity:
-   ```
-   Unity Hub → Add → Select "game-design-grab" folder
-   ```
-
-2. Open main scene:
-   ```
-   Assets/MainScene.unity
-   ```
-
-3. Configure Inspector (if not already set):
-   - **GameStartFlow**: Assign menu panel, HUD panel, play button, HUD controller
-   - **HUDController**: Assign all text elements, health slider, thief reference
-   - **ThiefCollectibleDropper**: Configure drop table with coin/gold bar prefabs
-   - **AudioDirector**: Add ambient and gameplay audio clips
-
-4. Press Play in Unity Editor
-
-### Building the Game
-
-1. Open Build Settings: `File → Build Settings` (Ctrl+Shift+B)
-2. Ensure `MainScene` is in "Scenes In Build" list (index 0, checked)
-3. Remove or uncheck any demo scenes (SampleScene, etc.)
-4. Select target platform (Windows/Mac/Linux)
-5. Click `Build` or `Build and Run`
-
-## Design Philosophy
-
-### Theme: "You Are Not The Main Character"
-The player operates as support, not the protagonist. The AI thief is the narrative focal point - you ensure their survival indirectly through collecting loot and managing resources.
-
-### Dual-Character System
-- **Thief** (AI): Autonomous forward movement, obstacle dodging, loot dropping
-- **Handler** (Player): Lane control, collection, survival management
-
-### Survival Loop
-- Timer creates constant pressure (police approaching)
-- Health depletes from obstacles
-- Loot rewards risk-taking behavior
-- Balance between greed (collecting loot) and caution (avoiding damage)
-
-## Known Limitations
-
-### Not Yet Implemented
-- **Tear Gas System**: Resource that extends timer (core survival mechanic from design doc)
-- **Game Over Screen**: Timer/health reaching 0 doesn't show proper end state
-- **Victory Condition**: No defined win state when escaping successfully
-- **Progressive Difficulty**: Obstacle spawn rate doesn't increase over time
-- **Score Multipliers**: No combo or near-miss bonus systems
-
-### Current Behavior
-- Timer reaching 0:00 sets status to "TIME UP" but game continues
-- Health reaching 0 shows empty bar but no game over
-- Obstacles spawn at constant rate throughout
-
-## Future Enhancements
-
-### Priority 1: Complete Core Loop
-- Tear gas collectibles that extend timer (+10-15 seconds)
-- Game over screen with final stats (loot, time, status)
-- Restart button functionality
-- Victory screen when timer expires with thief still safe
-
-### Priority 2: Difficulty Curve
-- Gradually increase obstacle spawn rate
-- Speed up forward movement over time
-- More aggressive AI thief behavior under pressure
-
-### Priority 3: Polish & Juice
-- Screen shake on collisions
-- Particle effects on pickups
-- Character trail effects
-- Dynamic music intensity based on timer
-- Whoosh sound on lane changes
-- Visual feedback for near-misses
-
-### Priority 4: Extended Features
-- Power-ups (shield, magnet, speed boost)
-- Combo multiplier system
-- Leaderboard/high score tracking
-- Multiple thief characters with different behaviors
-- Environmental hazards beyond vehicles
+## Known limitations
+- AJ's voice (text-to-speech) is not implemented yet; dialogue is subtitles + a radio blip. Needs a TTS provider decision.
+- There are no police vehicles or pursuit; police pressure is a HUD meter with audio cues.
+- The LLM backend has been tested in mock mode only (no provider key was used).
+- See `Docs/REGRESSION_CHECKLIST.md` for what has and has not been play-tested.
 
 ## Credits
+**Design, direction and development:** Harriet Maleck (ST10252836) - game jam March 24-26, 2026, extended October 2026.
 
-**Developer**: Harriet Maleck (ST10252836)  
-**Development Period**: March 24-26, 2026 (3-day game jam)  
-**Theme**: "You are not the main character"  
-**AI Assistance**: Code generation, debugging, system design consultation
-
-### Assets Used
-- [Cartoon City Free](https://assetstore.unity.com/packages/3d/environments/urban/cartoon-city-free-low-poly-city-3d-models-pack-328170) - Urban environment
-- [Basic Treasure Coins](https://assetstore.unity.com/packages/2d/textures-materials/metals/basic-treasure-coins-26609) - Collectible coins
-- [Money Pack](https://assetstore.unity.com/packages/3d/props/money-pack-84433) - Gold bars
-- [Space Explorer GUI Kit](https://assetstore.unity.com/packages/2d/gui/icons/sleek-essential-ui-pack-170650) - UI elements
-- Mixamo - Character animations
+Third-party assets (original licenses apply):
+- Cartoon City Free (ithappy) - city, road tiles, traffic obstacles
+- Devtoid Gold Coins (in "LiquidFire Package 4 - BSH games") - gold coin and gold coin stack pickups
+- Space Exploration GUI Kit - HUD elements
+- Mixamo - character running animations (Claire, AJ)
+- Mixkit - city ambience, train, siren and coin sounds; one ElevenLabs-generated voice clip
+- Also imported: Money Pack, Medieval Gold, LowPoly Fantasy Bags, jewellery shop, Explosives, LiquidFire effects
 
 ## AI Ethics Statement
 
@@ -255,12 +152,11 @@ This project represents a genuine exploration of AI-assisted development workflo
 - Claude Sonnet 4.5 by Anthropic
 - AI Assistance acknowledged per academic honesty requirements
 
+### October 2026 update
+The Stage 1-8 roadmap work on the `stage1-stability` branch (run-state system, rescue mechanic,
+police pressure, Distraction Pulse, dialogue system and backend, UI and docs) was implemented with
+Claude (Anthropic) under Harriet's direction and design brief. Each task is a separate, attributed commit.
+
+
 ## License
-
-Educational project developed for game jam submission. Assets retain their original licenses from Unity Asset Store.
-
----
-
-**Version**: 1.0  
-**Last Updated**: March 26, 2026  
-**Build Status**: Core systems functional, ready for expansion
+Educational project developed for game jam submission. Assets retain their original licenses from their sources.
