@@ -45,6 +45,26 @@ public class CityDresser : MonoBehaviour
     public bool skylineRow = true;
     public float skylineExtraOffset = 22f;
 
+    [Header("Building variety")]
+    [Tooltip("Height multipliers (vertical stretch) for low-, mid- and high-rise buildings.")]
+    public Vector2 lowRiseHeight = new Vector2(0.45f, 0.75f);
+    public Vector2 midRiseHeight = new Vector2(0.9f, 1.3f);
+    public Vector2 highRiseHeight = new Vector2(1.5f, 2.3f);
+    [Tooltip("Chance of low / mid / high rise on the street front (the rest is high rise). Skyline favours high rise.")]
+    [Range(0f, 1f)] public float lowRiseChance = 0.35f;
+    [Range(0f, 1f)] public float midRiseChance = 0.4f;
+    [Tooltip("Hard height caps after stretching.")]
+    public float maxFrontHeight = 55f;
+    public float maxSkylineHeight = 95f;
+    [Range(0f, 1f)] public float mirrorChance = 0.5f;
+    public bool tintBuildings = true;
+
+    [Header("Trees")]
+    [Range(0f, 1f)] public float sidewalkPalmChance = 0.7f;
+    public Vector2 palmScaleRange = new Vector2(0.75f, 1.45f);
+    [Tooltip("Gaps between buildings at least this wide get a palm or bushes.")]
+    public float gapTreeMinWidth = 1.6f;
+
     [Header("Props")]
     public float maxBillboardHeight = 6.5f;
 
@@ -65,6 +85,7 @@ public class CityDresser : MonoBehaviour
         public float side;      // -1 left, +1 right
         public bool skyline;
         public float cursorZ;
+        public GameObject lastPrefab;
         public readonly List<(GameObject go, float maxZ)> items = new();
     }
     private readonly List<Stream> _streams = new();
@@ -87,6 +108,9 @@ public class CityDresser : MonoBehaviour
     private void OnDestroy()
     {
         if (_spawner != null) _spawner.TileSpawned -= OnTileSpawned;
+        foreach (var m in _tintCache.Values)
+            if (m != null) Destroy(m);
+        _tintCache.Clear();
     }
 
     private void Start()
@@ -138,10 +162,18 @@ public class CityDresser : MonoBehaviour
         EnsureStreams();
     }
 
+    /// <summary>
+    /// Hides the placeholder buildings baked into a RoadTile. They are nested under the road mesh
+    /// (RoadTile/road_001/...), so search the whole hierarchy, hiding only the outermost "Building" objects.
+    /// </summary>
     private static void HideTileBuildings(GameObject tile)
     {
-        foreach (Transform child in tile.transform)
-            if (child.name.Contains("Building")) child.gameObject.SetActive(false);
+        foreach (var t in tile.GetComponentsInChildren<Transform>(true))
+        {
+            if (t == tile.transform || !t.name.Contains("Building")) continue;
+            if (t.parent != null && t.parent.name.Contains("Building")) continue; // parent already handled
+            t.gameObject.SetActive(false);
+        }
     }
 
     private void MeasureRoad(GameObject tile)
@@ -178,12 +210,16 @@ public class CityDresser : MonoBehaviour
             if ((index + sideIndex) % 2 == 0)
                 SpawnProp(Pick(_set.streetLights), tile, new Vector3(side * (edge + 0.7f), _groundY, z0 + len * 0.5f), faceRoadYaw);
 
-            // Greenery
-            float r = Random.value;
-            if (r < 0.55f)
-                SpawnProp(Pick(_set.trees), tile, new Vector3(side * (edge + sidewalkWidth * 0.65f), _groundY, z0 + Random.Range(1.5f, len - 1.5f)), Random.Range(0f, 360f));
-            else if (r < 0.9f)
-                SpawnProp(Pick(_set.bushes), tile, new Vector3(side * (edge + sidewalkWidth * 0.75f), _groundY, z0 + Random.Range(1.5f, len - 1.5f)), Random.Range(0f, 360f));
+            // Greenery: palms of varied size, otherwise a small bush cluster
+            if (Random.value < sidewalkPalmChance)
+                SpawnTree(tile, new Vector3(side * (edge + sidewalkWidth * 0.62f), _groundY, z0 + Random.Range(1.5f, len - 1.5f)));
+            else
+            {
+                float bz = z0 + Random.Range(2f, len - 2f);
+                SpawnProp(Pick(_set.bushes), tile, new Vector3(side * (edge + sidewalkWidth * 0.75f), _groundY, bz), Random.Range(0f, 360f));
+                if (Random.value < 0.6f)
+                    SpawnProp(Pick(_set.bushes), tile, new Vector3(side * (edge + sidewalkWidth * 0.8f), _groundY, bz + 1.3f), Random.Range(0f, 360f));
+            }
 
             // Bins
             if (Random.value < 0.3f)
@@ -234,8 +270,12 @@ public class CityDresser : MonoBehaviour
             var plazaRoot = new GameObject("Plaza").transform;
             plazaRoot.SetParent(_root, false);
             float cz = s.cursorZ + plazaLength * 0.5f;
-            var feature = Random.value < 0.5f ? Pick(_set.fountains) : Pick(_set.trees);
-            SpawnProp(feature, plazaRoot, new Vector3(s.side * (frontX + 4f), _groundY, cz), Random.Range(0f, 360f));
+            if (Random.value < 0.5f && _set.fountains != null && _set.fountains.Length > 0)
+                SpawnProp(Pick(_set.fountains), plazaRoot, new Vector3(s.side * (frontX + 4f), _groundY, cz), Random.Range(0f, 360f));
+            else
+                SpawnTree(plazaRoot, new Vector3(s.side * (frontX + 4f), _groundY, cz));
+            SpawnTree(plazaRoot, new Vector3(s.side * (frontX + 6.5f), _groundY, cz - 3.2f));
+            SpawnTree(plazaRoot, new Vector3(s.side * (frontX + 6.5f), _groundY, cz + 3.2f));
             SpawnProp(Pick(_set.bushes), plazaRoot, new Vector3(s.side * (frontX + 1f), _groundY, cz - 3f), 0f);
             SpawnProp(Pick(_set.bushes), plazaRoot, new Vector3(s.side * (frontX + 1f), _groundY, cz + 3f), 0f);
             s.items.Add((plazaRoot.gameObject, s.cursorZ + plazaLength));
@@ -243,7 +283,7 @@ public class CityDresser : MonoBehaviour
             return;
         }
 
-        var prefab = Pick(_set.buildings);
+        var prefab = PickBuilding(s);
         if (prefab == null) { s.cursorZ += frontageRange.x; return; }
 
         var go = Instantiate(prefab, _root);
@@ -258,12 +298,29 @@ public class CityDresser : MonoBehaviour
         go.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
         b = ComputeBounds(go);
 
-        float heightLimit = s.skyline ? maxBuildingHeight * 1.8f : maxBuildingHeight;
+        // Uniform scale from frontage (width along the street) and depth.
         float frontage = Random.Range(frontageRange.x, frontageRange.y) * (s.skyline ? 1.5f : 1f);
         float scale = frontage / Mathf.Max(0.01f, b.size.z);
-        scale = Mathf.Min(scale, heightLimit / Mathf.Max(0.01f, b.size.y), (s.skyline ? maxBuildingDepth * 2f : maxBuildingDepth) / Mathf.Max(0.01f, b.size.x));
+        scale = Mathf.Min(scale, (s.skyline ? maxBuildingDepth * 2f : maxBuildingDepth) / Mathf.Max(0.01f, b.size.x));
+        float baseHeight = b.size.y * scale;
+        float baseLimit = s.skyline ? maxBuildingHeight * 1.8f : maxBuildingHeight;
+        if (baseHeight > baseLimit) { scale *= baseLimit / baseHeight; baseHeight = baseLimit; }
         scale = Mathf.Clamp(scale, 0.02f, 50f);
-        go.transform.localScale = prefab.transform.localScale * scale;
+
+        // Height variety: stretch vertically into low-, mid- or high-rise.
+        float heightMul = PickHeightMultiplier(s.skyline);
+        float maxH = s.skyline ? maxSkylineHeight : maxFrontHeight;
+        heightMul = Mathf.Min(heightMul, maxH / Mathf.Max(0.01f, baseHeight));
+
+        // Mirror for extra variety (mirrors along the street direction, so the front still faces the road).
+        // The local axis that lies along the street is X when the building was turned 90 degrees, otherwise Z.
+        float mirror = Random.value < mirrorChance ? -1f : 1f;
+        bool streetAxisIsLocalX = Mathf.Abs(Mathf.DeltaAngle(yaw, 90f)) < 1f || Mathf.Abs(Mathf.DeltaAngle(yaw, 270f)) < 1f;
+        var ps = prefab.transform.localScale;
+        go.transform.localScale = new Vector3(
+            ps.x * scale * (streetAxisIsLocalX ? mirror : 1f),
+            ps.y * scale * heightMul,
+            ps.z * scale * (streetAxisIsLocalX ? 1f : mirror));
         b = ComputeBounds(go);
 
         // Front face at frontX, base on the ground, starting at the cursor.
@@ -271,9 +328,100 @@ public class CityDresser : MonoBehaviour
         float targetNearX = s.side * frontX;
         go.transform.position += new Vector3(targetNearX - nearX, _groundY - b.min.y, s.cursorZ - b.min.z);
 
+        if (tintBuildings) Tint(go);
+
         float maxZ = s.cursorZ + b.size.z;
         s.items.Add((go, maxZ));
-        s.cursorZ = maxZ + Random.Range(gapRange.x, gapRange.y);
+
+        float gap = Random.Range(gapRange.x, gapRange.y);
+        if (!s.skyline && gap >= gapTreeMinWidth)
+        {
+            // Fill wider gaps with a palm or bushes, set back slightly from the sidewalk.
+            var gapRoot = new GameObject("Gap Greenery").transform;
+            gapRoot.SetParent(_root, false);
+            var pos = new Vector3(s.side * (frontX + 1.2f), _groundY, maxZ + gap * 0.5f);
+            if (Random.value < 0.6f) SpawnTree(gapRoot, pos);
+            else SpawnProp(Pick(_set.bushes), gapRoot, pos, Random.Range(0f, 360f));
+            s.items.Add((gapRoot.gameObject, maxZ + gap));
+        }
+        s.cursorZ = maxZ + gap;
+    }
+
+    private GameObject PickBuilding(Stream s)
+    {
+        GameObject[] pool = _set.accentBuildings != null && _set.accentBuildings.Length > 0 && Random.value < _set.accentChance
+            ? _set.accentBuildings
+            : _set.buildings;
+        if (pool == null || pool.Length == 0) return null;
+        // Avoid the same model twice in a row on one side.
+        GameObject pick = pool[Random.Range(0, pool.Length)];
+        for (int i = 0; i < 4 && pool.Length > 1 && pick == s.lastPrefab; i++)
+            pick = pool[Random.Range(0, pool.Length)];
+        s.lastPrefab = pick;
+        return pick;
+    }
+
+    private float PickHeightMultiplier(bool skyline)
+    {
+        float r = Random.value;
+        float low = skyline ? 0.1f : lowRiseChance;
+        float mid = skyline ? 0.35f : midRiseChance;
+        if (r < low) return Random.Range(lowRiseHeight.x, lowRiseHeight.y);
+        if (r < low + mid) return Random.Range(midRiseHeight.x, midRiseHeight.y);
+        return Random.Range(highRiseHeight.x, highRiseHeight.y);
+    }
+
+    private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorId = Shader.PropertyToID("_Color");
+    // One tinted copy per (source material, tint) - at most a handful of materials, shared and SRP-batcher friendly.
+    private readonly Dictionary<(Material, int), Material> _tintCache = new();
+
+    /// <summary>Per-building pastel tint on wall materials only (glass and lights untouched). Shared assets are never modified.</summary>
+    private void Tint(GameObject go)
+    {
+        if (_set.buildingTints == null || _set.buildingTints.Length == 0) return;
+        int tintIndex = Random.Range(0, _set.buildingTints.Length);
+        foreach (var r in go.GetComponentsInChildren<Renderer>())
+        {
+            var mats = r.sharedMaterials;
+            bool changed = false;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                if (mats[i] == null || !MatchesTintKeyword(mats[i].name)) continue;
+                mats[i] = GetTinted(mats[i], tintIndex);
+                changed = true;
+            }
+            if (changed) r.sharedMaterials = mats;
+        }
+    }
+
+    private Material GetTinted(Material source, int tintIndex)
+    {
+        if (_tintCache.TryGetValue((source, tintIndex), out var cached) && cached != null) return cached;
+        var tint = _set.buildingTints[tintIndex];
+        var m = new Material(source) { name = $"{source.name} (tint {tintIndex})" };
+        if (m.HasProperty(BaseColorId)) m.SetColor(BaseColorId, m.GetColor(BaseColorId) * tint);
+        if (m.HasProperty(ColorId)) m.SetColor(ColorId, m.GetColor(ColorId) * tint);
+        _tintCache[(source, tintIndex)] = m;
+        return m;
+    }
+
+    private bool MatchesTintKeyword(string materialName)
+    {
+        if (_set.tintMaterialKeywords == null) return false;
+        foreach (var k in _set.tintMaterialKeywords)
+            if (!string.IsNullOrEmpty(k) && materialName.Contains(k)) return true;
+        return false;
+    }
+
+    private GameObject SpawnTree(Transform parent, Vector3 pos)
+    {
+        var tree = SpawnProp(Pick(_set.trees), parent, pos, Random.Range(0f, 360f));
+        if (tree == null) return null;
+        tree.transform.localScale *= Random.Range(palmScaleRange.x, palmScaleRange.y);
+        var b = ComputeBounds(tree);
+        tree.transform.position += new Vector3(0f, _groundY - b.min.y, 0f);
+        return tree;
     }
 
     // ---------------- Helpers ----------------

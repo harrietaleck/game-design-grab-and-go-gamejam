@@ -14,12 +14,14 @@ public static class CityDressingSetBuilder
 {
     private const string AssetPath = "Assets/Resources/CityDressingSet.asset";
     private const string PackRoot = "Assets/ithappy/Cartoon_City_Free";
+    private const int Version = 3;
 
     static CityDressingSetBuilder()
     {
         EditorApplication.delayCall += () =>
         {
-            if (AssetDatabase.LoadAssetAtPath<CityDressingSet>(AssetPath) == null)
+            var existing = AssetDatabase.LoadAssetAtPath<CityDressingSet>(AssetPath);
+            if (existing == null || existing.generatorVersion < Version)
                 Build(log: true);
         };
     }
@@ -41,6 +43,15 @@ public static class CityDressingSetBuilder
 
         // Daytime scene: skip the *_NightLight building variants.
         set.buildings = Load("Prefabs/Buildings", n => !n.Contains("NightLight"));
+        set.accentBuildings = Load("Prefabs/Buildings", n => n.Contains("NightLight"));
+        set.generatorVersion = Version;
+        // Reset the tint palette to the current defaults (v3: stronger pastel colours).
+        set.buildingTints = new[]
+        {
+        new Color(1f, 1f, 1f), new Color(1f, 0.8f, 0.62f), new Color(0.62f, 0.8f, 1f),
+        new Color(1f, 0.68f, 0.74f), new Color(0.64f, 0.95f, 0.76f), new Color(0.8f, 0.7f, 1f),
+        new Color(1f, 0.9f, 0.52f), new Color(0.74f, 0.79f, 0.9f), new Color(1f, 0.6f, 0.5f)
+        };
         set.sidewalkTiles = Load("Prefabs/Sidewalks");
         set.streetLights = Load("Prefabs/Props", n => n.StartsWith("Spotlight"));
         set.trees = Load("Prefabs/Vegetation", n => n.StartsWith("Palm"));

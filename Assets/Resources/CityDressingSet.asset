@@ -12,11 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed86fb60afdafec4eb66bd9130a522a1, type: 3}
   m_Name: CityDressingSet
   m_EditorClassIdentifier: 
+  generatorVersion: 3
   buildings:
   - {fileID: 4508651562860150202, guid: 6d3bd000f9d3e3c479ee0339e54f1247, type: 3}
   - {fileID: 4724550707367194761, guid: 54bb0c6cea2adb2408f37dd1ba7a7dd7, type: 3}
   - {fileID: 8171410634475633590, guid: 0cd0e09ea28be304eae00f533b94ffd9, type: 3}
   - {fileID: 5781593798904203336, guid: 5317394648af5b94eaea206e07e79629, type: 3}
+  accentBuildings:
+  - {fileID: 4597635526157119969, guid: 91a027cf7bf8fb84a8c5750b8c290efe, type: 3}
+  - {fileID: 8038722823023559478, guid: ade3f441d04146e41b543404123042e3, type: 3}
+  - {fileID: 3835268542668041557, guid: a1eaf708c08375d4a9b5f90640c24bc0, type: 3}
+  accentChance: 0.2
+  buildingTints:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.8, b: 0.62, a: 1}
+  - {r: 0.62, g: 0.8, b: 1, a: 1}
+  - {r: 1, g: 0.68, b: 0.74, a: 1}
+  - {r: 0.64, g: 0.95, b: 0.76, a: 1}
+  - {r: 0.8, g: 0.7, b: 1, a: 1}
+  - {r: 1, g: 0.9, b: 0.52, a: 1}
+  - {r: 0.74, g: 0.79, b: 0.9, a: 1}
+  - {r: 1, g: 0.6, b: 0.5, a: 1}
+  tintMaterialKeywords:
+  - Color
   sidewalkTiles:
   - {fileID: 994477329328447841, guid: c872a4807289d164fafc5806b57b2b4d, type: 3}
   - {fileID: 3162106053455735579, guid: 4cd46b062033fff4391fcbb6bd8a242f, type: 3}
