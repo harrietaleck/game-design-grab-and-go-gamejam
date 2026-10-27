@@ -71,6 +71,7 @@ public class ClaireReplyController : MonoBehaviour
     private float _hideAt;
     private float _lastPromptAt = -100f;
     private int _promptsThisRun;
+    private int _lastRunIdSeen = -1;
 
     private void Start()
     {
@@ -89,15 +90,25 @@ public class ClaireReplyController : MonoBehaviour
 
     private void OnGameEvent(GameEventData e)
     {
-        if (e.type == GameEventType.RunStarted) { _promptsThisRun = 0; _lastPromptAt = -100f; Clear(); }
+        // (Run reset happens in EnsureRun, so the order in which listeners receive RunStarted never matters.)
         // Danger: withdraw options immediately.
         if (e.type == GameEventType.AJCaught || e.type == GameEventType.PolicePressureHigh ||
             e.type == GameEventType.RunWon || e.type == GameEventType.RunFailed)
             Clear();
     }
 
+    private void EnsureRun()
+    {
+        if (_lastRunIdSeen == GameStartFlow.CurrentRunId) return;
+        _lastRunIdSeen = GameStartFlow.CurrentRunId;
+        _promptsThisRun = 0;
+        _lastPromptAt = -100f;
+        Clear();
+    }
+
     private void OnLineSpoken(GameEventType type, string line)
     {
+        EnsureRun();
         if (_flow == null || _flow.State != GameStartFlow.RunState.Playing) return;
         if (!Options.TryGetValue(type, out var replies)) return;
         if (_promptsThisRun >= maxPromptsPerRun || Time.unscaledTime - _lastPromptAt < minSecondsBetweenPrompts) return;
@@ -112,6 +123,7 @@ public class ClaireReplyController : MonoBehaviour
 
     private void Update()
     {
+        EnsureRun();
         if (_current == null) return;
         if (_flow == null || _flow.State != GameStartFlow.RunState.Playing || Time.unscaledTime >= _hideAt)
         {
