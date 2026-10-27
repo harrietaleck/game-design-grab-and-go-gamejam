@@ -8,9 +8,15 @@ You don't control the thief - you ARE the getaway partner running behind them, c
 
 ## Controls
 
-- **A / Left Arrow**: Move left
-- **D / Right Arrow**: Move right
-- **Space**: Start game (from menu)
+| Input | Action | When |
+|---|---|---|
+| **A / Left Arrow** | Move one lane left | During a run |
+| **D / Right Arrow** | Move one lane right | During a run |
+| **Space** | Distraction Pulse (limited charges) | During a run |
+| **Space / Enter** or click **PLAY** | Start a run | Main menu |
+| **Esc / P** | Pause / resume | During a run |
+| **R / Enter** | Retry | Results screen |
+| **Esc / M** | Back to main menu | Results screen |
 
 ## Gameplay Features
 
@@ -76,7 +82,7 @@ Timer uses `Time.unscaledDeltaTime` to maintain accurate countdown during pause/
 
 ## Development Stack
 
-- **Engine**: Unity 2022.3+ (Built-in Render Pipeline)
+- **Engine**: Unity 6 (`6000.0.44f1`), Universal Render Pipeline (URP 17.0.4)
 - **Language**: C#
 - **UI Framework**: Unity UI with TextMesh Pro
 - **Audio**: Unity Audio System with 2D spatial audio
@@ -85,7 +91,7 @@ Timer uses `Time.unscaledDeltaTime` to maintain accurate countdown during pause/
 ## Setup Instructions
 
 ### Prerequisites
-- Unity 2022.3 or newer
+- Unity `6000.0.44f1` (open the project with this exact editor version)
 - TextMesh Pro (imported via Package Manager)
 
 ### Running the Game
