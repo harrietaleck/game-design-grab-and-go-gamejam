@@ -29,6 +29,9 @@ public class CollectiblePickup : MonoBehaviour
     [Range(0f, 1f)] public float pickupAudioVolume = 1f;
 
     private bool _collected;
+
+    // Cached player (was a FindObjectsByType call per item per frame).
+    private static PlayerLaneMovement s_player;
     private float _canCollectAt;
 
     private void Awake()
@@ -60,20 +63,14 @@ public class CollectiblePickup : MonoBehaviour
         if (GameStartFlow.Instance != null && !GameStartFlow.CanCollectLoot)
             return;
 
-        float sqrRadius = pickupRadius * pickupRadius;
-        var players = FindObjectsByType<PlayerLaneMovement>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (players[i] == null)
-                continue;
+        if (s_player == null)
+            s_player = FindFirstObjectByType<PlayerLaneMovement>();
+        if (s_player == null)
+            return;
 
-            float sqrDist = (players[i].transform.position - transform.position).sqrMagnitude;
-            if (sqrDist <= sqrRadius)
-            {
-                CollectNow("ProximityCheck");
-                return;
-            }
-        }
+        float sqrRadius = pickupRadius * pickupRadius;
+        if ((s_player.transform.position - transform.position).sqrMagnitude <= sqrRadius)
+            CollectNow("ProximityCheck");
     }
 
     private void CollectNow(string reason)
@@ -95,6 +92,8 @@ public class CollectiblePickup : MonoBehaviour
         var hud = FindFirstObjectByType<HUDController>();
         if (hud != null)
             hud.ShowAlert(awardValue >= 5 ? $"+{awardValue}  GOLD STACK!" : $"+{awardValue}");
+
+        LootPopup.Spawn(transform.position, awardValue);
 
         onCollected?.Invoke();
         Collected?.Invoke(this);
