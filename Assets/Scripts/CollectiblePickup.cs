@@ -15,6 +15,9 @@ public class CollectiblePickup : MonoBehaviour
         RuntimeCollectedValue = 0;
     }
 
+    /// <summary>Raised once per collected item (after scoring).</summary>
+    public static event System.Action<CollectiblePickup> Collected;
+
     [Tooltip("Delay collection shortly after spawn so pickups don't vanish instantly on overlap.")]
     public float pickupDelaySeconds = 0.4f;
     [Tooltip("Enable fallback radius pickup (in addition to trigger collision).")]
@@ -26,7 +29,6 @@ public class CollectiblePickup : MonoBehaviour
     [Range(0f, 1f)] public float pickupAudioVolume = 1f;
 
     private bool _collected;
-    private bool _rewardApplied;
     private float _canCollectAt;
 
     private void Awake()
@@ -41,6 +43,8 @@ public class CollectiblePickup : MonoBehaviour
 
         if (Time.time < _canCollectAt)
             return;
+        if (GameStartFlow.Instance != null && !GameStartFlow.CanCollectLoot)
+            return;
 
         var player = other.GetComponentInParent<PlayerLaneMovement>();
         if (player == null)
@@ -52,6 +56,8 @@ public class CollectiblePickup : MonoBehaviour
     private void Update()
     {
         if (_collected || Time.time < _canCollectAt || !useProximityPickup)
+            return;
+        if (GameStartFlow.Instance != null && !GameStartFlow.CanCollectLoot)
             return;
 
         float sqrRadius = pickupRadius * pickupRadius;
@@ -75,29 +81,24 @@ public class CollectiblePickup : MonoBehaviour
         if (_collected)
             return;
 
-        _collected = true;
-        Destroy(gameObject);
-    }
-
-    private void OnDestroy()
-    {
-        // Only reward on intentional collected despawn, not generic cleanup/despawn.
-        if (!_collected || _rewardApplied)
-            return;
-
-        _rewardApplied = true;
         int awardValue = Mathf.Max(1, value);
-        RuntimeCollectedValue += awardValue;
-        
+        var flow = GameStartFlow.Instance;
+        if (flow != null && !flow.RegisterLoot(awardValue))
+            return; // run not active: leave the item where it is, score nothing
+
+        _collected = true;
+        RuntimeCollectedValue = flow != null ? flow.LootValue : RuntimeCollectedValue + awardValue;
+
         if (pickupAudio != null)
             AudioSource.PlayClipAtPoint(pickupAudio, transform.position, pickupAudioVolume);
-        
-        // Trigger alert showing loot gained.
+
         var hud = FindFirstObjectByType<HUDController>();
         if (hud != null)
-            hud.ShowAlert($"+{awardValue}");
-        
+            hud.ShowAlert(awardValue >= 5 ? $"+{awardValue}  GOLD STACK!" : $"+{awardValue}");
+
         onCollected?.Invoke();
+        Collected?.Invoke(this);
+        Destroy(gameObject);
     }
 
     public static void EnsureSetup(GameObject go, int fallbackValue)

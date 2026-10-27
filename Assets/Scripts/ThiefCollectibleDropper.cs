@@ -63,6 +63,10 @@ public class ThiefCollectibleDropper : MonoBehaviour
 
     private void Update()
     {
+        // Only advance during an active run (Playing or AJ rescue window).
+        if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
+            return;
+
         if (Time.time < _nextDropAt)
             return;
 

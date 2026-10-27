@@ -42,6 +42,10 @@ public class PlayerLaneMovement : MonoBehaviour
 
     void Update()
     {
+        // Only advance during an active run (Playing or AJ rescue window).
+        if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
+            return;
+
         HandleInput();
         
         // Auto-move forward so the runner/prototype advances without player input.

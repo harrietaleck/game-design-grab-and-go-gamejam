@@ -56,6 +56,8 @@ public class AIThiefLaneDodge : MonoBehaviour
     {
         if (_caught)
             return;
+        if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
+            return;
 
         if (moveForward)
             transform.position += new Vector3(0f, 0f, forwardSpeed * Time.deltaTime);

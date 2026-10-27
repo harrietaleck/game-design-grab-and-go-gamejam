@@ -21,6 +21,9 @@ public class LaneObstacle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
+            return;
+
         // Treat the handler as "the player" by checking for PlayerLaneMovement.
         // This avoids relying on tags that may not be set yet.
         var handlerMovement = other.GetComponentInParent<PlayerLaneMovement>();
@@ -47,11 +50,14 @@ public class LaneObstacle : MonoBehaviour
             if (disableHandlerMovementOnHit)
                 handlerMovement.enabled = false;
             
-            // Apply health damage and show alert.
+            // Apply health damage (single source of truth) and show alert.
+            var flow = GameStartFlow.Instance;
+            if (flow != null)
+                flow.ApplyClaireDamage(healthDamage);
             var hud = FindFirstObjectByType<HUDController>();
             if (hud != null)
             {
-                hud.AddHealth(-healthDamage);
+                if (flow == null) hud.AddHealth(-healthDamage);
                 hud.ShowAlert("WATCH OUT!");
             }
         }
