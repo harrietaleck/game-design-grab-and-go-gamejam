@@ -34,6 +34,15 @@ public class LaneObstacle : MonoBehaviour
             if (aiMovement == null)
                 return;
 
+            // Just rescued: AJ barges through instead of being caught again immediately.
+            if (aiMovement.IsInvulnerable)
+            {
+                onHit?.Invoke();
+                if (destroyOnHit)
+                    Destroy(gameObject);
+                return;
+            }
+
             if (allowAIEmergencyDodgeOnContact && aiMovement.TryEmergencyDodgeFromContact())
             {
                 // AI found a safe lane — still clear the obstacle if you want one-touch feedback.

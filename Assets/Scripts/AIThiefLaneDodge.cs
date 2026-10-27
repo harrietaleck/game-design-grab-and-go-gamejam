@@ -44,6 +44,19 @@ public class AIThiefLaneDodge : MonoBehaviour
     [Tooltip("Extra lateral lerp speed when dodging from urgent zone or after a bump.")]
     public float emergencyLaneMoveMultiplier = 2.5f;
 
+    [Header("Smarter Dodging (Task 2.3)")]
+    [Tooltip("After a planned (non-urgent) lane change, stay at least this long before planning another. Stops lane flip-flopping.")]
+    public float minLaneHoldSeconds = 0.6f;
+    [Tooltip("When crossing several lanes, the lanes in between must be clear for this distance ahead.")]
+    public float crossingCheckZ = 6f;
+    [Tooltip("Minimum seconds between AJ near-miss events (for pressure/dialogue).")]
+    public float nearMissEventCooldown = 2.5f;
+    public bool debugDecisions = false;
+
+    [Header("Recovery After Rescue")]
+    [Tooltip("Forward speed multiplier while AJ regains his lead after being rescued.")]
+    public float recoverySpeedMultiplier = 1.6f;
+
     private int _currentLane = 1;
     private float _nextDecisionTime;
     private bool _caught;
@@ -58,6 +71,15 @@ public class AIThiefLaneDodge : MonoBehaviour
     public int CurrentLane => _currentLane;
 
     private float _emergencyLaneBoostUntil;
+    private float _laneHoldUntil;
+    private float _nextNearMissEventAt;
+    private float _invulnerableUntil;
+    private Transform _recoveryTarget;
+    private float _recoveryGap;
+
+    /// <summary>True briefly after a rescue: obstacles AJ touches are cleared instead of catching him.</summary>
+    public bool IsInvulnerable => Time.time < _invulnerableUntil;
+    public bool IsRecovering => _recoveryTarget != null;
 
     private void Awake()
     {
@@ -91,11 +113,14 @@ public class AIThiefLaneDodge : MonoBehaviour
             return;
 
         if (moveForward)
-            transform.position += new Vector3(0f, 0f, forwardSpeed * Time.deltaTime);
+            transform.position += new Vector3(0f, 0f, CurrentForwardSpeed() * Time.deltaTime);
 
-        // Urgent: obstacle very close ahead in current lane — dodge immediately (no cooldown, no random skip).
+        // Urgent: obstacle very close ahead in current lane - dodge immediately (no cooldown, no random skip).
         if (IsLaneBlocked(_currentLane, urgentLookAheadZ))
-            TryPickSafeLane(urgent: true);
+        {
+            if (TryPickSafeLane(urgent: true))
+                RaiseNearMiss("urgent dodge");
+        }
 
         // Normal planning: decide occasionally to avoid lane jitter.
         if (Time.time >= _nextDecisionTime)
@@ -109,29 +134,107 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     private void DecideAndSetLane()
     {
+        if (Time.time < _laneHoldUntil)
+            return;
+
         // If we randomly decide to "hesitate", skip this turn sometimes.
         if (Random.value < dodgeRandomness)
             return;
 
-        int bestLane = _currentLane;
-
-        bool currentLaneBlocked = IsLaneBlocked(_currentLane, lookAheadZ);
-        if (!currentLaneBlocked)
+        if (!IsLaneBlocked(_currentLane, lookAheadZ))
             return;
 
-        // Try to find the closest safe lane.
-        int[] laneOrder = GetLaneOrderByDistance(_currentLane);
-        for (int i = 0; i < laneOrder.Length; i++)
+        int best = PickBestLane(lookAheadZ);
+        if (best >= 0 && best != _currentLane)
         {
-            int laneIndex = laneOrder[i];
-            if (!IsLaneBlocked(laneIndex, lookAheadZ))
+            if (debugDecisions) Debug.Log($"[AJ] Planned dodge {_currentLane} -> {best}");
+            _currentLane = best;
+            _laneHoldUntil = Time.time + minLaneHoldSeconds;
+        }
+    }
+
+    /// <summary>
+    /// Nearest clear lane that can also be reached safely (lanes crossed on the way are clear).
+    /// Ties between equally near lanes go to the one with more open road ahead. Returns -1 if none.
+    /// </summary>
+    private int PickBestLane(float range)
+    {
+        int[] order = GetLaneOrderByDistance(_currentLane);
+        int best = -1;
+        int bestDistance = int.MaxValue;
+        float bestClearance = -1f;
+        for (int i = 0; i < order.Length; i++)
+        {
+            int lane = order[i];
+            int distance = Mathf.Abs(lane - _currentLane);
+            if (best >= 0 && distance > bestDistance)
+                break; // order is sorted by distance; nothing nearer remains
+            if (IsLaneBlocked(lane, range) || !IsCrossingClear(_currentLane, lane))
+                continue;
+            float clearance = ClearanceAhead(lane, lookAheadZ * 1.5f);
+            if (best < 0 || clearance > bestClearance)
             {
-                bestLane = laneIndex;
-                break;
+                best = lane;
+                bestDistance = distance;
+                bestClearance = clearance;
             }
         }
+        return best;
+    }
 
-        _currentLane = bestLane;
+    private bool IsCrossingClear(int fromLane, int toLane)
+    {
+        int step = toLane > fromLane ? 1 : -1;
+        for (int lane = fromLane + step; lane != toLane; lane += step)
+        {
+            if (IsLaneBlocked(lane, crossingCheckZ))
+                return false;
+        }
+        return true;
+    }
+
+    /// <summary>Distance to the nearest obstacle ahead in a lane (or maxRange if none).</summary>
+    private float ClearanceAhead(int laneIndex, float maxRange)
+    {
+        float x = GetLaneX(laneIndex);
+        var center = new Vector3(x, transform.position.y, transform.position.z + maxRange * 0.5f);
+        var hits = Physics.OverlapBox(center, new Vector3(laneCheckRadiusX, 1.5f, maxRange * 0.5f), Quaternion.identity, ~0, QueryTriggerInteraction.Collide);
+        float nearest = maxRange;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i] == null || hits[i].GetComponentInParent<LaneObstacle>() == null) continue;
+            float dz = hits[i].bounds.min.z - transform.position.z;
+            if (dz >= 0f && dz < nearest) nearest = dz;
+        }
+        return nearest;
+    }
+
+    private void RaiseNearMiss(string detail)
+    {
+        if (Time.time < _nextNearMissEventAt) return;
+        _nextNearMissEventAt = Time.time + nearMissEventCooldown;
+        GameEvents.Raise(GameEventType.AJNearMiss, 0, detail);
+    }
+
+    private float CurrentForwardSpeed()
+    {
+        if (_recoveryTarget == null)
+            return forwardSpeed;
+        float gap = transform.position.z - _recoveryTarget.position.z;
+        if (gap >= _recoveryGap)
+        {
+            _recoveryTarget = null; // lead restored
+            return forwardSpeed;
+        }
+        return forwardSpeed * Mathf.Max(1f, recoverySpeedMultiplier);
+    }
+
+    /// <summary>After a rescue: run faster until AJ is 'gap' units ahead of 'claire', and ignore obstacles for a moment.</summary>
+    public void BeginRecovery(Transform claire, float gap, float invulnerableSeconds)
+    {
+        _recoveryTarget = claire;
+        _recoveryGap = Mathf.Max(0f, gap);
+        _invulnerableUntil = Time.time + Mathf.Max(0f, invulnerableSeconds);
     }
 
     /// <summary>
@@ -144,28 +247,30 @@ public class AIThiefLaneDodge : MonoBehaviour
 
         bool moved = TryPickSafeLane(urgent: true);
         if (moved)
+        {
             _emergencyLaneBoostUntil = Time.time + 0.35f;
+            RaiseNearMiss("emergency dodge");
+        }
         return moved;
     }
 
     private bool TryPickSafeLane(bool urgent)
     {
         float range = urgent ? urgentLookAheadZ : lookAheadZ;
-        int[] laneOrder = GetLaneOrderByDistance(_currentLane);
-        for (int i = 0; i < laneOrder.Length; i++)
+        if (!IsLaneBlocked(_currentLane, range))
+            return true;
+
+        int best = PickBestLane(range);
+        if (best < 0)
+            return false;
+        if (best != _currentLane)
         {
-            int laneIndex = laneOrder[i];
-            if (!IsLaneBlocked(laneIndex, range))
-            {
-                if (laneIndex != _currentLane)
-                {
-                    _currentLane = laneIndex;
-                    _nextDecisionTime = Time.time + decisionCooldown;
-                }
-                return true;
-            }
+            if (debugDecisions) Debug.Log($"[AJ] {(urgent ? "Urgent" : "Planned")} dodge {_currentLane} -> {best}");
+            _currentLane = best;
+            _nextDecisionTime = Time.time + decisionCooldown;
+            _laneHoldUntil = Time.time + minLaneHoldSeconds;
         }
-        return false;
+        return true;
     }
 
     private void MoveToLaneX()
@@ -258,6 +363,7 @@ public class AIThiefLaneDodge : MonoBehaviour
         if (_caught)
             return;
         _caught = true;
+        _recoveryTarget = null;
         Caught?.Invoke(this, cause);
 
         var flow = GameStartFlow.Instance;
