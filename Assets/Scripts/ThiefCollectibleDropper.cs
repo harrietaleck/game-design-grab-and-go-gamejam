@@ -47,11 +47,13 @@ public class ThiefCollectibleDropper : MonoBehaviour
     public float pickupDelaySeconds = 0.25f;
 
     private float _nextDropAt;
+    private AIThiefLaneDodge _thief;
     private Collider[] _thiefColliders;
 
     private void Awake()
     {
         _thiefColliders = GetComponentsInChildren<Collider>(includeInactive: false);
+        _thief = GetComponent<AIThiefLaneDodge>();
         if (playerTransform == null)
         {
             var player = FindFirstObjectByType<PlayerLaneMovement>();
@@ -67,6 +69,12 @@ public class ThiefCollectibleDropper : MonoBehaviour
         if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
             return;
 
+        // A caught AJ drops nothing (Task 1.6). Push the next drop back so he doesn't burst-drop on release.
+        if (_thief != null && _thief.IsCaught)
+        {
+            _nextDropAt = Mathf.Max(_nextDropAt, Time.time + minDropInterval);
+            return;
+        }
         if (Time.time < _nextDropAt)
             return;
 

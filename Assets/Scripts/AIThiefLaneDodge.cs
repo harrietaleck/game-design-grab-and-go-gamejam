@@ -44,6 +44,13 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     public bool IsCaught => _caught;
 
+    /// <summary>Raised once each time AJ becomes caught. The string is the cause ("obstacle", "police").</summary>
+    public event System.Action<AIThiefLaneDodge, string> Caught;
+    /// <summary>Raised when AJ is released (rescued).</summary>
+    public event System.Action<AIThiefLaneDodge> Released;
+
+    public int CurrentLane => _currentLane;
+
     private float _emergencyLaneBoostUntil;
 
     private void Start()
@@ -213,10 +220,35 @@ public class AIThiefLaneDodge : MonoBehaviour
         return LaneMath.GetNearestLaneIndex(x, laneCount, laneDistance, laneCenterX);
     }
 
+    /// <summary>Kept for compatibility (called by LaneObstacle when no escape lane exists).</summary>
     public void OnHitObstacle()
     {
+        SetCaught("obstacle");
+    }
+
+    /// <summary>
+    /// Stops AJ's movement (and, via ThiefCollectibleDropper, his loot drops) and informs the run controller once.
+    /// </summary>
+    public void SetCaught(string cause)
+    {
+        if (_caught)
+            return;
         _caught = true;
-        // Optionally you could trigger animation/state here.
+        Caught?.Invoke(this, cause);
+
+        var flow = GameStartFlow.Instance;
+        if (flow != null && flow.EnterAJCaught())
+            GameEvents.Raise(GameEventType.AJCaught, 0, cause);
+    }
+
+    /// <summary>Frees AJ (used by the rescue system). Snaps him back to the nearest lane.</summary>
+    public void Release()
+    {
+        if (!_caught)
+            return;
+        _caught = false;
+        _currentLane = GetNearestLaneIndex(transform.position.x);
+        _nextDecisionTime = Time.time + decisionCooldown;
+        Released?.Invoke(this);
     }
 }
-
