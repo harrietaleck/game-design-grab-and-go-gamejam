@@ -29,6 +29,9 @@ public class AudioDirector : MonoBehaviour
     public float pitchMax = 1.05f;
 
     private float _nextGameplayAt;
+    private float _ambienceBaseVolume = 0.3f;
+    private float _ambienceDuck = 1f;
+    private float _ambienceDuckTarget = 1f;
     private int _lastAmbienceIndex = -1;
     private int _lastGameplayIndex = -1;
 
@@ -42,8 +45,20 @@ public class AudioDirector : MonoBehaviour
             PlayRandomAmbience();
     }
 
+    /// <summary>Smoothly scales ambience volume (1 = normal). Used to duck the city while AJ is on the radio.</summary>
+    public void SetAmbienceDuck(float multiplier)
+    {
+        _ambienceDuckTarget = Mathf.Clamp01(multiplier);
+    }
+
     private void Update()
     {
+        if (!Mathf.Approximately(_ambienceDuck, _ambienceDuckTarget))
+        {
+            _ambienceDuck = Mathf.MoveTowards(_ambienceDuck, _ambienceDuckTarget, Time.unscaledDeltaTime * 2f);
+            if (ambienceSource != null) ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck;
+        }
+
         // Keep ambience continuous with no random start delay/gaps.
         if (playAmbienceRandom && ambienceSource != null && !ambienceSource.isPlaying)
         {
@@ -70,7 +85,8 @@ public class AudioDirector : MonoBehaviour
         _lastAmbienceIndex = index;
         ambienceSource.pitch = Random.Range(Mathf.Min(pitchMin, pitchMax), Mathf.Max(pitchMin, pitchMax));
         ambienceSource.clip = clip;
-        ambienceSource.volume = Random.Range(Mathf.Min(ambienceVolumeMin, ambienceVolumeMax), Mathf.Max(ambienceVolumeMin, ambienceVolumeMax));
+        _ambienceBaseVolume = Random.Range(Mathf.Min(ambienceVolumeMin, ambienceVolumeMax), Mathf.Max(ambienceVolumeMin, ambienceVolumeMax));
+        ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck;
         ambienceSource.Play();
     }
 
