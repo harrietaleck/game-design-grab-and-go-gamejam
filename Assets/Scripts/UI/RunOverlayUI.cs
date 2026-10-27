@@ -103,7 +103,14 @@ public class RunOverlayUI : MonoBehaviour
         _pausePanel.transform.SetAsLastSibling();
 
         if (newState == GameStartFlow.RunState.Results)
-            ShowResults();
+            StartCoroutine(ShowResultsNextFrame());
+    }
+
+    // Wait one frame so every RunEnded listener (e.g. personal bests) has finished first.
+    private System.Collections.IEnumerator ShowResultsNextFrame()
+    {
+        yield return null;
+        ShowResults();
     }
 
     private void ShowResults()
