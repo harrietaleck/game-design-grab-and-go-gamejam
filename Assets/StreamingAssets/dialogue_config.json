@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "endpoint": "http://127.0.0.1:8787/dialogue",
+  "clientToken": "",
+  "timeoutSeconds": 4,
+  "verboseLogging": true
+}

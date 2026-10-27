@@ -1,0 +1,14 @@
+{
+  "name": "grabgo-dialogue-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Server-side LLM dialogue proxy for Grab & Go: Loot on the Run (keeps API keys out of the game build).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
