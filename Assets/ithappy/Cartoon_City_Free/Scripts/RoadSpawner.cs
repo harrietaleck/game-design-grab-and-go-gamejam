@@ -47,6 +47,24 @@ public class RoadSpawner : MonoBehaviour
     [Range(0f, 1f)]
     public float emptyRowChance = 0.22f;
 
+    [Header("Fairness (Task 2.1)")]
+    [Tooltip("No obstacles are placed before this world Z, so the run (and AJ) get a clean start.")]
+    public float safeStartZ = 40f;
+    [Tooltip("Every row keeps at least one free lane that is reachable from a free lane of the previous row by moving at most this many lanes.")]
+    [Range(1, 3)] public int maxLaneShiftBetweenRows = 1;
+    [Tooltip("Log rejected/reshuffled rows to the Console.")]
+    public bool debugFairness = false;
+
+    [Header("Difficulty Curve (Task 2.2)")]
+    [Tooltip("When on, row density ramps up over the run instead of using the fixed alternating / chance settings above.")]
+    public bool useDifficultyCurve = true;
+    [Range(0f, 1f)] public float emptyRowChanceStart = 0.35f;
+    [Range(0f, 1f)] public float emptyRowChanceEnd = 0.12f;
+    [Range(0f, 1f)] public float twoObstacleChanceStart = 0.2f;
+    [Range(0f, 1f)] public float twoObstacleChanceEnd = 0.65f;
+    [Tooltip("Maps run progress (0..1) to difficulty (0..1).")]
+    public AnimationCurve difficultyCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
     [Header("Obstacle Prefabs (multiple)")]
     [Tooltip("If set (size > 0), the spawner will randomly pick one prefab from this list for each obstacle instance.")]
     public GameObject[] obstaclePrefabs;
@@ -85,6 +103,8 @@ public class RoadSpawner : MonoBehaviour
     private float nextSpawnZ = 0f;
     private readonly System.Collections.Generic.List<GameObject> _spawnedTiles = new();
     private int _nextRowObstacleCount = 1;
+    private bool[] _prevRowFree;          // free lanes of the last placed row (null = all free)
+    private float _assumedForwardSpeed = 6f;
 
     void Start()
     {
@@ -97,6 +117,8 @@ public class RoadSpawner : MonoBehaviour
         // If no handler is set, just behave like the original prototype.
         laneCount = LaneMath.ClampLaneCount(laneCount);
         _nextRowObstacleCount = oneThenTwoAlternating ? 1 : 1;
+        if (handlerTransform != null && handlerTransform.TryGetComponent<PlayerLaneMovement>(out var mover))
+            _assumedForwardSpeed = Mathf.Max(0.1f, mover.forwardSpeed);
         for (int i = 0; i < initialTiles; i++)
             SpawnTile();
     }
@@ -169,14 +191,27 @@ public class RoadSpawner : MonoBehaviour
         if (laneCount < 1)
             return;
 
-        if (Random.value < emptyRowChance)
-            return;
-
         float obstacleZ = tileStartZ + tileLength * obstacleZWithinTile;
 
-        // Decide row obstacle count (1 or 2 only).
-        int obstacleCount = 1;
-        if (oneThenTwoAlternating)
+        // Fair start: nothing before safeStartZ.
+        if (obstacleZ < safeStartZ)
+            return;
+
+        float difficulty = EstimateDifficulty(obstacleZ);
+        float emptyChance = useDifficultyCurve ? Mathf.Lerp(emptyRowChanceStart, emptyRowChanceEnd, difficulty) : emptyRowChance;
+        if (Random.value < emptyChance)
+        {
+            _prevRowFree = null; // empty row: every lane is free again
+            return;
+        }
+
+        int obstacleCount;
+        if (useDifficultyCurve)
+        {
+            float twoChance = Mathf.Lerp(twoObstacleChanceStart, twoObstacleChanceEnd, difficulty);
+            obstacleCount = Random.value < twoChance ? 2 : 1;
+        }
+        else if (oneThenTwoAlternating)
         {
             obstacleCount = Mathf.Clamp(_nextRowObstacleCount, 1, 2);
             _nextRowObstacleCount = obstacleCount == 1 ? 2 : 1;
@@ -186,21 +221,79 @@ public class RoadSpawner : MonoBehaviour
             obstacleCount = Random.value < twoObstacleRowChance ? 2 : 1;
         }
 
-        // Pick distinct random lanes.
+        // Never block every lane.
+        obstacleCount = Mathf.Clamp(obstacleCount, 1, Mathf.Max(1, laneCount - 1));
+
         int[] laneIndices = new int[laneCount];
-        for (int i = 0; i < laneCount; i++)
-            laneIndices[i] = i;
-        ShuffleInPlace(laneIndices);
-
-        int lanesToUse = Mathf.Clamp(obstacleCount, 1, laneCount);
-        for (int i = 0; i < lanesToUse; i++)
+        bool[] free = null;
+        for (int count = obstacleCount; count >= 1 && free == null; count--)
         {
-            int laneIndex = laneIndices[i];
+            for (int attempt = 0; attempt < 12; attempt++)
+            {
+                for (int i = 0; i < laneCount; i++)
+                    laneIndices[i] = i;
+                ShuffleInPlace(laneIndices);
 
-            float x = LaneMath.GetLaneX(laneIndex, laneCount, laneDistance, laneCenterX);
-            var pos = new Vector3(x, obstacleY, obstacleZ);
-            CreateAndSetupObstacle(pos, tileParent);
+                var candidate = new bool[laneCount];
+                for (int i = 0; i < laneCount; i++) candidate[i] = true;
+                for (int i = 0; i < count; i++) candidate[laneIndices[i]] = false;
+
+                if (IsReachable(candidate))
+                {
+                    free = candidate;
+                    obstacleCount = count;
+                    break;
+                }
+                if (debugFairness)
+                    Debug.Log($"[RoadSpawner] Rejected unfair row at z={obstacleZ:0} (count {count}, attempt {attempt}).");
+            }
         }
+
+        if (free == null)
+        {
+            // No fair layout found: leave the row empty.
+            _prevRowFree = null;
+            return;
+        }
+
+        for (int lane = 0; lane < laneCount; lane++)
+        {
+            if (free[lane]) continue;
+            float x = LaneMath.GetLaneX(lane, laneCount, laneDistance, laneCenterX);
+            CreateAndSetupObstacle(new Vector3(x, obstacleY, obstacleZ), tileParent);
+        }
+        _prevRowFree = free;
+    }
+
+    /// <summary>True if some free lane in this row is within maxLaneShiftBetweenRows of a free lane in the previous row.</summary>
+    private bool IsReachable(bool[] rowFree)
+    {
+        if (_prevRowFree == null || _prevRowFree.Length != rowFree.Length)
+            return true;
+        for (int lane = 0; lane < rowFree.Length; lane++)
+        {
+            if (!rowFree[lane]) continue;
+            for (int prev = 0; prev < _prevRowFree.Length; prev++)
+            {
+                if (_prevRowFree[prev] && Mathf.Abs(prev - lane) <= maxLaneShiftBetweenRows)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Difficulty (0..1) for a row at world Z. Rows are generated well ahead of Claire, so this estimates
+    /// the run progress at the moment she will actually reach the row.
+    /// </summary>
+    private float EstimateDifficulty(float rowZ)
+    {
+        var flow = GameStartFlow.Instance;
+        if (flow == null || handlerTransform == null)
+            return 0f;
+        float secondsUntilReached = Mathf.Max(0f, rowZ - handlerTransform.position.z) / _assumedForwardSpeed;
+        float progress = Mathf.Clamp01((flow.TimeSurvived + secondsUntilReached) / flow.RunDuration);
+        return Mathf.Clamp01(difficultyCurve != null ? difficultyCurve.Evaluate(progress) : progress);
     }
 
     private static void ShuffleInPlace(int[] array)
