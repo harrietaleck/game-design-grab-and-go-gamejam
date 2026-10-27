@@ -3,11 +3,14 @@ using UnityEngine;
 public class PlayerLaneMovement : MonoBehaviour
 {
     [Header("Lane Settings")]
+    [Tooltip("Use the project-wide lane settings in LaneMath (4 lanes, 3.0 apart, centre X 0). Turn off only to experiment with per-object values.")]
+    public bool useSharedLaneSettings = true;
+
     [Tooltip("Number of playable lanes.")]
     public int laneCount = 4;
 
     [Tooltip("Distance between lane centers.")]
-    public float laneDistance = 2.5f;
+    public float laneDistance = LaneMath.SharedLaneDistance;
 
     [Tooltip("World X center of the road lanes.")]
     public float laneCenterX = 0f;
@@ -27,6 +30,16 @@ public class PlayerLaneMovement : MonoBehaviour
 
     private int currentLane;
     private Vector3 targetPosition;
+
+    void Awake()
+    {
+        if (useSharedLaneSettings)
+        {
+            laneCount = LaneMath.SharedLaneCount;
+            laneDistance = LaneMath.SharedLaneDistance;
+            laneCenterX = LaneMath.SharedLaneCenterX;
+        }
+    }
 
     void Start()
     {

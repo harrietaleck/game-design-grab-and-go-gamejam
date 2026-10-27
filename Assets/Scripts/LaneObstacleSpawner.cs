@@ -8,8 +8,11 @@ public class LaneObstacleSpawner : MonoBehaviour
     public Transform handlerTransform;
 
     [Header("Lane Setup")]
+    [Tooltip("Use the project-wide lane settings in LaneMath (4 lanes, 3.0 apart, centre X 0). Turn off only to experiment with per-object values.")]
+    public bool useSharedLaneSettings = true;
+
     [Tooltip("X distance between lanes (should match PlayerLaneMovement.laneDistance).")]
-    public float laneDistance = 2.5f;
+    public float laneDistance = LaneMath.SharedLaneDistance;
 
     [Tooltip("World X position of the middle lane.")]
     public float laneCenterX = 0f;
@@ -47,6 +50,12 @@ public class LaneObstacleSpawner : MonoBehaviour
 
     private void Start()
     {
+        if (useSharedLaneSettings)
+        {
+            laneCount = LaneMath.SharedLaneCount;
+            laneDistance = LaneMath.SharedLaneDistance;
+            laneCenterX = LaneMath.SharedLaneCenterX;
+        }
         laneCount = LaneMath.ClampLaneCount(laneCount);
         _nextSpawnTime = Time.time + 0.25f;
     }

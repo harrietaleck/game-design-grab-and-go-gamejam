@@ -51,8 +51,11 @@ public class RoadSpawner : MonoBehaviour
     [Tooltip("If set (size > 0), the spawner will randomly pick one prefab from this list for each obstacle instance.")]
     public GameObject[] obstaclePrefabs;
 
+    [Tooltip("Use the project-wide lane settings in LaneMath (4 lanes, 3.0 apart, centre X 0). Turn off only to experiment with per-object values.")]
+    public bool useSharedLaneSettings = true;
+
     [Tooltip("X distance between lanes.")]
-    public float laneDistance = 2.5f;
+    public float laneDistance = LaneMath.SharedLaneDistance;
 
     [Tooltip("World X position of the middle lane.")]
     public float laneCenterX = 0f;
@@ -85,6 +88,12 @@ public class RoadSpawner : MonoBehaviour
 
     void Start()
     {
+        if (useSharedLaneSettings)
+        {
+            laneCount = LaneMath.SharedLaneCount;
+            laneDistance = LaneMath.SharedLaneDistance;
+            laneCenterX = LaneMath.SharedLaneCenterX;
+        }
         // If no handler is set, just behave like the original prototype.
         laneCount = LaneMath.ClampLaneCount(laneCount);
         _nextRowObstacleCount = oneThenTwoAlternating ? 1 : 1;

@@ -6,8 +6,11 @@ using UnityEngine;
 public class AIThiefLaneDodge : MonoBehaviour
 {
     [Header("Lane Setup")]
+    [Tooltip("Use the project-wide lane settings in LaneMath (4 lanes, 3.0 apart, centre X 0). Turn off only to experiment with per-object values.")]
+    public bool useSharedLaneSettings = true;
+
     public int laneCount = 4;
-    public float laneDistance = 2.5f;
+    public float laneDistance = LaneMath.SharedLaneDistance;
     public float laneCenterX = 0f;
 
     [Header("Movement")]
@@ -52,6 +55,16 @@ public class AIThiefLaneDodge : MonoBehaviour
     public int CurrentLane => _currentLane;
 
     private float _emergencyLaneBoostUntil;
+
+    private void Awake()
+    {
+        if (useSharedLaneSettings)
+        {
+            laneCount = LaneMath.SharedLaneCount;
+            laneDistance = LaneMath.SharedLaneDistance;
+            laneCenterX = LaneMath.SharedLaneCenterX;
+        }
+    }
 
     private void Start()
     {
