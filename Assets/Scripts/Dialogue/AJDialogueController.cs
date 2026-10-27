@@ -293,6 +293,7 @@ public class AJDialogueController : MonoBehaviour
     private void Speak(GameEventType type, string line, Priority priority)
     {
         if (string.IsNullOrEmpty(line) || UI == null) return;
+        UI.DockTop(_flow != null && _flow.State == GameStartFlow.RunState.Results);
         UI.Show(personality != null ? personality.characterName : "AJ", line);
         _showingPriority = priority;
         _lastSpokeAt = Time.unscaledTime;

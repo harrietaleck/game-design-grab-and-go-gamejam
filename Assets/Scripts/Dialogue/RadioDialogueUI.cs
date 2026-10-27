@@ -56,6 +56,14 @@ public class RadioDialogueUI : MonoBehaviour
         _audio = FindFirstObjectByType<AudioDirector>();
     }
 
+    /// <summary>Moves the box to the top of the screen (used on the results screen so it never covers buttons).</summary>
+    public void DockTop(bool top)
+    {
+        if (_root == null) return;
+        var rt = (RectTransform)_root.transform;
+        RuntimeUI.Place(rt, top ? new Vector2(0.5f, 1f) : new Vector2(0.5f, 0f), rt.sizeDelta, top ? new Vector2(0f, -30f) : new Vector2(0f, 120f));
+    }
+
     public void Show(string speaker, string line)
     {
         if (_root == null || string.IsNullOrEmpty(line)) return;
