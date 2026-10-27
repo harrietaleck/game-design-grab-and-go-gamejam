@@ -90,20 +90,19 @@ public class RunOverlayUI : MonoBehaviour
         _resultsPanel = dim.gameObject;
 
         var card = RuntimeUI.CreatePanel(dim.transform, "Card", RuntimeUI.PanelDark);
-        RuntimeUI.Place(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(760f, 760f), Vector2.zero);
+        RuntimeUI.Place(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1000f, 1080f), Vector2.zero);
 
-        _resultsTitle = RuntimeUI.CreateText(card.transform, "Title", "GETAWAY", 64f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(_resultsTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(720f, 90f), new Vector2(0f, -30f));
+        _resultsTitle = RuntimeUI.CreateText(card.transform, "Title", "GETAWAY", 56f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
+        RuntimeUI.Place(_resultsTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(960f, 90f), new Vector2(0f, -30f));
 
-        _resultsReason = RuntimeUI.CreateText(card.transform, "Reason", "", 30f, TextAlignmentOptions.Center, Color.white);
-        RuntimeUI.Place(_resultsReason.rectTransform, new Vector2(0.5f, 1f), new Vector2(700f, 80f), new Vector2(0f, -120f));
+        _resultsReason = RuntimeUI.CreateText(card.transform, "Reason", "", 28f, TextAlignmentOptions.Center, Color.white);
+        RuntimeUI.Place(_resultsReason.rectTransform, new Vector2(0.5f, 1f), new Vector2(940f, 100f), new Vector2(0f, -130f));
 
-        _resultsStats = RuntimeUI.CreateText(card.transform, "Stats", "", 32f, TextAlignmentOptions.Left, Color.white);
-        RuntimeUI.Place(_resultsStats.rectTransform, new Vector2(0.5f, 1f), new Vector2(560f, 330f), new Vector2(0f, -210f));
-        _resultsStats.lineSpacing = 8f;
+        _resultsStats = RuntimeUI.CreateText(card.transform, "Stats", "", 30f, TextAlignmentOptions.TopLeft, Color.white);
+        RuntimeUI.Place(_resultsStats.rectTransform, new Vector2(0.5f, 1f), new Vector2(600f, 520f), new Vector2(0f, -250f));
 
         _resultsExtra = RuntimeUI.CreateText(card.transform, "Extra", "", 26f, TextAlignmentOptions.Center, RuntimeUI.Gold);
-        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 0f), new Vector2(700f, 90f), new Vector2(0f, 135f));
+        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 0f), new Vector2(940f, 120f), new Vector2(0f, 140f));
 
         _retryButton = RuntimeUI.CreateButton(card.transform, "RetryButton", "RETRY  (R)", OnRetry);
         RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(300f, 70f), new Vector2(-165f, 40f));

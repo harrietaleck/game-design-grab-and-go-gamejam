@@ -288,6 +288,11 @@ public class AIThiefLaneDodge : MonoBehaviour
         if (forwardRangeZ <= 0f)
             return false;
 
+        // Police officers standing or jogging in a lane count as blocked (they are not LaneObstacles).
+        var police = PoliceDirector.Instance;
+        if (police != null && police.IsLaneBlockedByPolice(laneIndex, transform.position.z, forwardRangeZ))
+            return true;
+
         float x = GetLaneX(laneIndex);
         float zCenter = transform.position.z + forwardRangeZ * 0.5f;
 

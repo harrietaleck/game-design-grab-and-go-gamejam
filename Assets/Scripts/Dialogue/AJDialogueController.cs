@@ -130,6 +130,7 @@ public class AJDialogueController : MonoBehaviour
             case GameEventType.AJNearMiss: return "AJ_NEAR_MISS";
             case GameEventType.PolicePressureHigh: return "POLICE_PRESSURE_HIGH";
             case GameEventType.DistractionUsed: return "DISTRACTION_USED";
+            case GameEventType.PoliceSpotted: return "POLICE_SPOTTED";
             case GameEventType.AJCaught: return "AJ_CAUGHT";
             case GameEventType.AJRescued: return "AJ_RESCUED";
             case GameEventType.RunWon: return "RUN_WON";
@@ -154,6 +155,7 @@ public class AJDialogueController : MonoBehaviour
             case GameEventType.ClaireCollision:
             case GameEventType.ClaireLowHealth:
             case GameEventType.PolicePressureHigh:
+            case GameEventType.PoliceSpotted:
                 return Priority.High;
             default:
                 return Priority.Critical;
@@ -163,7 +165,7 @@ public class AJDialogueController : MonoBehaviour
     /// <summary>Urgent warnings always use prewritten lines (instant).</summary>
     private static bool IsUrgent(GameEventType t) =>
         t == GameEventType.ClaireCollision || t == GameEventType.AJCaught || t == GameEventType.AJNearMiss ||
-        t == GameEventType.TimeUp || t == GameEventType.PolicePressureHigh;
+        t == GameEventType.TimeUp || t == GameEventType.PolicePressureHigh || t == GameEventType.PoliceSpotted;
 
     /// <summary>Events worth a contextual (LLM) line when budget allows.</summary>
     private static bool IsRemoteCandidate(GameEventType t) =>

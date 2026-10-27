@@ -59,6 +59,12 @@ public static class DialogueFallbackLibrary
             "They're onto us. Maybe hit that distraction?",
             "Heat's rising! Less crashing, more vanishing!",
         },
+        [GameEventType.PoliceSpotted] = new[]
+        {
+            "Cop on your tail, Claire! Switch lanes!",
+            "Behind you! Blue uniform, angry face, move!",
+            "They're coming up behind you. Shake 'em!",
+        },
         [GameEventType.DistractionUsed] = new[]
         {
             "Ha! They're looking the wrong way. Genius. My genius, obviously.",

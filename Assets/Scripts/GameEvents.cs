@@ -24,6 +24,7 @@ public enum GameEventType
     AJNearMiss,
     PolicePressureHigh,
     DistractionUsed,
+    PoliceSpotted,      // first police chaser warning of the run
     AJCaught,
     AJRescued,
     RunWon,

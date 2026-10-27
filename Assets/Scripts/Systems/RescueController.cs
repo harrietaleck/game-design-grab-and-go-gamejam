@@ -88,6 +88,8 @@ public class RescueController : MonoBehaviour
         _windowTotalDistance = Mathf.Max(0.01f, ajPos.z - _claire.transform.position.z);
 
         ClearObstaclesInLane(ajLane, _claire.transform.position.z - 1f, ajPos.z + 3f);
+        if (PoliceDirector.Instance != null)
+            PoliceDirector.Instance.ClearLane(ajLane, _claire.transform.position.z - 1f, ajPos.z + 3f);
 
         if (_flow.hudController != null)
             _flow.hudController.ShowAlert(cause == "police" ? "THE POLICE GRABBED AJ!" : "AJ IS CAUGHT!");

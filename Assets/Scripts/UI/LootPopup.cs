@@ -16,7 +16,7 @@ public class LootPopup : MonoBehaviour
         var popup = go.AddComponent<LootPopup>();
         popup._text = go.AddComponent<TextMeshPro>();
         popup._text.text = value >= 5 ? $"+{value}" : $"+{value}";
-        popup._text.fontSize = value >= 5 ? 9f : 6f;
+        popup._text.fontSize = value >= 5 ? 5f : 3.5f;
         popup._text.alignment = TextAlignmentOptions.Center;
         popup._text.fontStyle = FontStyles.Bold;
         popup._color = value >= 5 ? new Color(1f, 0.8f, 0.2f) : new Color(1f, 0.95f, 0.6f);

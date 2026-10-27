@@ -35,3 +35,8 @@ Status key: **PASS** = checked in the Unity editor (Play Mode) on 27 Oct 2026 ·
 | 28 | Resolutions | Game view 1280x720, 1920x1080, 2560x1440 | HUD readable, nothing overlapping | TODO |
 | 29 | Windows build | Build + run .exe outside editor | Opens on menu, full run, retry works | TODO |
 | 30 | Console clean | After all of the above | No errors or warnings | TODO |
+| 31 | Police officers appear | Play 60 s | Sidewalk officers/interceptors with POLICE tag; AJ steers around them | PASS |
+| 32 | Chaser warning + grab | Stay in lane when POLICE BEHIND shows | Banner + lane marker; grab = -15 health, AJ reacts | PASS |
+| 33 | Officer catches AJ | Let an interceptor reach AJ | AJ caught -> rescue window; officers cleared from his lane | TODO |
+| 34 | Distraction vs police | Space with officers on screen | All officers stop and walk off | TODO |
+| 35 | Results card layout | Finish a run | Title, reason and stats do not overlap | PASS |

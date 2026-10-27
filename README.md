@@ -23,6 +23,10 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
 
 - **Loot:** AJ drops gold coins (+1) and gold coin stacks (+5) behind him. Run over them to collect.
 - **Traffic:** every crash costs Claire 10 of her 100 health and raises **police pressure**.
+- **Police officers:** chasers run up from behind in your lane (a **POLICE BEHIND** banner shows their lane - change lanes),
+  interceptors jog towards you from ahead, and sidewalk officers step into the outer lanes. An officer grab costs Claire 15
+  health; an officer reaching AJ catches him (rescue time). More officers, and more chasers, as police pressure rises.
+  The Distraction Pulse stuns every officer for 3 s.
 - **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
   cools down after 3 calm seconds. At 100 the police grab AJ.
 - **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.
@@ -75,7 +79,7 @@ If the service is off, slow or fails, AJ falls back to prewritten lines instantl
 
 ## Known limitations
 - AJ's voice (text-to-speech) is not implemented yet; dialogue is subtitles + a radio blip. Needs a TTS provider decision.
-- There are no police vehicles or pursuit; police pressure is a HUD meter with audio cues.
+- Police officers are stand-ins built from AJ/Claire rigs (blue uniform tint, cap, POLICE tag) because the project has no police models. Add real ones via a `PoliceSet` asset in `Assets/Resources`. There are no police cars.
 - The LLM backend has been tested in mock mode only (no provider key was used).
 - See `Docs/REGRESSION_CHECKLIST.md` for what has and has not been play-tested.
 
