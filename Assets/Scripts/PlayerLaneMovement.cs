@@ -22,6 +22,9 @@ public class PlayerLaneMovement : MonoBehaviour
     public float moveSpeed = 10f;
 
     [Header("Forward Movement")]
+    [Tooltip("Make this character's Rigidbody kinematic at runtime (it is moved by script, not physics).")]
+    public bool makeRigidbodyKinematic = true;
+
     [Tooltip("When enabled, the handler moves forward automatically along world +Z.")]
     public bool moveForward = true;
 
@@ -33,6 +36,14 @@ public class PlayerLaneMovement : MonoBehaviour
 
     void Awake()
     {
+        // Characters are moved by script, so a dynamic (gravity) Rigidbody fights the transform and can shove
+        // Claire and AJ apart. Kinematic keeps trigger events with obstacles and loot working.
+        if (makeRigidbodyKinematic && TryGetComponent<Rigidbody>(out var body))
+        {
+            body.isKinematic = true;
+            body.useGravity = false;
+            body.interpolation = RigidbodyInterpolation.None;
+        }
         if (useSharedLaneSettings)
         {
             laneCount = LaneMath.SharedLaneCount;

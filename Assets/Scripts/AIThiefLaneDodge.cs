@@ -14,6 +14,9 @@ public class AIThiefLaneDodge : MonoBehaviour
     public float laneCenterX = 0f;
 
     [Header("Movement")]
+    [Tooltip("Make this character's Rigidbody kinematic at runtime (it is moved by script, not physics).")]
+    public bool makeRigidbodyKinematic = true;
+
     [Tooltip("Lateral smoothing speed.")]
     public float laneMoveSpeed = 10f;
 
@@ -58,6 +61,14 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     private void Awake()
     {
+        // Characters are moved by script, so a dynamic (gravity) Rigidbody fights the transform and can shove
+        // Claire and AJ apart. Kinematic keeps trigger events with obstacles and loot working.
+        if (makeRigidbodyKinematic && TryGetComponent<Rigidbody>(out var body))
+        {
+            body.isKinematic = true;
+            body.useGravity = false;
+            body.interpolation = RigidbodyInterpolation.None;
+        }
         if (useSharedLaneSettings)
         {
             laneCount = LaneMath.SharedLaneCount;
