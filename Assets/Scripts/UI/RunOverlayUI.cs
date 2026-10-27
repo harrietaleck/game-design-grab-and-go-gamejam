@@ -35,7 +35,23 @@ public class RunOverlayUI : MonoBehaviour
     private void Awake()
     {
         _flow = GetComponent<GameStartFlow>();
+        MakeCanvasResponsive();
         Build();
+    }
+
+    /// <summary>
+    /// MainScene's canvas used Constant Pixel Size, so the HUD was tiny at 1080p and larger.
+    /// Scale with screen size using the canvas's own 800x600 reference keeps the original layout
+    /// (designed at roughly that size) and makes it readable at every Windows resolution.
+    /// </summary>
+    private void MakeCanvasResponsive()
+    {
+        var scaler = GetComponent<UnityEngine.UI.CanvasScaler>();
+        if (scaler == null) return;
+        scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(800f, 600f);
+        scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight = 0.5f;
     }
 
     private void OnEnable()

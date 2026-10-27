@@ -9,6 +9,14 @@ using UnityEngine.UI;
 /// </summary>
 public static class RuntimeUI
 {
+    /// <summary>
+    /// Runtime UI is authored in 1920x1080 units; the gameplay canvas uses an 800x600 reference
+    /// (see RunOverlayUI.MakeCanvasResponsive), so every size, offset and font is multiplied by this.
+    /// </summary>
+    public const float U = 0.42f;
+    /// <summary>Font multiplier (slightly larger than U so text matches the original 16-24pt HUD fonts).</summary>
+    public const float F = 0.6f;
+
     public static readonly Color PanelDark = new Color(0.03f, 0.05f, 0.12f, 0.88f);
     public static readonly Color Accent = new Color(0.1f, 0.9f, 1f, 1f);
     public static readonly Color Gold = new Color(1f, 0.82f, 0.25f, 1f);
@@ -27,8 +35,8 @@ public static class RuntimeUI
     {
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
-        rt.offsetMin = new Vector2(inset, inset);
-        rt.offsetMax = new Vector2(-inset, -inset);
+        rt.offsetMin = new Vector2(inset, inset) * U;
+        rt.offsetMax = new Vector2(-inset, -inset) * U;
     }
 
     /// <summary>Anchors a fixed-size rect at a normalised anchor point (pivot matches anchor).</summary>
@@ -36,8 +44,8 @@ public static class RuntimeUI
     {
         rt.anchorMin = rt.anchorMax = anchor;
         rt.pivot = anchor;
-        rt.sizeDelta = size;
-        rt.anchoredPosition = offset;
+        rt.sizeDelta = size * U;
+        rt.anchoredPosition = offset * U;
     }
 
     public static Image CreatePanel(Transform parent, string name, Color color)
@@ -55,7 +63,7 @@ public static class RuntimeUI
         var rt = CreateRect(parent, name);
         var tmp = rt.gameObject.AddComponent<TextMeshProUGUI>();
         tmp.text = text;
-        tmp.fontSize = size;
+        tmp.fontSize = size * F;
         tmp.alignment = align;
         tmp.color = color ?? Color.white;
         tmp.fontStyle = style;

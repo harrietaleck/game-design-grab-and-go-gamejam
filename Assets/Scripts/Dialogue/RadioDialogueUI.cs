@@ -32,7 +32,7 @@ public class RadioDialogueUI : MonoBehaviour
         var panel = RuntimeUI.CreatePanel(canvasRoot, "RadioDialogue (runtime)", new Color(0.02f, 0.04f, 0.1f, 0.82f));
         panel.raycastTarget = false;
         // Compact, top-left (under the status text) so it never covers the road or Claire.
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), new Vector2(660f, 132f), new Vector2(20f, -78f));
+        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), new Vector2(900f, 235f), new Vector2(20f, -78f));
         _group = panel.gameObject.AddComponent<CanvasGroup>();
         _group.blocksRaycasts = false;
 
@@ -43,14 +43,14 @@ public class RadioDialogueUI : MonoBehaviour
         stripe.rectTransform.pivot = new Vector2(0f, 0.5f);
         stripe.rectTransform.sizeDelta = new Vector2(8f, 0f);
 
-        _speaker = RuntimeUI.CreateText(panel.transform, "Speaker", "AJ  •  RADIO", 18f, TextAlignmentOptions.Left, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(620f, 24f), new Vector2(20f, -6f));
+        _speaker = RuntimeUI.CreateText(panel.transform, "Speaker", "AJ  •  RADIO", 20f, TextAlignmentOptions.Left, RuntimeUI.Accent, FontStyles.Bold);
+        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(860f, 30f), new Vector2(24f, -8f));
 
-        _line = RuntimeUI.CreateText(panel.transform, "Line", "", 23f, TextAlignmentOptions.TopLeft, Color.white);
-        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(625f, 62f), new Vector2(20f, -30f));
+        _line = RuntimeUI.CreateText(panel.transform, "Line", "", 22f, TextAlignmentOptions.TopLeft, Color.white);
+        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(860f, 118f), new Vector2(24f, -40f));
 
-        _options = RuntimeUI.CreateText(panel.transform, "Options", "", 16f, TextAlignmentOptions.BottomLeft, RuntimeUI.Gold);
-        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(625f, 40f), new Vector2(20f, 6f));
+        _options = RuntimeUI.CreateText(panel.transform, "Options", "", 19f, TextAlignmentOptions.BottomLeft, RuntimeUI.Gold);
+        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(860f, 66f), new Vector2(24f, 8f));
 
         _root = panel.gameObject;
         _root.SetActive(false);
