@@ -92,7 +92,16 @@ public class PoliceDirector : MonoBehaviour
         BuildTemplates();
     }
 
-    private void OnDestroy() { if (Instance == this) Instance = null; }
+    private readonly List<Material> _createdMaterials = new();
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+        // Runtime-created officer materials would otherwise leak on every restart (scene reload).
+        foreach (var m in _createdMaterials) if (m != null) Destroy(m);
+        _createdMaterials.Clear();
+        _uniformCache.Clear();
+    }
     private void OnEnable() => GameEvents.OnEvent += OnGameEvent;
     private void OnDisable() => GameEvents.OnEvent -= OnGameEvent;
 
@@ -106,6 +115,12 @@ public class PoliceDirector : MonoBehaviour
                 break;
             case GameEventType.DistractionUsed:
                 foreach (var o in _officers) if (o != null) o.Stun(distractionStunSeconds);
+                break;
+            case GameEventType.AJCaught:
+                // Resolve every active encounter: officers stop being hazards and walk off, so nothing conflicts
+                // with the rescue (RescueController stays the only authority). New spawns are already paused
+                // because Update only spawns in RunState.Playing.
+                foreach (var o in _officers) if (o != null && o.state != PoliceOfficer.State.Leaving) o.BeginLeaving();
                 break;
             case GameEventType.AJRescued:
                 // Officers around AJ are shaken off by the rescue.
@@ -405,6 +420,7 @@ public class PoliceDirector : MonoBehaviour
                 if (!_uniformCache.TryGetValue(mats[i], out var tinted) || tinted == null)
                 {
                     tinted = new Material(mats[i]) { name = mats[i].name + " (police)" };
+                    _createdMaterials.Add(tinted);
                     if (tinted.HasProperty("_BaseColor")) tinted.SetColor("_BaseColor", tinted.GetColor("_BaseColor") * uniformTint);
                     if (tinted.HasProperty("_Color")) tinted.SetColor("_Color", tinted.GetColor("_Color") * uniformTint);
                     _uniformCache[mats[i]] = tinted;
@@ -422,6 +438,7 @@ public class PoliceDirector : MonoBehaviour
         if (head == null || skinned == null) return;
 
         var capMat = new Material(skinned.sharedMaterial) { name = "Police Cap" };
+        _createdMaterials.Add(capMat);
         if (capMat.HasProperty("_BaseMap")) capMat.SetTexture("_BaseMap", null);
         if (capMat.HasProperty("_BaseColor")) capMat.SetColor("_BaseColor", capColor);
         if (capMat.HasProperty("_Color")) capMat.SetColor("_Color", capColor);
@@ -444,7 +461,9 @@ public class PoliceDirector : MonoBehaviour
         var light = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         light.name = "Police Light";
         DestroyImmediate(light.GetComponent<Collider>());
-        light.GetComponent<Renderer>().sharedMaterial = new Material(capMat) { name = "Police Light" };
+        var lightMat = new Material(capMat) { name = "Police Light" };
+        _createdMaterials.Add(lightMat);
+        light.GetComponent<Renderer>().sharedMaterial = lightMat;
         light.transform.SetParent(head, false);
         SetWorldTransform(light.transform, head.position + Vector3.up * 0.27f, new Vector3(0.1f, 0.1f, 0.1f));
         light.AddComponent<PoliceLightBlink>();

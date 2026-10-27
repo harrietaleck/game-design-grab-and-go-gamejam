@@ -73,8 +73,9 @@ public class PoliceOfficer : MonoBehaviour
         }
         transform.position = p;
 
-        // Grabs (only while dangerous)
-        if (IsDangerous)
+        // Grabs: only while dangerous and only in normal play. During the rescue window (AJCaught) police
+        // contact is suspended, so the rescue can never be interrupted or re-triggered by another grab.
+        if (IsDangerous && GameStartFlow.Instance != null && GameStartFlow.Instance.State == GameStartFlow.RunState.Playing)
         {
             if (Reaches(claire.transform.position, p))
             {
