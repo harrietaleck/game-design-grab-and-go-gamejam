@@ -391,6 +391,10 @@ public class PoliceDirector : MonoBehaviour
     /// <summary>Removes gameplay scripts, physics and audio so the copy is just an animated model.</summary>
     private static void StripToVisual(GameObject go)
     {
+        // Officers don't wear Claire's/AJ's backpacks.
+        foreach (var t in go.GetComponentsInChildren<Transform>(true))
+            if (t != null && t.name == CharacterBackpacks.BackpackObjectName) DestroyImmediate(t.gameObject);
+
         // Reverse order + two passes: components with [RequireComponent] dependants must go after them.
         for (int pass = 0; pass < 2; pass++)
         {
