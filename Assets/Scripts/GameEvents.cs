@@ -24,7 +24,8 @@ public enum GameEventType
     AJNearMiss,
     PolicePressureHigh,
     DistractionUsed,
-    PoliceSpotted,      // first police chaser warning of the run
+    PoliceSpotted,
+    LootSpilled,        // Claire crashed into traffic and lost part of her loot (value = amount lost)      // first police chaser warning of the run
     AJCaught,
     AJRescued,
     RunWon,

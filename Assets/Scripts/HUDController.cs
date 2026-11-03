@@ -54,6 +54,8 @@ public class HUDController : MonoBehaviour
     private float _lastHealth = -1f;
     private string _lastStatus;
     private float _lootPunchUntil;
+    private float _lootLossFlashUntil;
+    private Color _lootBaseColor = Color.white;
     private Vector3 _lootBaseScale = Vector3.one;
 
     private const string LegacyControlsHint = "A/D or <- ->";
@@ -64,7 +66,11 @@ public class HUDController : MonoBehaviour
         if (string.IsNullOrEmpty(controlsHint) || controlsHint == LegacyControlsHint)
             controlsHint = "A/D move   SPACE distract   ESC pause";
         if (alertText != null) alertText.text = "";
-        if (lootText != null) _lootBaseScale = lootText.transform.localScale;
+        if (lootText != null)
+        {
+            _lootBaseScale = lootText.transform.localScale;
+            _lootBaseColor = lootText.color;
+        }
         ResolveHealthLabel();
         RefreshAll(force: true);
     }
@@ -84,6 +90,8 @@ public class HUDController : MonoBehaviour
         {
             float punch = Mathf.Clamp01((_lootPunchUntil - Time.unscaledTime) / 0.18f);
             lootText.transform.localScale = _lootBaseScale * (1f + 0.25f * punch);
+            float loss = Mathf.Clamp01((_lootLossFlashUntil - Time.unscaledTime) / 0.6f);
+            lootText.color = Color.Lerp(_lootBaseColor, new Color(1f, 0.25f, 0.2f), loss);
         }
     }
 
@@ -166,6 +174,7 @@ public class HUDController : MonoBehaviour
         int loot = flow != null ? flow.LootValue : CollectiblePickup.RuntimeCollectedValue;
         if (!force && loot == _lastLoot) return;
         if (!force && loot > _lastLoot) _lootPunchUntil = Time.unscaledTime + 0.18f;
+        if (!force && loot < _lastLoot && _lastLoot >= 0) { _lootLossFlashUntil = Time.unscaledTime + 0.6f; _lootPunchUntil = Time.unscaledTime + 0.18f; }
         _lastLoot = loot;
         lootText.text = loot.ToString();
     }

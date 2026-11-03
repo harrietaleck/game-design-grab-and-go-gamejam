@@ -534,7 +534,10 @@ public class PoliceLightBlink : MonoBehaviour
 
     private void Update()
     {
+        // Lazy init also covers a script reload while playing (private fields reset, Awake not re-run).
+        if (_renderer == null) _renderer = GetComponent<Renderer>();
         if (_renderer == null) return;
+        _block ??= new MaterialPropertyBlock();
         bool red = Mathf.Repeat(Time.time * 3f + transform.position.z * 0.1f, 1f) < 0.5f;
         var c = red ? new Color(1f, 0.1f, 0.1f) : new Color(0.1f, 0.35f, 1f);
         _block.SetColor(BaseColorId, c);

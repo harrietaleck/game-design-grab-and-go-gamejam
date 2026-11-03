@@ -140,6 +140,7 @@ public class RunOverlayUI : MonoBehaviour
             $"Loot value\t<b>{f.LootValue}</b>\n" +
             $"Coins\t\t<b>{f.CoinCount}</b>\n" +
             $"Gold stacks\t<b>{f.GoldStackCount}</b>\n" +
+            $"Loot lost\t<b>{f.LootLost}</b>\n" +
             $"Time survived\t<b>{RuntimeUI.FormatTime(f.TimeSurvived)}</b>\n" +
             $"Claire's health\t<b>{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}</b>\n" +
             $"Hits taken\t<b>{f.CollisionCount}</b>\n" +

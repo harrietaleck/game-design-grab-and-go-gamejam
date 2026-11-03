@@ -16,6 +16,9 @@ public class LaneObstacle : MonoBehaviour
     [Tooltip("Health damage dealt when player hits this obstacle.")]
     public float healthDamage = 10f;
 
+    [Tooltip("Fraction of Claire's loot value lost (and spilled from her bag) when she hits this obstacle.")]
+    [Range(0f, 1f)] public float lootLossFraction = 0.5f;
+
     [Tooltip("Invoked when the obstacle is hit by the handler.")]
     public UnityEvent onHit;
 
@@ -59,15 +62,18 @@ public class LaneObstacle : MonoBehaviour
             if (disableHandlerMovementOnHit)
                 handlerMovement.enabled = false;
             
-            // Apply health damage (single source of truth) and show alert.
+            // Lose part of the loot first (so a fatal crash still costs loot), then apply health damage.
+            // Both go through the run controller, the single source of truth. The obstacle is destroyed below,
+            // so one obstacle can only do this once.
             var flow = GameStartFlow.Instance;
+            int lost = flow != null ? flow.SpillLoot(lootLossFraction) : 0;
             if (flow != null)
                 flow.ApplyClaireDamage(healthDamage);
             var hud = FindFirstObjectByType<HUDController>();
             if (hud != null)
             {
                 if (flow == null) hud.AddHealth(-healthDamage);
-                hud.ShowAlert("WATCH OUT!");
+                hud.ShowAlert(lost > 0 ? $"CRASH!  -{lost} LOOT" : "WATCH OUT!");
             }
         }
 

@@ -75,6 +75,8 @@ public class GameStartFlow : MonoBehaviour
     public int LootValue { get; private set; }
     public int CoinCount { get; private set; }
     public int GoldStackCount { get; private set; }
+    /// <summary>Total loot value lost to crashes this run.</summary>
+    public int LootLost { get; private set; }
     public int CollisionCount { get; private set; }
     public int RescueSuccessCount { get; set; }
     public int CaptureCount { get; set; }
@@ -223,7 +225,7 @@ public class GameStartFlow : MonoBehaviour
 
         TimeRemaining = RunDuration;
         ClaireHealth = MaxHealth;
-        LootValue = CoinCount = GoldStackCount = CollisionCount = 0;
+        LootValue = CoinCount = GoldStackCount = CollisionCount = LootLost = 0;
         RescueSuccessCount = CaptureCount = DistractionsUsed = 0;
         _lowHealthWarned = false;
         CollectiblePickup.ResetRuntimeCollectedValue();
@@ -408,6 +410,23 @@ public class GameStartFlow : MonoBehaviour
         if (_recentLootCount == 5)
             GameEvents.Raise(GameEventType.MultipleLootCollected, _recentLootCount);
         return true;
+    }
+
+    /// <summary>
+    /// Removes a fraction of the current loot value (rounded down, so a single coin is kept) and returns how much
+    /// was lost. Scores and stats are owned here; visuals and dialogue react to GameEventType.LootSpilled.
+    /// </summary>
+    public int SpillLoot(float fraction)
+    {
+        if (!IsGameplayActive || LootValue <= 0) return 0;
+        int lost = Mathf.FloorToInt(LootValue * Mathf.Clamp01(fraction));
+        if (lost <= 0) return 0;
+        LootValue -= lost;
+        LootLost += lost;
+        CollectiblePickup.SetRuntimeCollectedValue(LootValue);
+        LootChanged?.Invoke();
+        GameEvents.Raise(GameEventType.LootSpilled, lost);
+        return lost;
     }
 
     private void SetGameplayEnabled(bool enabled)

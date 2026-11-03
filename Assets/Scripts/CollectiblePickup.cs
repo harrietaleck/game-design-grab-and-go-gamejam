@@ -15,6 +15,12 @@ public class CollectiblePickup : MonoBehaviour
         RuntimeCollectedValue = 0;
     }
 
+    /// <summary>Keeps the legacy static total in step when loot is lost (set by GameStartFlow only).</summary>
+    public static void SetRuntimeCollectedValue(int value)
+    {
+        RuntimeCollectedValue = Mathf.Max(0, value);
+    }
+
     /// <summary>Raised once per collected item (after scoring).</summary>
     public static event System.Action<CollectiblePickup> Collected;
 

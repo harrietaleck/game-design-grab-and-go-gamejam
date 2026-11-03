@@ -59,6 +59,13 @@ public static class DialogueFallbackLibrary
             "They're onto us. Maybe hit that distraction?",
             "Heat's rising! Less crashing, more vanishing!",
         },
+        [GameEventType.LootSpilled] = new[]
+        {
+            "Claire! The loot! You're leaking money!",
+            "Noooo, that was half our haul!",
+            "Every crash is coins on the road, Claire!",
+            "Zip the bag! ZIP THE BAG!",
+        },
         [GameEventType.PoliceSpotted] = new[]
         {
             "Cop on your tail, Claire! Switch lanes!",
