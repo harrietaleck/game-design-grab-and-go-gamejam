@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6fd50cda55ffb2e408396bfd9dd9cf11
+timeCreated: 1524048673
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/Editor/SoftEffectCurves.curves
+  uploadId: 970336

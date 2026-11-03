@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: def33e5390fdbfb4493f07f54b6b43d3
+timeCreated: 1513089947
+licenseType: Store
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/Examples/Scenes/3_DeformedText.unity
+  uploadId: 970336

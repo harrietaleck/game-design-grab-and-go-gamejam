@@ -23,7 +23,7 @@ public class MenuExtrasUI : MonoBehaviour
         if (flow == null || flow.menuPanel == null) return;
         Transform root = flow.menuPanel.transform;
 
-        var panel = RuntimeUI.CreatePanel(root, "HowToPlay (runtime)", new Color(0.02f, 0.03f, 0.1f, 0.7f));
+        var panel = RuntimeUI.CreateWindow(root, "HowToPlay (runtime)", null, 0.6f);
         panel.raycastTarget = false;
         RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 0f), new Vector2(1800f, 330f), new Vector2(0f, 30f));
 

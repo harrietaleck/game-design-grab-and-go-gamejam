@@ -32,7 +32,7 @@ public class RadioDialogueUI : MonoBehaviour
 
     public void Build(Transform canvasRoot)
     {
-        var panel = RuntimeUI.CreatePanel(canvasRoot, "RadioDialogue (runtime)", new Color(0.02f, 0.04f, 0.1f, 0.82f));
+        var panel = RuntimeUI.CreateWindow(canvasRoot, "RadioDialogue (runtime)", null, 0.75f);
         panel.raycastTarget = false;
         // Compact, top-left (under the status text) so it never covers the road or Claire.
         RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -78f));

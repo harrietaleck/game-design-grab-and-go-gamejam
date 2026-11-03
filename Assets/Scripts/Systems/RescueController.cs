@@ -176,13 +176,16 @@ public class RescueController : MonoBehaviour
     private void BuildBanner()
     {
         Transform root = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
-        var panel = RuntimeUI.CreatePanel(root, "RescueBanner (runtime)", new Color(0.35f, 0f, 0f, 0.75f));
+        var panel = RuntimeUI.CreateWindow(root, "RescueBanner (runtime)", new Color(1f, 0.45f, 0.45f, 1f), 0.7f);
         panel.raycastTarget = false;
         RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 1f), new Vector2(760f, 130f), new Vector2(0f, -190f));
         _bannerText = RuntimeUI.CreateText(panel.transform, "Text", "", 40f, TextAlignmentOptions.Center, RuntimeUI.Gold, FontStyles.Bold);
         RuntimeUI.Place(_bannerText.rectTransform, new Vector2(0.5f, 1f), new Vector2(740f, 100f), new Vector2(0f, -4f));
         _bannerFill = RuntimeUI.CreateBar(panel.transform, "Window", new Color(0f, 0f, 0f, 0.5f), RuntimeUI.Danger);
         RuntimeUI.Place((RectTransform)_bannerFill.transform.parent, new Vector2(0.5f, 0f), new Vector2(720f, 18f), new Vector2(0f, 8f));
+        var theme = UITheme.Active;
+        var red = theme != null ? theme.barRed.GetSprite() : null;
+        if (red != null) { _bannerFill.sprite = red; _bannerFill.color = Color.white; }
         _banner = panel.gameObject;
         _banner.SetActive(false);
     }

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c641c1941196fee4da4cb173500d530f
+timeCreated: 1524048673
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/Editor/SoftEffectsColors.colors
+  uploadId: 970336

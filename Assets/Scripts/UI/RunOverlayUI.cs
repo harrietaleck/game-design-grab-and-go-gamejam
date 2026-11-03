@@ -24,7 +24,7 @@ public class RunOverlayUI : MonoBehaviour
     private GameStartFlow _flow;
     private GameObject _pausePanel;
     private GameObject _resultsPanel;
-    private TextMeshProUGUI _resultsTitle;
+    private FancyText _resultsTitle;
     private TextMeshProUGUI _resultsReason;
     private TextMeshProUGUI _resultsStats;
     private TextMeshProUGUI _resultsExtra;
@@ -77,9 +77,11 @@ public class RunOverlayUI : MonoBehaviour
         // ---- Pause ----
         var pause = RuntimeUI.CreatePanel(root, "PauseOverlay (runtime)", new Color(0f, 0f, 0f, 0.6f));
         RuntimeUI.Stretch(pause.rectTransform);
-        var pauseText = RuntimeUI.CreateText(pause.transform, "PausedText", "PAUSED\n<size=40%>ESC / P to resume</size>", 90f,
+        FancyText.Create(pause.transform, "PausedText", "PAUSED", 120f, UITheme.Fancy.Neon,
+            new Vector2(0.5f, 0.5f), new Vector2(1200f, 220f), new Vector2(0f, 60f));
+        var pauseHint = RuntimeUI.CreateText(pause.transform, "PausedHint", "ESC / P to resume", 36f,
             TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Stretch(pauseText.rectTransform);
+        RuntimeUI.Place(pauseHint.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1000f, 80f), new Vector2(0f, -90f));
         _pausePanel = pause.gameObject;
         _pausePanel.SetActive(false);
 
@@ -89,11 +91,11 @@ public class RunOverlayUI : MonoBehaviour
         _resultsGroup = dim.gameObject.AddComponent<CanvasGroup>();
         _resultsPanel = dim.gameObject;
 
-        var card = RuntimeUI.CreatePanel(dim.transform, "Card", RuntimeUI.PanelDark);
+        var card = RuntimeUI.CreateWindow(dim.transform, "Card", null, 0.7f);
         RuntimeUI.Place(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1000f, 1080f), Vector2.zero);
 
-        _resultsTitle = RuntimeUI.CreateText(card.transform, "Title", "GETAWAY", 56f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(_resultsTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(960f, 90f), new Vector2(0f, -30f));
+        _resultsTitle = FancyText.Create(card.transform, "Title", "GETAWAY", 64f, UITheme.Fancy.Gold,
+            new Vector2(0.5f, 1f), new Vector2(960f, 100f), new Vector2(0f, -45f));
 
         _resultsReason = RuntimeUI.CreateText(card.transform, "Reason", "", 28f, TextAlignmentOptions.Center, Color.white);
         RuntimeUI.Place(_resultsReason.rectTransform, new Vector2(0.5f, 1f), new Vector2(940f, 100f), new Vector2(0f, -130f));
@@ -132,8 +134,8 @@ public class RunOverlayUI : MonoBehaviour
     {
         var f = _flow;
         bool won = f.WasSuccessful;
-        _resultsTitle.text = won ? "GETAWAY SUCCESSFUL!" : "GETAWAY FAILED";
-        _resultsTitle.color = won ? RuntimeUI.Accent : RuntimeUI.Danger;
+        _resultsTitle.SetStyle(won ? UITheme.Fancy.Gold : UITheme.Fancy.Purple);
+        _resultsTitle.SetText(won ? "GETAWAY SUCCESSFUL!" : "GETAWAY FAILED");
         _resultsReason.text = ReasonText(f.EndReason);
 
         _resultsStats.text =

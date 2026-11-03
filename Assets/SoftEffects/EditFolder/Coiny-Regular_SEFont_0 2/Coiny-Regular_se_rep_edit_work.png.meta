@@ -1,0 +1,2646 @@
+fileFormatVersion: 2
+guid: 54422da01cbf2fe49a642192fe4a02a9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2164074600565511332
+    second: Coiny-Regular_se_rep_edit_work_0
+  - first:
+      213: 2539401213534545070
+    second: Coiny-Regular_se_rep_edit_work_1
+  - first:
+      213: 6975654765830466457
+    second: Coiny-Regular_se_rep_edit_work_2
+  - first:
+      213: -3719325143231296721
+    second: Coiny-Regular_se_rep_edit_work_3
+  - first:
+      213: -1862365123686867346
+    second: Coiny-Regular_se_rep_edit_work_4
+  - first:
+      213: -726150121712614758
+    second: Coiny-Regular_se_rep_edit_work_5
+  - first:
+      213: -4246746102187224095
+    second: Coiny-Regular_se_rep_edit_work_6
+  - first:
+      213: -208493720839589683
+    second: Coiny-Regular_se_rep_edit_work_7
+  - first:
+      213: -5667291464536596706
+    second: Coiny-Regular_se_rep_edit_work_8
+  - first:
+      213: -6292538991885187924
+    second: Coiny-Regular_se_rep_edit_work_9
+  - first:
+      213: 1865328876279715312
+    second: Coiny-Regular_se_rep_edit_work_10
+  - first:
+      213: 1550353477840181129
+    second: Coiny-Regular_se_rep_edit_work_11
+  - first:
+      213: -2454474251430029805
+    second: Coiny-Regular_se_rep_edit_work_12
+  - first:
+      213: 2148099910489541388
+    second: Coiny-Regular_se_rep_edit_work_13
+  - first:
+      213: -953262002188106590
+    second: Coiny-Regular_se_rep_edit_work_14
+  - first:
+      213: -3957708913082000208
+    second: Coiny-Regular_se_rep_edit_work_15
+  - first:
+      213: 3096744503482988627
+    second: Coiny-Regular_se_rep_edit_work_16
+  - first:
+      213: 945878799906980501
+    second: Coiny-Regular_se_rep_edit_work_17
+  - first:
+      213: 8055152647080803422
+    second: Coiny-Regular_se_rep_edit_work_18
+  - first:
+      213: -3913298676975729969
+    second: Coiny-Regular_se_rep_edit_work_19
+  - first:
+      213: 3902720467981680949
+    second: Coiny-Regular_se_rep_edit_work_20
+  - first:
+      213: 8821773681150672077
+    second: Coiny-Regular_se_rep_edit_work_21
+  - first:
+      213: 2208968164832214760
+    second: Coiny-Regular_se_rep_edit_work_22
+  - first:
+      213: 6139041181994118629
+    second: Coiny-Regular_se_rep_edit_work_23
+  - first:
+      213: 5012173441910188378
+    second: Coiny-Regular_se_rep_edit_work_24
+  - first:
+      213: -136614671128903340
+    second: Coiny-Regular_se_rep_edit_work_25
+  - first:
+      213: 2550725165126746521
+    second: Coiny-Regular_se_rep_edit_work_26
+  - first:
+      213: 5849937033076871885
+    second: Coiny-Regular_se_rep_edit_work_27
+  - first:
+      213: -3962582973510649422
+    second: Coiny-Regular_se_rep_edit_work_28
+  - first:
+      213: -8402708526234149103
+    second: Coiny-Regular_se_rep_edit_work_29
+  - first:
+      213: -305588186546584831
+    second: Coiny-Regular_se_rep_edit_work_30
+  - first:
+      213: -787537461456427251
+    second: Coiny-Regular_se_rep_edit_work_31
+  - first:
+      213: -3490686738530783167
+    second: Coiny-Regular_se_rep_edit_work_32
+  - first:
+      213: 8151100017079811305
+    second: Coiny-Regular_se_rep_edit_work_33
+  - first:
+      213: 7465974452554250810
+    second: Coiny-Regular_se_rep_edit_work_34
+  - first:
+      213: 4227855199787379664
+    second: Coiny-Regular_se_rep_edit_work_35
+  - first:
+      213: 1894930669374209648
+    second: Coiny-Regular_se_rep_edit_work_36
+  - first:
+      213: 5978087976711921988
+    second: Coiny-Regular_se_rep_edit_work_37
+  - first:
+      213: -439408651503099064
+    second: Coiny-Regular_se_rep_edit_work_38
+  - first:
+      213: -9113606194925978111
+    second: Coiny-Regular_se_rep_edit_work_39
+  - first:
+      213: -376499223339105396
+    second: Coiny-Regular_se_rep_edit_work_40
+  - first:
+      213: -1353537842767983938
+    second: Coiny-Regular_se_rep_edit_work_41
+  - first:
+      213: -6663321610785991956
+    second: Coiny-Regular_se_rep_edit_work_42
+  - first:
+      213: -3601420866277126576
+    second: Coiny-Regular_se_rep_edit_work_43
+  - first:
+      213: 2766716098558867650
+    second: Coiny-Regular_se_rep_edit_work_44
+  - first:
+      213: -204468639842275277
+    second: Coiny-Regular_se_rep_edit_work_45
+  - first:
+      213: 5710373497455540490
+    second: Coiny-Regular_se_rep_edit_work_46
+  - first:
+      213: -3518720403020962099
+    second: Coiny-Regular_se_rep_edit_work_47
+  - first:
+      213: -4575952019765306246
+    second: Coiny-Regular_se_rep_edit_work_48
+  - first:
+      213: 7892338732037523523
+    second: Coiny-Regular_se_rep_edit_work_49
+  - first:
+      213: 6659428859970937923
+    second: Coiny-Regular_se_rep_edit_work_50
+  - first:
+      213: -3473653448559826139
+    second: Coiny-Regular_se_rep_edit_work_51
+  - first:
+      213: 4327524037996325592
+    second: Coiny-Regular_se_rep_edit_work_52
+  - first:
+      213: -8394001666407534233
+    second: Coiny-Regular_se_rep_edit_work_53
+  - first:
+      213: 8437376455567280884
+    second: Coiny-Regular_se_rep_edit_work_54
+  - first:
+      213: 4545427761601571276
+    second: Coiny-Regular_se_rep_edit_work_55
+  - first:
+      213: -1480272725544949701
+    second: Coiny-Regular_se_rep_edit_work_56
+  - first:
+      213: 6428800356391263004
+    second: Coiny-Regular_se_rep_edit_work_57
+  - first:
+      213: 1273755365992449769
+    second: Coiny-Regular_se_rep_edit_work_58
+  - first:
+      213: 3877956265206360587
+    second: Coiny-Regular_se_rep_edit_work_59
+  - first:
+      213: -2545901615673526185
+    second: Coiny-Regular_se_rep_edit_work_60
+  - first:
+      213: -4735223888462988027
+    second: Coiny-Regular_se_rep_edit_work_61
+  - first:
+      213: 6059232198777478381
+    second: Coiny-Regular_se_rep_edit_work_62
+  - first:
+      213: -7855412005825542582
+    second: Coiny-Regular_se_rep_edit_work_63
+  - first:
+      213: 4028581619060285467
+    second: Coiny-Regular_se_rep_edit_work_64
+  - first:
+      213: -6404545697309399174
+    second: Coiny-Regular_se_rep_edit_work_65
+  - first:
+      213: -5492562598031890110
+    second: Coiny-Regular_se_rep_edit_work_66
+  - first:
+      213: 1624270936539329516
+    second: Coiny-Regular_se_rep_edit_work_67
+  - first:
+      213: 6924959246187805152
+    second: Coiny-Regular_se_rep_edit_work_68
+  - first:
+      213: 658750174333315559
+    second: Coiny-Regular_se_rep_edit_work_69
+  - first:
+      213: -2003304803186350175
+    second: Coiny-Regular_se_rep_edit_work_70
+  - first:
+      213: 8973541207811660531
+    second: Coiny-Regular_se_rep_edit_work_71
+  - first:
+      213: -7592803890529658408
+    second: Coiny-Regular_se_rep_edit_work_72
+  - first:
+      213: -1721616067109193166
+    second: Coiny-Regular_se_rep_edit_work_73
+  - first:
+      213: 6152121123521198700
+    second: Coiny-Regular_se_rep_edit_work_74
+  - first:
+      213: 2363860779509596290
+    second: Coiny-Regular_se_rep_edit_work_75
+  - first:
+      213: -5510862965962730127
+    second: Coiny-Regular_se_rep_edit_work_76
+  - first:
+      213: -3556515522107948549
+    second: Coiny-Regular_se_rep_edit_work_77
+  - first:
+      213: -2933550202027213694
+    second: Coiny-Regular_se_rep_edit_work_78
+  - first:
+      213: -8413905720848858982
+    second: Coiny-Regular_se_rep_edit_work_79
+  - first:
+      213: -4888153286100317001
+    second: Coiny-Regular_se_rep_edit_work_80
+  - first:
+      213: -4798093288685371274
+    second: Coiny-Regular_se_rep_edit_work_81
+  - first:
+      213: -8073772716907828288
+    second: Coiny-Regular_se_rep_edit_work_82
+  - first:
+      213: 5225459682823886152
+    second: Coiny-Regular_se_rep_edit_work_83
+  - first:
+      213: 2425477257004695285
+    second: Coiny-Regular_se_rep_edit_work_84
+  - first:
+      213: -6426193527907929160
+    second: Coiny-Regular_se_rep_edit_work_85
+  - first:
+      213: 1753743477738583236
+    second: Coiny-Regular_se_rep_edit_work_86
+  - first:
+      213: 6951759831340574191
+    second: Coiny-Regular_se_rep_edit_work_87
+  - first:
+      213: 5432655890598350336
+    second: Coiny-Regular_se_rep_edit_work_88
+  - first:
+      213: 5084309992889882083
+    second: Coiny-Regular_se_rep_edit_work_89
+  - first:
+      213: -3808241513143654208
+    second: Coiny-Regular_se_rep_edit_work_90
+  - first:
+      213: 5882122235970730697
+    second: Coiny-Regular_se_rep_edit_work_91
+  - first:
+      213: 4331287044903728717
+    second: Coiny-Regular_se_rep_edit_work_92
+  - first:
+      213: 6487544221640796979
+    second: Coiny-Regular_se_rep_edit_work_93
+  - first:
+      213: 5772934433745129266
+    second: Coiny-Regular_se_rep_edit_work_94
+  - first:
+      213: -4901766203881925869
+    second: Coiny-Regular_se_rep_edit_work_95
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: 0
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_0
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 1511
+        width: 166
+        height: 144
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a4172a2266580e10800000000000000
+      internalID: 2164074600565511332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1452
+        width: 110
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea42cea03f3cd3320800000000000000
+      internalID: 2539401213534545070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_2
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 1500
+        width: 144
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99be5190d018ec060800000000000000
+      internalID: 6975654765830466457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_3
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1499
+        width: 155
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2b0581fc7d426cc0800000000000000
+      internalID: -3719325143231296721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_4
+      rect:
+        serializedVersion: 2
+        x: 751
+        y: 1499
+        width: 124
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6e519889cc8726e0800000000000000
+      internalID: -1862365123686867346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_5
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 1363
+        width: 124
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9286b5cf423ce5f0800000000000000
+      internalID: -726150121712614758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_6
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 1375
+        width: 141
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e31bd79be68015c0800000000000000
+      internalID: -4246746102187224095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_7
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 1315
+        width: 119
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0f477c0184b1df0800000000000000
+      internalID: -208493720839589683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_8
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 1363
+        width: 137
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1f51b9807cb951b0800000000000000
+      internalID: -5667291464536596706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_9
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 1359
+        width: 122
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca4836d40296ca8a0800000000000000
+      internalID: -6292538991885187924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_10
+      rect:
+        serializedVersion: 2
+        x: 883
+        y: 1359
+        width: 121
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f55ee3eabaf2e910800000000000000
+      internalID: 1865328876279715312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_11
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1227
+        width: 117
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98794f22646f38510800000000000000
+      internalID: 1550353477840181129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_12
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1240
+        width: 118
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3169b253ca4ffedd0800000000000000
+      internalID: -2454474251430029805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_13
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 1179
+        width: 114
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b07cacc759fcd10800000000000000
+      internalID: 2148099910489541388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_14
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 1227
+        width: 118
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a443b5724555c2f0800000000000000
+      internalID: -953262002188106590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_15
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 1088
+        width: 85
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc995f56b46319c0800000000000000
+      internalID: -3957708913082000208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_16
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 1223
+        width: 116
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3583f3af7b8d9fa20800000000000000
+      internalID: 3096744503482988627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_17
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 1107
+        width: 116
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 592470dc1cf602d00800000000000000
+      internalID: 945878799906980501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_18
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 1052
+        width: 85
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5c7ccc87a6a9cf60800000000000000
+      internalID: 8055152647080803422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_19
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 1103
+        width: 114
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc20bda369b21b9c0800000000000000
+      internalID: -3913298676975729969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_20
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 1043
+        width: 111
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 531c1bf869f392630800000000000000
+      internalID: 3902720467981680949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_21
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 1087
+        width: 110
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcc30e95c6c3d6a70800000000000000
+      internalID: 8821773681150672077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_22
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 1087
+        width: 113
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ee78f0a7d4d7ae10800000000000000
+      internalID: 2208968164832214760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_23
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 971
+        width: 112
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ede042dd61423550800000000000000
+      internalID: 6139041181994118629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_24
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 971
+        width: 112
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5924b59031de8540800000000000000
+      internalID: 5012173441910188378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_25
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 883
+        width: 85
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45141403ea5aa1ef0800000000000000
+      internalID: -136614671128903340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_26
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 967
+        width: 110
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 991870bf50ff56320800000000000000
+      internalID: 2550725165126746521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_27
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 907
+        width: 108
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc213febcb62f2150800000000000000
+      internalID: 5849937033076871885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_28
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 951
+        width: 110
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b9f2eeb7c31209c0800000000000000
+      internalID: -3962582973510649422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_29
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 951
+        width: 110
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11fdaa66d15936b80800000000000000
+      internalID: -8402708526234149103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_30
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 796
+        width: 102
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 103c555d92552cbf0800000000000000
+      internalID: -305588186546584831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_31
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 863
+        width: 139
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d07a392f9da1215f0800000000000000
+      internalID: -787537461456427251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_32
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 747
+        width: 102
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 140b4bfd7e69e8fc0800000000000000
+      internalID: -3490686738530783167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_33
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 859
+        width: 139
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ecf8b677468e1170800000000000000
+      internalID: 8151100017079811305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_34
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 772
+        width: 101
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a33aa45387c9760800000000000000
+      internalID: 7465974452554250810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_35
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 815
+        width: 104
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0db6d1177eb5caa30800000000000000
+      internalID: 4227855199787379664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_36
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 815
+        width: 104
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07efa0e67652c4a10800000000000000
+      internalID: 1894930669374209648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_37
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 659
+        width: 101
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 441a2ff675f66f250800000000000000
+      internalID: 5978087976711921988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_38
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 727
+        width: 102
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 843ace7d828e6e9f0800000000000000
+      internalID: -439408651503099064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_39
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 608
+        width: 101
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10e33a0a377f58180800000000000000
+      internalID: -9113606194925978111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_40
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 724
+        width: 101
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8389ae73f766caf0800000000000000
+      internalID: -376499223339105396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_41
+      rect:
+        serializedVersion: 2
+        x: 699
+        y: 635
+        width: 103
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eba04cbd084473de0800000000000000
+      internalID: -1353537842767983938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_42
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 679
+        width: 103
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce2daec7c402783a0800000000000000
+      internalID: -6663321610785991956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_43
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 599
+        width: 101
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05e4fd2adce250ec0800000000000000
+      internalID: -3601420866277126576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_44
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 523
+        width: 101
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c8b4f802a9556620800000000000000
+      internalID: 2766716098558867650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_45
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 552
+        width: 73
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3307e7afad4992df0800000000000000
+      internalID: -204468639842275277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_46
+      rect:
+        serializedVersion: 2
+        x: 612
+        y: 548
+        width: 73
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0974aae0725f3f40800000000000000
+      internalID: 5710373497455540490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_47
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 499
+        width: 99
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc6240abf6efa2fc0800000000000000
+      internalID: -3518720403020962099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_48
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 544
+        width: 99
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7c58a8e1e3fe70c0800000000000000
+      internalID: -4575952019765306246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_49
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 412
+        width: 88
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 348472ae248378d60800000000000000
+      internalID: 7892338732037523523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_50
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 459
+        width: 96
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3446d85d34b0b6c50800000000000000
+      internalID: 6659428859970937923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_51
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 323
+        width: 69
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52be7cdb79a1bcfc0800000000000000
+      internalID: -3473653448559826139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_52
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 347
+        width: 69
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8da2cb13f247e0c30800000000000000
+      internalID: 4327524037996325592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_53
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 415
+        width: 97
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 761fdbd25f3828b80800000000000000
+      internalID: -8394001666407534233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_54
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 471
+        width: 98
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fa0556ee25971570800000000000000
+      internalID: 8437376455567280884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_55
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 411
+        width: 97
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc9e57a677a941f30800000000000000
+      internalID: 4545427761601571276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_56
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 391
+        width: 119
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b38a1378cc3057be0800000000000000
+      internalID: -1480272725544949701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_57
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 407
+        width: 97
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1b1b96ecdfa73950800000000000000
+      internalID: 6428800356391263004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_58
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 303
+        width: 98
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e64ab8b1c94da110800000000000000
+      internalID: 1273755365992449769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_59
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 323
+        width: 85
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0a202a4da441d530800000000000000
+      internalID: 3877956265206360587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_60
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 239
+        width: 100
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 758bfa428f32bacd0800000000000000
+      internalID: -2545901615673526185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_61
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 307
+        width: 104
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50d383436fa194eb0800000000000000
+      internalID: -4735223888462988027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_62
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 332
+        width: 85
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dec9db3e497b61450800000000000000
+      internalID: 6059232198777478381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_63
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 303
+        width: 101
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a460e648668fbf290800000000000000
+      internalID: -7855412005825542582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_64
+      rect:
+        serializedVersion: 2
+        x: 814
+        y: 283
+        width: 98
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b10a1c063a568e730800000000000000
+      internalID: 4028581619060285467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_65
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 275
+        width: 85
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a77ed1cfe9b7e17a0800000000000000
+      internalID: -6404545697309399174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_66
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 195
+        width: 93
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24966bdfa6f76c3b0800000000000000
+      internalID: -5492562598031890110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_67
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 215
+        width: 100
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce3fa6f9fc19a8610800000000000000
+      internalID: 1624270936539329516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_68
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 88
+        width: 57
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e9b4119eb56a1060800000000000000
+      internalID: 6924959246187805152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_69
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 199
+        width: 100
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e92dd81bc9542900800000000000000
+      internalID: 658750174333315559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_70
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 224
+        width: 101
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a76e3d35e4d234e0800000000000000
+      internalID: -2003304803186350175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_71
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 196
+        width: 97
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa91f44f2c688c70800000000000000
+      internalID: 8973541207811660531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_72
+      rect:
+        serializedVersion: 2
+        x: 819
+        y: 175
+        width: 95
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d996c70711f0a690800000000000000
+      internalID: -7592803890529658408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_73
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 139
+        width: 74
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23af958fe479b18e0800000000000000
+      internalID: -1721616067109193166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_74
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 67
+        width: 58
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6a78a60199b06550800000000000000
+      internalID: 6152121123521198700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_75
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 64
+        width: 59
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 280c52dcade1ec020800000000000000
+      internalID: 2363860779509596290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_76
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 131
+        width: 56
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1759feb845b7583b0800000000000000
+      internalID: -5510862965962730127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_77
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 75
+        width: 59
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf1c792d9f7b4aec0800000000000000
+      internalID: -3556515522107948549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_78
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 88
+        width: 77
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28c746542afe947d0800000000000000
+      internalID: -2933550202027213694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_79
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 76
+        width: 78
+        height: 97
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a904d2f535dcb3b80800000000000000
+      internalID: -8413905720848858982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_80
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 63
+        width: 57
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bc055e1c7ac92cb0800000000000000
+      internalID: -4888153286100317001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_81
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 115
+        width: 91
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67009b8439fb96db0800000000000000
+      internalID: -4798093288685371274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_82
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 87
+        width: 85
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cbe77b9d7234ff80800000000000000
+      internalID: -8073772716907828288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_83
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 83
+        width: 98
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 845d7d655ef848840800000000000000
+      internalID: 5225459682823886152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_84
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 4
+        width: 68
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5febd8ae6b609a120800000000000000
+      internalID: 2425477257004695285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_85
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 4
+        width: 60
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b33227a80391d6a0800000000000000
+      internalID: -6426193527907929160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_86
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 4
+        width: 59
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c434c9b66c865810800000000000000
+      internalID: 1753743477738583236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_87
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 3
+        width: 79
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe562ee0cbc997060800000000000000
+      internalID: 6951759831340574191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_88
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 51
+        width: 56
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00e4c02cfbba46b40800000000000000
+      internalID: 5432655890598350336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_89
+      rect:
+        serializedVersion: 2
+        x: 652
+        y: 4
+        width: 56
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e59b2e20091f8640800000000000000
+      internalID: 5084309992889882083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_90
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 4
+        width: 95
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c82d2e4588662bc0800000000000000
+      internalID: -3808241513143654208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_91
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 3
+        width: 105
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ca3670420f71a150800000000000000
+      internalID: 5882122235970730697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_92
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 3
+        width: 57
+        height: 123
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d46fcb38e92db1c30800000000000000
+      internalID: 4331287044903728717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_93
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 3
+        width: 57
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33ba98bd813680a50800000000000000
+      internalID: 6487544221640796979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_94
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 3
+        width: 71
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23fcffaf7459d1050800000000000000
+      internalID: 5772934433745129266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coiny-Regular_se_rep_edit_work_95
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 3
+        width: 110
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3135a95bb9d69fbb0800000000000000
+      internalID: -4901766203881925869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Coiny-Regular_se_rep_edit_work_0: 2164074600565511332
+      Coiny-Regular_se_rep_edit_work_1: 2539401213534545070
+      Coiny-Regular_se_rep_edit_work_10: 1865328876279715312
+      Coiny-Regular_se_rep_edit_work_11: 1550353477840181129
+      Coiny-Regular_se_rep_edit_work_12: -2454474251430029805
+      Coiny-Regular_se_rep_edit_work_13: 2148099910489541388
+      Coiny-Regular_se_rep_edit_work_14: -953262002188106590
+      Coiny-Regular_se_rep_edit_work_15: -3957708913082000208
+      Coiny-Regular_se_rep_edit_work_16: 3096744503482988627
+      Coiny-Regular_se_rep_edit_work_17: 945878799906980501
+      Coiny-Regular_se_rep_edit_work_18: 8055152647080803422
+      Coiny-Regular_se_rep_edit_work_19: -3913298676975729969
+      Coiny-Regular_se_rep_edit_work_2: 6975654765830466457
+      Coiny-Regular_se_rep_edit_work_20: 3902720467981680949
+      Coiny-Regular_se_rep_edit_work_21: 8821773681150672077
+      Coiny-Regular_se_rep_edit_work_22: 2208968164832214760
+      Coiny-Regular_se_rep_edit_work_23: 6139041181994118629
+      Coiny-Regular_se_rep_edit_work_24: 5012173441910188378
+      Coiny-Regular_se_rep_edit_work_25: -136614671128903340
+      Coiny-Regular_se_rep_edit_work_26: 2550725165126746521
+      Coiny-Regular_se_rep_edit_work_27: 5849937033076871885
+      Coiny-Regular_se_rep_edit_work_28: -3962582973510649422
+      Coiny-Regular_se_rep_edit_work_29: -8402708526234149103
+      Coiny-Regular_se_rep_edit_work_3: -3719325143231296721
+      Coiny-Regular_se_rep_edit_work_30: -305588186546584831
+      Coiny-Regular_se_rep_edit_work_31: -787537461456427251
+      Coiny-Regular_se_rep_edit_work_32: -3490686738530783167
+      Coiny-Regular_se_rep_edit_work_33: 8151100017079811305
+      Coiny-Regular_se_rep_edit_work_34: 7465974452554250810
+      Coiny-Regular_se_rep_edit_work_35: 4227855199787379664
+      Coiny-Regular_se_rep_edit_work_36: 1894930669374209648
+      Coiny-Regular_se_rep_edit_work_37: 5978087976711921988
+      Coiny-Regular_se_rep_edit_work_38: -439408651503099064
+      Coiny-Regular_se_rep_edit_work_39: -9113606194925978111
+      Coiny-Regular_se_rep_edit_work_4: -1862365123686867346
+      Coiny-Regular_se_rep_edit_work_40: -376499223339105396
+      Coiny-Regular_se_rep_edit_work_41: -1353537842767983938
+      Coiny-Regular_se_rep_edit_work_42: -6663321610785991956
+      Coiny-Regular_se_rep_edit_work_43: -3601420866277126576
+      Coiny-Regular_se_rep_edit_work_44: 2766716098558867650
+      Coiny-Regular_se_rep_edit_work_45: -204468639842275277
+      Coiny-Regular_se_rep_edit_work_46: 5710373497455540490
+      Coiny-Regular_se_rep_edit_work_47: -3518720403020962099
+      Coiny-Regular_se_rep_edit_work_48: -4575952019765306246
+      Coiny-Regular_se_rep_edit_work_49: 7892338732037523523
+      Coiny-Regular_se_rep_edit_work_5: -726150121712614758
+      Coiny-Regular_se_rep_edit_work_50: 6659428859970937923
+      Coiny-Regular_se_rep_edit_work_51: -3473653448559826139
+      Coiny-Regular_se_rep_edit_work_52: 4327524037996325592
+      Coiny-Regular_se_rep_edit_work_53: -8394001666407534233
+      Coiny-Regular_se_rep_edit_work_54: 8437376455567280884
+      Coiny-Regular_se_rep_edit_work_55: 4545427761601571276
+      Coiny-Regular_se_rep_edit_work_56: -1480272725544949701
+      Coiny-Regular_se_rep_edit_work_57: 6428800356391263004
+      Coiny-Regular_se_rep_edit_work_58: 1273755365992449769
+      Coiny-Regular_se_rep_edit_work_59: 3877956265206360587
+      Coiny-Regular_se_rep_edit_work_6: -4246746102187224095
+      Coiny-Regular_se_rep_edit_work_60: -2545901615673526185
+      Coiny-Regular_se_rep_edit_work_61: -4735223888462988027
+      Coiny-Regular_se_rep_edit_work_62: 6059232198777478381
+      Coiny-Regular_se_rep_edit_work_63: -7855412005825542582
+      Coiny-Regular_se_rep_edit_work_64: 4028581619060285467
+      Coiny-Regular_se_rep_edit_work_65: -6404545697309399174
+      Coiny-Regular_se_rep_edit_work_66: -5492562598031890110
+      Coiny-Regular_se_rep_edit_work_67: 1624270936539329516
+      Coiny-Regular_se_rep_edit_work_68: 6924959246187805152
+      Coiny-Regular_se_rep_edit_work_69: 658750174333315559
+      Coiny-Regular_se_rep_edit_work_7: -208493720839589683
+      Coiny-Regular_se_rep_edit_work_70: -2003304803186350175
+      Coiny-Regular_se_rep_edit_work_71: 8973541207811660531
+      Coiny-Regular_se_rep_edit_work_72: -7592803890529658408
+      Coiny-Regular_se_rep_edit_work_73: -1721616067109193166
+      Coiny-Regular_se_rep_edit_work_74: 6152121123521198700
+      Coiny-Regular_se_rep_edit_work_75: 2363860779509596290
+      Coiny-Regular_se_rep_edit_work_76: -5510862965962730127
+      Coiny-Regular_se_rep_edit_work_77: -3556515522107948549
+      Coiny-Regular_se_rep_edit_work_78: -2933550202027213694
+      Coiny-Regular_se_rep_edit_work_79: -8413905720848858982
+      Coiny-Regular_se_rep_edit_work_8: -5667291464536596706
+      Coiny-Regular_se_rep_edit_work_80: -4888153286100317001
+      Coiny-Regular_se_rep_edit_work_81: -4798093288685371274
+      Coiny-Regular_se_rep_edit_work_82: -8073772716907828288
+      Coiny-Regular_se_rep_edit_work_83: 5225459682823886152
+      Coiny-Regular_se_rep_edit_work_84: 2425477257004695285
+      Coiny-Regular_se_rep_edit_work_85: -6426193527907929160
+      Coiny-Regular_se_rep_edit_work_86: 1753743477738583236
+      Coiny-Regular_se_rep_edit_work_87: 6951759831340574191
+      Coiny-Regular_se_rep_edit_work_88: 5432655890598350336
+      Coiny-Regular_se_rep_edit_work_89: 5084309992889882083
+      Coiny-Regular_se_rep_edit_work_9: -6292538991885187924
+      Coiny-Regular_se_rep_edit_work_90: -3808241513143654208
+      Coiny-Regular_se_rep_edit_work_91: 5882122235970730697
+      Coiny-Regular_se_rep_edit_work_92: 4331287044903728717
+      Coiny-Regular_se_rep_edit_work_93: 6487544221640796979
+      Coiny-Regular_se_rep_edit_work_94: 5772934433745129266
+      Coiny-Regular_se_rep_edit_work_95: -4901766203881925869
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/EditFolder/Coiny-Regular_SEFont_0 2/Coiny-Regular_se_rep_edit_work.png
+  uploadId: 970336

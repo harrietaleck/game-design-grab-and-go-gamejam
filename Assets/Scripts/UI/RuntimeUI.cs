@@ -69,36 +69,95 @@ public static class RuntimeUI
         tmp.fontStyle = style;
         tmp.raycastTarget = false;
         tmp.textWrappingMode = TextWrappingModes.Normal;
+        ApplyThemeFont(tmp);
         return tmp;
+    }
+
+    /// <summary>Switches a TMP text to the Sci-Fi UI font when the theme provides it.</summary>
+    public static void ApplyThemeFont(TMP_Text text)
+    {
+        if (text == null) return;
+        var theme = UITheme.Active;
+        var font = theme != null ? theme.HudFontAsset : null;
+        if (font != null) text.font = font;
+    }
+
+    /// <summary>
+    /// Sci-Fi glass window (9-sliced frame + dark backing for readability). Falls back to a flat panel.
+    /// Children added to the returned image draw on top of the window.
+    /// </summary>
+    public static Image CreateWindow(Transform parent, string name, Color? glassTint = null, float backingAlpha = 0.55f)
+    {
+        var theme = UITheme.Active;
+        var sprite = theme != null ? theme.window.GetSprite() : null;
+        if (sprite == null)
+            return CreatePanel(parent, name, PanelDark);
+
+        var frame = CreatePanel(parent, name, glassTint ?? new Color(0.75f, 0.92f, 1f, 1f));
+        frame.sprite = sprite;
+        frame.type = Image.Type.Sliced;
+        frame.pixelsPerUnitMultiplier = theme.window.borderScale;
+        var backing = CreatePanel(frame.transform, "Backing", new Color(0.01f, 0.03f, 0.07f, backingAlpha));
+        backing.raycastTarget = false;
+        Stretch(backing.rectTransform, 22f);
+        return frame;
     }
 
     public static Button CreateButton(Transform parent, string name, string label, UnityAction onClick, Color? color = null)
     {
+        var theme = UITheme.Active;
+        var normal = theme != null ? theme.button.GetSprite() : null;
         var img = CreatePanel(parent, name, color ?? Accent);
         var btn = img.gameObject.AddComponent<Button>();
-        var colors = btn.colors;
-        colors.highlightedColor = Color.white;
-        colors.pressedColor = new Color(0.7f, 0.7f, 0.7f, 1f);
-        btn.colors = colors;
+        Color labelColor = new Color(0.02f, 0.05f, 0.1f);
+        if (normal != null)
+        {
+            // Sci-Fi UI button art with the active state on hover/press/selection.
+            img.sprite = normal;
+            img.type = Image.Type.Sliced;
+            img.pixelsPerUnitMultiplier = theme.button.borderScale;
+            img.color = color.HasValue && color.Value != Accent ? Color.Lerp(Color.white, color.Value, 0.35f) : Color.white;
+            var active = theme.buttonActive.GetSprite();
+            btn.transition = Selectable.Transition.SpriteSwap;
+            btn.spriteState = new SpriteState { highlightedSprite = active, pressedSprite = active, selectedSprite = active };
+            labelColor = Color.white;
+        }
+        else
+        {
+            var colors = btn.colors;
+            colors.highlightedColor = Color.white;
+            colors.pressedColor = new Color(0.7f, 0.7f, 0.7f, 1f);
+            btn.colors = colors;
+        }
         if (onClick != null) btn.onClick.AddListener(onClick);
-        var text = CreateText(img.transform, "Label", label, 30f, TextAlignmentOptions.Center, new Color(0.02f, 0.05f, 0.1f), FontStyles.Bold);
-        Stretch(text.rectTransform);
+        var text = CreateText(img.transform, "Label", label, 30f, TextAlignmentOptions.Center, labelColor, FontStyles.Bold);
+        Stretch(text.rectTransform, normal != null ? 14f : 0f);
         return btn;
     }
 
     /// <summary>Horizontal fill bar (background + fill). Returns the fill image (Filled, horizontal).</summary>
     public static Image CreateBar(Transform parent, string name, Color background, Color fill)
     {
-        var bg = CreatePanel(parent, name, background);
+        var theme = UITheme.Active;
+        var frameSprite = theme != null ? theme.barFrame.GetSprite() : null;
+        var fillSprite = theme != null ? theme.barFill.GetSprite() : null;
+
+        var bg = CreatePanel(parent, name, frameSprite != null ? Color.white : background);
         bg.raycastTarget = false;
+        if (frameSprite != null)
+        {
+            bg.sprite = frameSprite;
+            bg.type = Image.Type.Sliced;
+            bg.pixelsPerUnitMultiplier = theme.barFrame.borderScale;
+        }
         var fillImg = CreatePanel(bg.transform, "Fill", fill);
         fillImg.raycastTarget = false;
-        Stretch(fillImg.rectTransform, 3f);
+        Stretch(fillImg.rectTransform, frameSprite != null ? 6f : 3f);
         fillImg.type = Image.Type.Filled;
         fillImg.fillMethod = Image.FillMethod.Horizontal;
         fillImg.fillOrigin = 0;
-        // Filled images need a sprite to render the fill amount correctly.
-        fillImg.sprite = WhiteSprite;
+        // Filled images need a sprite; the theme's light capsule tints nicely to any colour.
+        fillImg.sprite = fillSprite != null ? fillSprite : WhiteSprite;
         return fillImg;
     }
 

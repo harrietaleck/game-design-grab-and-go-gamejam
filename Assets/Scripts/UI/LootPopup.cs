@@ -19,6 +19,8 @@ public class LootPopup : MonoBehaviour
         popup._text.fontSize = value >= 5 ? 5f : 3.5f;
         popup._text.alignment = TextAlignmentOptions.Center;
         popup._text.fontStyle = FontStyles.Bold;
+        var theme = UITheme.Active;
+        if (theme != null && theme.HudFontAsset != null) popup._text.font = theme.HudFontAsset;
         popup._color = value >= 5 ? new Color(1f, 0.8f, 0.2f) : new Color(1f, 0.95f, 0.6f);
         popup._text.color = popup._color;
         popup._born = Time.time;

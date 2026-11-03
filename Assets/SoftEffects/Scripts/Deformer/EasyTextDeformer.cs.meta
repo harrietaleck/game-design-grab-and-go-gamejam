@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c994dff7a398da94088e3cd0627c87f1
+timeCreated: 1497529313
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/Scripts/Deformer/EasyTextDeformer.cs
+  uploadId: 970336

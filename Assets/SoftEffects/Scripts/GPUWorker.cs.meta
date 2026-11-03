@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 62515b94125aed443afb2f08306dea9b
+timeCreated: 1500195530
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 107555
+  packageName: "MK Easy Text \u2022 Free UI Font Effects Tool"
+  packageVersion: 2.0.1
+  assetPath: Assets/SoftEffects/Scripts/GPUWorker.cs
+  uploadId: 970336

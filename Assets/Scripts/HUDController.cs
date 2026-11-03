@@ -72,6 +72,9 @@ public class HUDController : MonoBehaviour
             _lootBaseColor = lootText.color;
         }
         ResolveHealthLabel();
+        // Sci-Fi GUI skin: the scene's HUD texts use the theme font.
+        foreach (var t in new[] { timerText, thiefStatusText, lootText, healthText, healthLabelText, alertText, controlsHintText })
+            RuntimeUI.ApplyThemeFont(t);
         RefreshAll(force: true);
     }
 

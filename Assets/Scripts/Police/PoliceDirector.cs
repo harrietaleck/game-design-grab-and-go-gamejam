@@ -287,7 +287,7 @@ public class PoliceDirector : MonoBehaviour
     private void BuildWarningUI()
     {
         Transform root = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
-        var panel = RuntimeUI.CreatePanel(root, "PoliceWarning (runtime)", new Color(0.05f, 0.08f, 0.35f, 0.8f));
+        var panel = RuntimeUI.CreateWindow(root, "PoliceWarning (runtime)", new Color(0.55f, 0.65f, 1f, 1f), 0.7f);
         panel.raycastTarget = false;
         RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 0f), new Vector2(520f, 96f), new Vector2(0f, 250f));
         _warningText = RuntimeUI.CreateText(panel.transform, "Text", "POLICE BEHIND!", 30f, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
