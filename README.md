@@ -50,7 +50,8 @@ health, hits, rescues and personal bests.
 ## Project layout
 ```
 Assets/
-  MainScene.unity              gameplay scene (build scene 0)
+  Scenes/FrontEnd.unity        splash, menu, difficulty, story, guide, settings, scoreboard, credits, loading (build scene 0)
+  MainScene.unity              gameplay scene with HUD, pause, game over and win screens (build scene 1)
   Scripts/                     core gameplay (GameStartFlow, HUDController, PlayerLaneMovement, AIThiefLaneDodge,
                                ThiefCollectibleDropper, CollectiblePickup, LaneObstacle, LaneMath, AudioDirector, ...)
   Scripts/Systems/             PolicePressure, DistractionPulse, RescueController, ProgressionStore, ProceduralSfx
@@ -69,8 +70,8 @@ needed no manual wiring. Existing Inspector references and field names were kept
 ## Open, play, build
 1. Unity Hub -> **Add -> Add project from disk** -> select the `game-design-grab` folder (do not use *New project*).
    Open it with Unity **6000.0.44f1**.
-2. Open `Assets/MainScene.unity` and press Play.
-3. Build: **File -> Build Profiles -> Windows**, confirm `MainScene` is scene 0 (ticked), build to a folder **outside** the
+2. Open `Assets/Scenes/FrontEnd.unity` and press Play for the full game (or `Assets/MainScene.unity` to jump straight to gameplay).
+3. Build: **File -> Build Profiles -> Windows**, confirm `FrontEnd` is scene 0 and `MainScene` scene 1 (both ticked), build to a folder **outside** the
    project. The first build needs a few GB of free disk space.
 
 ## Optional: LLM dialogue

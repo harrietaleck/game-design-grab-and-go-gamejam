@@ -148,7 +148,7 @@ public class GameplayHUDExtras : MonoBehaviour
 
     public void Flash(Color c)
     {
-        if (c.a <= 0f) return;
+        if (c.a <= 0f || !GameSettings.ScreenFlash) return;
         _flashColor = c;
         _flashUntil = Time.unscaledTime + flashDuration;
     }

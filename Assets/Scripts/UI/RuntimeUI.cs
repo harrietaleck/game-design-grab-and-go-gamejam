@@ -129,10 +129,36 @@ public static class RuntimeUI
             colors.pressedColor = new Color(0.7f, 0.7f, 0.7f, 1f);
             btn.colors = colors;
         }
+        btn.onClick.AddListener(() => ProceduralSfx.Play(ProceduralSfx.RadioBlip, 0.4f));
         if (onClick != null) btn.onClick.AddListener(onClick);
         var text = CreateText(img.transform, "Label", label, 30f, TextAlignmentOptions.Center, labelColor, FontStyles.Bold);
         Stretch(text.rectTransform, normal != null ? 14f : 0f);
         return btn;
+    }
+
+    /// <summary>A 0..1 horizontal slider. Place it with Place() on its RectTransform.</summary>
+    public static Slider CreateSlider(Transform parent, string name, float value)
+    {
+        var bg = CreatePanel(parent, name, new Color(0f, 0f, 0f, 0.6f));
+        var fillArea = CreateRect(bg.transform, "Fill Area");
+        Stretch(fillArea);
+        var fill = CreatePanel(fillArea, "Fill", Accent);
+        fill.raycastTarget = false;
+        fill.rectTransform.sizeDelta = Vector2.zero;
+        var handleArea = CreateRect(bg.transform, "Handle Area");
+        Stretch(handleArea);
+        var handle = CreatePanel(handleArea, "Handle", Color.white);
+        handle.rectTransform.sizeDelta = new Vector2(30f, 0f) * U;
+
+        var slider = bg.gameObject.AddComponent<Slider>();
+        slider.targetGraphic = handle;
+        slider.fillRect = fill.rectTransform;
+        slider.handleRect = handle.rectTransform;
+        slider.direction = Slider.Direction.LeftToRight;
+        slider.minValue = 0f;
+        slider.maxValue = 1f;
+        slider.SetValueWithoutNotify(Mathf.Clamp01(value));
+        return slider;
     }
 
     /// <summary>Horizontal fill bar (background + fill). Returns the fill image (Filled, horizontal).</summary>

@@ -54,8 +54,16 @@ public class GameStartFlow : MonoBehaviour
     public static bool IsGameplayActive =>
         Instance != null && (Instance.State == RunState.Playing || Instance.State == RunState.AJCaught);
 
-    // Retry reloads the scene and skips the menu.
+    public const string FrontEndSceneName = "FrontEnd";
+    public const string GameSceneName = "MainScene";
+
+    // Retry and the front end load the scene and skip its built-in menu.
     private static bool s_autoStartOnLoad;
+
+    public static void RequestAutoStart() => s_autoStartOnLoad = true;
+
+    /// <summary>Lets an open sub-screen (e.g. settings on the pause menu) consume the pause key. Returns true if it did.</summary>
+    public Func<bool> PauseBackHandler;
 
     // ---------- Events ----------
     public event Action<RunState, RunState> StateChanged;       // (old, new)
@@ -192,7 +200,7 @@ public class GameStartFlow : MonoBehaviour
                     SetPaused(true);
                 break;
             case RunState.Paused:
-                if (AnyKeyDown(pauseKeys))
+                if (AnyKeyDown(pauseKeys) && (PauseBackHandler == null || !PauseBackHandler()))
                     SetPaused(false);
                 break;
             case RunState.Results:
@@ -328,6 +336,12 @@ public class GameStartFlow : MonoBehaviour
             EndRun(RunEndReason.Abandoned);
         }
         s_autoStartOnLoad = false;
+        if (Application.CanStreamedLevelBeLoaded(FrontEndSceneName))
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(FrontEndSceneName);
+            return;
+        }
         ReloadScene();
     }
 

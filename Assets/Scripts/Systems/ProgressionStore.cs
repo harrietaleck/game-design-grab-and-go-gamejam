@@ -66,6 +66,7 @@ public class ProgressionStore : MonoBehaviour
             PlayerPrefs.SetFloat(KeyBestTime, _flow.TimeSurvived);
         }
         PlayerPrefs.Save();
+        ScoreboardStore.Record(_flow.LootValue, _flow.TimeSurvived, GameStartFlow.StatusTextFor(reason));
     }
 
     private static string BuildResultsLines(GameStartFlow f)

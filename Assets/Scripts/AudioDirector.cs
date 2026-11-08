@@ -53,11 +53,8 @@ public class AudioDirector : MonoBehaviour
 
     private void Update()
     {
-        if (!Mathf.Approximately(_ambienceDuck, _ambienceDuckTarget))
-        {
-            _ambienceDuck = Mathf.MoveTowards(_ambienceDuck, _ambienceDuckTarget, Time.unscaledDeltaTime * 2f);
-            if (ambienceSource != null) ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck;
-        }
+        _ambienceDuck = Mathf.MoveTowards(_ambienceDuck, _ambienceDuckTarget, Time.unscaledDeltaTime * 2f);
+        if (ambienceSource != null) ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck * GameSettings.MusicVolume;
 
         // Keep ambience continuous with no random start delay/gaps.
         if (playAmbienceRandom && ambienceSource != null && !ambienceSource.isPlaying)
@@ -86,7 +83,7 @@ public class AudioDirector : MonoBehaviour
         ambienceSource.pitch = Random.Range(Mathf.Min(pitchMin, pitchMax), Mathf.Max(pitchMin, pitchMax));
         ambienceSource.clip = clip;
         _ambienceBaseVolume = Random.Range(Mathf.Min(ambienceVolumeMin, ambienceVolumeMax), Mathf.Max(ambienceVolumeMin, ambienceVolumeMax));
-        ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck;
+        ambienceSource.volume = _ambienceBaseVolume * _ambienceDuck * GameSettings.MusicVolume;
         ambienceSource.Play();
     }
 
@@ -124,7 +121,7 @@ public class AudioDirector : MonoBehaviour
     {
         float volume = Random.Range(Mathf.Min(minVolume, maxVolume), Mathf.Max(minVolume, maxVolume));
         source.pitch = Random.Range(Mathf.Min(pitchMin, pitchMax), Mathf.Max(pitchMin, pitchMax));
-        source.PlayOneShot(clip, volume);
+        source.PlayOneShot(clip, volume * GameSettings.SfxVolume);
     }
 
     private void EnsureAudioSources()

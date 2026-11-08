@@ -36,7 +36,7 @@ public class CameraFollowTarget : MonoBehaviour
     /// <summary>Short, subtle positional shake (scaled time: stops when paused).</summary>
     public void Shake(float amplitude, float duration)
     {
-        if (amplitude <= 0f || duration <= 0f) return;
+        if (amplitude <= 0f || duration <= 0f || !GameSettings.ScreenShake) return;
         _shakeAmplitude = amplitude;
         _shakeUntil = Time.time + duration;
     }

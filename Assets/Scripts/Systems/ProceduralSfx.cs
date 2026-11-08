@@ -25,7 +25,7 @@ public static class ProceduralSfx
             s_source.spatialBlend = 0f;
             s_source.ignoreListenerPause = true;
         }
-        s_source.PlayOneShot(clip, volume);
+        s_source.PlayOneShot(clip, volume * GameSettings.SfxVolume);
     }
 
     private static AudioClip Sweep(string name, float f0, float f1, float seconds, float volume, bool square)

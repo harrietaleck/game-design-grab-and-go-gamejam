@@ -23,7 +23,12 @@ public class RunOverlayUI : MonoBehaviour
 
     private GameStartFlow _flow;
     private GameObject _pausePanel;
+    private GameObject _pauseMenu;
+    private GameObject _pauseSettings;
+    private Button _resumeButton;
     private GameObject _resultsPanel;
+    private GameObject _resultsCard;
+    private GameObject _resultsScoreboard;
     private FancyText _resultsTitle;
     private TextMeshProUGUI _resultsReason;
     private TextMeshProUGUI _resultsStats;
@@ -77,11 +82,31 @@ public class RunOverlayUI : MonoBehaviour
         // ---- Pause ----
         var pause = RuntimeUI.CreatePanel(root, "PauseOverlay (runtime)", new Color(0f, 0f, 0f, 0.6f));
         RuntimeUI.Stretch(pause.rectTransform);
-        FancyText.Create(pause.transform, "PausedText", "PAUSED", 120f, UITheme.Fancy.Neon,
-            new Vector2(0.5f, 0.5f), new Vector2(1200f, 220f), new Vector2(0f, 60f));
-        var pauseHint = RuntimeUI.CreateText(pause.transform, "PausedHint", "ESC / P to resume", 36f,
-            TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(pauseHint.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1000f, 80f), new Vector2(0f, -90f));
+        _pauseMenu = RuntimeUI.CreateRect(pause.transform, "PauseMenu").gameObject;
+        RuntimeUI.Stretch((RectTransform)_pauseMenu.transform);
+        FancyText.Create(_pauseMenu.transform, "PausedText", "PAUSED", 110f, UITheme.Fancy.Neon,
+            new Vector2(0.5f, 1f), new Vector2(1200f, 190f), new Vector2(0f, -110f));
+
+        var buttons = new (string label, UnityEngine.Events.UnityAction action)[]
+        {
+            ("RESUME", OnResume), ("RETRY", OnRetry), ("SETTINGS", OpenPauseSettings), ("HOME", OnMenu), ("QUIT", GameNavigation.Quit)
+        };
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            var b = RuntimeUI.CreateButton(_pauseMenu.transform, buttons[i].label + " Button", buttons[i].label, buttons[i].action);
+            RuntimeUI.Place((RectTransform)b.transform, new Vector2(0.5f, 1f), new Vector2(520f, 88f), new Vector2(0f, -340f - i * 104f));
+            if (i == 0) _resumeButton = b;
+        }
+
+        _pauseSettings = SharedScreens.BuildSettings(pause.transform, ClosePauseSettings);
+        _pauseSettings.SetActive(false);
+        _flow.PauseBackHandler = () =>
+        {
+            if (!_pauseSettings.activeSelf) return false;
+            ClosePauseSettings();
+            return true;
+        };
+
         _pausePanel = pause.gameObject;
         _pausePanel.SetActive(false);
 
@@ -104,20 +129,35 @@ public class RunOverlayUI : MonoBehaviour
         RuntimeUI.Place(_resultsStats.rectTransform, new Vector2(0.5f, 1f), new Vector2(600f, 520f), new Vector2(0f, -250f));
 
         _resultsExtra = RuntimeUI.CreateText(card.transform, "Extra", "", 26f, TextAlignmentOptions.Center, RuntimeUI.Gold);
-        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 0f), new Vector2(940f, 120f), new Vector2(0f, 140f));
+        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 0f), new Vector2(940f, 100f), new Vector2(0f, 196f));
 
         _retryButton = RuntimeUI.CreateButton(card.transform, "RetryButton", "RETRY  (R)", OnRetry);
-        RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(300f, 70f), new Vector2(-165f, 40f));
-        var menuButton = RuntimeUI.CreateButton(card.transform, "MenuButton", "MENU  (ESC)", OnMenu, new Color(0.85f, 0.85f, 0.9f));
-        RuntimeUI.Place((RectTransform)menuButton.transform, new Vector2(0.5f, 0f), new Vector2(300f, 70f), new Vector2(165f, 40f));
+        RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(-220f, 118f));
+        var homeButton = RuntimeUI.CreateButton(card.transform, "HomeButton", "HOME  (ESC)", OnMenu, new Color(0.85f, 0.85f, 0.9f));
+        RuntimeUI.Place((RectTransform)homeButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(220f, 118f));
+        var scoresButton = RuntimeUI.CreateButton(card.transform, "ScoreboardButton", "SCOREBOARD", OpenResultsScoreboard, new Color(0.85f, 0.85f, 0.9f));
+        RuntimeUI.Place((RectTransform)scoresButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(-220f, 36f));
+        var quitButton = RuntimeUI.CreateButton(card.transform, "QuitButton", "QUIT", GameNavigation.Quit, new Color(0.85f, 0.85f, 0.9f));
+        RuntimeUI.Place((RectTransform)quitButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(220f, 36f));
+
+        _resultsCard = card.gameObject;
+        _resultsScoreboard = SharedScreens.BuildScoreboard(dim.transform, CloseResultsScoreboard, allowClear: false);
+        _resultsScoreboard.SetActive(false);
 
         _resultsPanel.SetActive(false);
     }
 
     private void OnStateChanged(GameStartFlow.RunState oldState, GameStartFlow.RunState newState)
     {
-        _pausePanel.SetActive(newState == GameStartFlow.RunState.Paused);
+        bool paused = newState == GameStartFlow.RunState.Paused;
+        _pausePanel.SetActive(paused);
         _pausePanel.transform.SetAsLastSibling();
+        if (paused)
+        {
+            _pauseSettings.SetActive(false);
+            _pauseMenu.SetActive(true);
+            _resumeButton.Select();
+        }
 
         if (newState == GameStartFlow.RunState.Results)
             StartCoroutine(ShowResultsNextFrame());
@@ -171,6 +211,35 @@ public class RunOverlayUI : MonoBehaviour
             case RunEndReason.Abandoned: return "Run abandoned.";
             default: return "";
         }
+    }
+
+    private void OnResume() { if (_flow != null) _flow.SetPaused(false); }
+
+    private void OpenPauseSettings()
+    {
+        _pauseMenu.SetActive(false);
+        _pauseSettings.SetActive(true);
+    }
+
+    private void ClosePauseSettings()
+    {
+        GameSettings.Save();
+        _pauseSettings.SetActive(false);
+        _pauseMenu.SetActive(true);
+        _resumeButton.Select();
+    }
+
+    private void OpenResultsScoreboard()
+    {
+        _resultsCard.SetActive(false);
+        _resultsScoreboard.SetActive(true);
+    }
+
+    private void CloseResultsScoreboard()
+    {
+        _resultsScoreboard.SetActive(false);
+        _resultsCard.SetActive(true);
+        _retryButton.Select();
     }
 
     private void OnRetry() { if (_flow != null) _flow.Retry(); }

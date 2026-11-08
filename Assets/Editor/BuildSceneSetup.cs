@@ -4,8 +4,8 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Guarantees the gameplay scene (Assets/MainScene.unity) is build scene 0.
-/// Runs once when the editor loads scripts, and is also available from the menu.
+/// Guarantees the front-end scene is build scene 0 and the gameplay scene (Assets/MainScene.unity) follows it.
+/// Without a front-end scene, MainScene is scene 0. Runs when the editor loads scripts, and from the menu.
 /// SampleScene is kept in the list but disabled (not deleted) so nothing is lost.
 /// </summary>
 [InitializeOnLoad]
@@ -25,13 +25,16 @@ public static class BuildSceneSetup
     private static void EnsureBuildScenes(bool logIfUnchanged)
     {
         var scenes = EditorBuildSettings.scenes.ToList();
-        bool mainIsFirstAndEnabled = scenes.Count > 0 && scenes[0].path == MainScenePath && scenes[0].enabled;
+        bool hasFrontEnd = AssetDatabase.LoadAssetAtPath<SceneAsset>(FrontEndSceneBuilder.ScenePath) != null;
+        int mainIndex = hasFrontEnd ? 1 : 0;
+        bool frontEndFirst = !hasFrontEnd || (scenes.Count > 0 && scenes[0].path == FrontEndSceneBuilder.ScenePath && scenes[0].enabled);
+        bool mainInPlace = scenes.Count > mainIndex && scenes[mainIndex].path == MainScenePath && scenes[mainIndex].enabled;
         bool sampleDisabled = scenes.All(s => s.path != SampleScenePath || !s.enabled);
 
-        if (mainIsFirstAndEnabled && sampleDisabled)
+        if (frontEndFirst && mainInPlace && sampleDisabled)
         {
             if (logIfUnchanged)
-                Debug.Log("[BuildSceneSetup] Build scenes already correct: MainScene is scene 0.");
+                Debug.Log("[BuildSceneSetup] Build scenes already correct.");
             return;
         }
 
@@ -42,7 +45,9 @@ public static class BuildSceneSetup
         }
 
         scenes.RemoveAll(s => s.path == MainScenePath);
+        scenes.RemoveAll(s => s.path == FrontEndSceneBuilder.ScenePath);
         scenes.Insert(0, new EditorBuildSettingsScene(MainScenePath, true));
+        if (hasFrontEnd) scenes.Insert(0, new EditorBuildSettingsScene(FrontEndSceneBuilder.ScenePath, true));
         for (int i = 0; i < scenes.Count; i++)
         {
             if (scenes[i].path == SampleScenePath)
@@ -50,7 +55,7 @@ public static class BuildSceneSetup
         }
 
         EditorBuildSettings.scenes = scenes.ToArray();
-        Debug.Log("[BuildSceneSetup] Build scenes updated: MainScene is scene 0, SampleScene disabled.");
+        Debug.Log("[BuildSceneSetup] Build scenes updated.");
     }
 }
 #endif

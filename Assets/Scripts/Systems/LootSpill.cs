@@ -65,7 +65,7 @@ public class LootSpill : MonoBehaviour
 
     private void OnGameEvent(GameEventData e)
     {
-        if (e.type == GameEventType.LootSpilled && e.value > 0)
+        if (e.type == GameEventType.LootSpilled && e.value > 0 && GameSettings.CoinEffects)
             Spill(e.value);
     }
 
@@ -92,7 +92,7 @@ public class LootSpill : MonoBehaviour
         for (int i = 0; i < coins; i++) Launch(coinPrefab, origin);
 
         var clip = SpillClip();
-        if (clip != null) AudioSource.PlayClipAtPoint(clip, origin, spillVolume);
+        if (clip != null) AudioSource.PlayClipAtPoint(clip, origin, spillVolume * GameSettings.SfxVolume);
     }
 
     private void Launch(GameObject prefab, Vector3 origin)

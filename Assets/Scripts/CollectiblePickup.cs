@@ -93,7 +93,7 @@ public class CollectiblePickup : MonoBehaviour
         RuntimeCollectedValue = flow != null ? flow.LootValue : RuntimeCollectedValue + awardValue;
 
         if (pickupAudio != null)
-            AudioSource.PlayClipAtPoint(pickupAudio, transform.position, pickupAudioVolume);
+            AudioSource.PlayClipAtPoint(pickupAudio, transform.position, pickupAudioVolume * GameSettings.SfxVolume);
 
         var hud = FindFirstObjectByType<HUDController>();
         if (hud != null)
