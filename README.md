@@ -27,6 +27,7 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
   interceptors jog towards you from ahead, and sidewalk officers step into the outer lanes. An officer grab costs Claire 15
   health; an officer reaching AJ catches him (rescue time). More officers, and more chasers, as police pressure rises.
   The Distraction Pulse stuns every officer for 3 s.
+- **Roadblocks:** police cars parked across three lanes. A **ROADBLOCK** banner shows which lane is open - get to the gap. Hitting one costs 20 health and half your loot.
 - **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
   cools down after 3 calm seconds. At 100 the police grab AJ.
 - **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.
@@ -79,7 +80,6 @@ If the service is off, slow or fails, AJ falls back to prewritten lines instantl
 
 ## Known limitations
 - AJ's voice (text-to-speech) is not implemented yet; dialogue is subtitles + a radio blip. Needs a TTS provider decision.
-- Police officers are stand-ins built from AJ/Claire rigs (blue uniform tint, cap, POLICE tag) because the project has no police models. Add real ones via a `PoliceSet` asset in `Assets/Resources`. There are no police cars.
 - The LLM backend has been tested in mock mode only (no provider key was used).
 - See `Docs/REGRESSION_CHECKLIST.md` for what has and has not been play-tested.
 

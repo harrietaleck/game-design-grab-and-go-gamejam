@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f71e1def78e9a9b488868749635ab7cc, type: 3}
+  m_Name: PoliceSet
+  m_EditorClassIdentifier: Assembly-CSharp::PoliceSet
+  officerPrefabs:
+  - {fileID: 642909989054810903, guid: a2e2a04d8921316448b92f30ce1d2ed5, type: 3}
+  tintPrefabs: 0
+  officerRunController: {fileID: 9100000, guid: 91fc1e62491c3714bb52f36fadd7580e, type: 2}
+  policeCar: {fileID: 115512, guid: 7be733fca5977484eab72a8eca73b1b2, type: 3}
+  helicopter: {fileID: 100006, guid: ebfa405660e25c549bb7039f0b44f8ff, type: 3}
+  generatorVersion: 1

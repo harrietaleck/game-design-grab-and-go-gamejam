@@ -364,7 +364,9 @@ public class GameStartFlow : MonoBehaviour
             return;
         CollisionCount++;
         SetClaireHealth(ClaireHealth - amount);
-        GameEvents.Raise(GameEventType.ClaireCollision, Mathf.RoundToInt(amount));
+        // A fatal hit has already ended the run; RunFailed must be the last event of a run.
+        if (!_ended)
+            GameEvents.Raise(GameEventType.ClaireCollision, Mathf.RoundToInt(amount));
     }
 
     public void SetClaireHealth(float value)

@@ -359,6 +359,10 @@ public class PoliceDirector : MonoBehaviour
                 var t = Instantiate(prefab, _templateHolder);
                 StripToVisual(t);
                 if (set.tintPrefabs) TintUniform(t);
+                var animator = t.GetComponentInChildren<Animator>(true);
+                if (animator != null && animator.runtimeAnimatorController == null)
+                    animator.runtimeAnimatorController = set.officerRunController;
+                AddTag(t);
                 _templates.Add(t);
             }
         }

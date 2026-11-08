@@ -36,12 +36,68 @@ public class GameplayHUDExtras : MonoBehaviour
     private float _flashUntil;
     private Color _flashColor;
 
+    // Distances from the canvas edges (canvas units) for the scene's non-UI-anchored HUD groups.
+    private const float HealthGroupLeft = 122f;
+    private const float HealthGroupBottom = 32f;
+    private const float LootGroupRight = 95f;
+    private const float LootGroupTop = 67f;
+
+    private Transform _healthGroup;
+    private Transform _lootGroup;
+    private Vector2 _laidOutSize;
+
     private void Awake()
     {
         Instance = this;
         _flow = GetComponent<GameStartFlow>();
         _hudRoot = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
         Build();
+        AnchorSceneHud();
+    }
+
+    /// <summary>
+    /// MainScene's HUD is positioned from the screen centre for one aspect ratio, so it slides off wider screens.
+    /// Pins each element to its screen edge instead.
+    /// </summary>
+    private void AnchorSceneHud()
+    {
+        var hud = _flow != null ? _flow.hudController : null;
+        if (hud == null) return;
+        PinToEdge(hud.timerText, new Vector2(0.5f, 1f), new Vector2(0f, -4f));
+        PinToEdge(hud.thiefStatusText, new Vector2(0f, 1f), new Vector2(12f, -4f));
+        PinToEdge(hud.alertText, new Vector2(0.5f, 0f), new Vector2(0f, 12f));
+        PinToEdge(hud.controlsHintText, new Vector2(1f, 0f), new Vector2(-12f, -12f));
+        if (hud.controlsHintText != null) // wide enough for the whole hint on one line
+            hud.controlsHintText.rectTransform.sizeDelta = new Vector2(340f, hud.controlsHintText.rectTransform.sizeDelta.y);
+        _healthGroup = hud.healthSlider != null ? ChildOfHudRoot(hud.healthSlider.transform) : null;
+        _lootGroup = hud.lootText != null ? ChildOfHudRoot(hud.lootText.transform) : null;
+    }
+
+    private static void PinToEdge(TMP_Text text, Vector2 anchor, Vector2 offset)
+    {
+        if (text == null) return;
+        var rt = text.rectTransform;
+        rt.anchorMin = rt.anchorMax = rt.pivot = anchor;
+        rt.anchoredPosition = offset;
+    }
+
+    private Transform ChildOfHudRoot(Transform t)
+    {
+        while (t != null && t.parent != _hudRoot) t = t.parent;
+        return t;
+    }
+
+    /// <summary>The health and loot groups are plain Transforms (no anchors), so they are placed from the canvas size.</summary>
+    private void LayoutSceneGroups()
+    {
+        if (!(_hudRoot is RectTransform root)) return;
+        Vector2 size = root.rect.size;
+        if (size == _laidOutSize) return;
+        _laidOutSize = size;
+        if (_healthGroup != null)
+            _healthGroup.localPosition = new Vector3(-size.x * 0.5f + HealthGroupLeft, -size.y * 0.5f + HealthGroupBottom, _healthGroup.localPosition.z);
+        if (_lootGroup != null)
+            _lootGroup.localPosition = new Vector3(size.x * 0.5f - LootGroupRight, size.y * 0.5f - LootGroupTop, _lootGroup.localPosition.z);
     }
 
     private void OnDestroy() { if (Instance == this) Instance = null; }
@@ -99,6 +155,8 @@ public class GameplayHUDExtras : MonoBehaviour
 
     private void Update()
     {
+        LayoutSceneGroups();
+
         // Pressure meter
         var pressure = PolicePressure.Instance;
         float p = pressure != null ? pressure.Normalized : 0f;

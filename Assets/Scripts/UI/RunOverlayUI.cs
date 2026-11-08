@@ -138,15 +138,16 @@ public class RunOverlayUI : MonoBehaviour
         _resultsTitle.SetText(won ? "GETAWAY SUCCESSFUL!" : "GETAWAY FAILED");
         _resultsReason.text = ReasonText(f.EndReason);
 
+        const string col = "<pos=60%>"; // a fixed value column; tab stops vary with label width
         _resultsStats.text =
-            $"Loot value\t<b>{f.LootValue}</b>\n" +
-            $"Coins\t\t<b>{f.CoinCount}</b>\n" +
-            $"Gold stacks\t<b>{f.GoldStackCount}</b>\n" +
-            $"Loot lost\t<b>{f.LootLost}</b>\n" +
-            $"Time survived\t<b>{RuntimeUI.FormatTime(f.TimeSurvived)}</b>\n" +
-            $"Claire's health\t<b>{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}</b>\n" +
-            $"Hits taken\t<b>{f.CollisionCount}</b>\n" +
-            $"Rescues\t\t<b>{f.RescueSuccessCount}/{f.CaptureCount}</b>";
+            $"Loot value{col}<b>{f.LootValue}</b>\n" +
+            $"Coins{col}<b>{f.CoinCount}</b>\n" +
+            $"Gold stacks{col}<b>{f.GoldStackCount}</b>\n" +
+            $"Loot lost{col}<b>{f.LootLost}</b>\n" +
+            $"Time survived{col}<b>{RuntimeUI.FormatTime(f.TimeSurvived)}</b>\n" +
+            $"Claire's health{col}<b>{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}</b>\n" +
+            $"Hits taken{col}<b>{f.CollisionCount}</b>\n" +
+            $"Rescues{col}<b>{f.RescueSuccessCount}/{f.CaptureCount}</b>";
 
         string extra = null;
         try { extra = ExtraResultsLines?.Invoke(f); } catch (System.Exception e) { Debug.LogException(e); }

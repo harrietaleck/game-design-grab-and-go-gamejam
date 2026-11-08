@@ -103,6 +103,12 @@ public class RoadSpawner : MonoBehaviour
     /// <summary>Raised after each road tile is created: (tile root, tile start Z, tile length). Used by CityDresser.</summary>
     public event System.Action<GameObject, float, float> TileSpawned;
 
+    /// <summary>
+    /// Lets another system replace a tile's obstacle row: (row Z, tile, previous row's free lanes or null).
+    /// Returns this row's free lanes if it placed something, or null to use the normal traffic row.
+    /// </summary>
+    public System.Func<float, Transform, bool[], bool[]> RowOverride;
+
     private float nextSpawnZ = 0f;
     private readonly System.Collections.Generic.List<GameObject> _spawnedTiles = new();
     private int _nextRowObstacleCount = 1;
@@ -202,6 +208,13 @@ public class RoadSpawner : MonoBehaviour
         // Fair start: nothing before safeStartZ.
         if (obstacleZ < safeStartZ)
             return;
+
+        var overrideFree = RowOverride?.Invoke(obstacleZ, tileParent, _prevRowFree);
+        if (overrideFree != null)
+        {
+            _prevRowFree = overrideFree;
+            return;
+        }
 
         float difficulty = EstimateDifficulty(obstacleZ);
         float emptyChance = useDifficultyCurve ? Mathf.Lerp(emptyRowChanceStart, emptyRowChanceEnd, difficulty) : emptyRowChance;

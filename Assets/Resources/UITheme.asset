@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e4fc703a40c4204b96689960f82726e, type: 3}
+  m_Name: UITheme
+  m_EditorClassIdentifier: Assembly-CSharp::UITheme
+  generatorVersion: 1
+  window:
+    texture: {fileID: 2800000, guid: 06edc4e02f9c48647adfed0a778cb8aa, type: 3}
+    border: {x: 110, y: 110, z: 110, w: 110}
+    borderScale: 6
+  button:
+    texture: {fileID: 2800000, guid: 8a6f536f4b2392f40afb62df609f6e40, type: 3}
+    border: {x: 200, y: 170, z: 200, w: 170}
+    borderScale: 5
+  buttonActive:
+    texture: {fileID: 2800000, guid: 67c34bb955c72e6419b7528e10e73c53, type: 3}
+    border: {x: 200, y: 170, z: 200, w: 170}
+    borderScale: 5
+  barFrame:
+    texture: {fileID: 2800000, guid: fcabe002e685bc147918c97e9538d17f, type: 3}
+    border: {x: 40, y: 60, z: 40, w: 60}
+    borderScale: 4
+  barFill:
+    texture: {fileID: 2800000, guid: fd496259f55fb1f4f89429cd523c1af9, type: 3}
+    border: {x: 100, y: 70, z: 100, w: 70}
+    borderScale: 4
+  barRed:
+    texture: {fileID: 2800000, guid: 2678aad9451e8e44a9c17d6e98886f05, type: 3}
+    border: {x: 100, y: 70, z: 100, w: 70}
+    borderScale: 4
+  hudFont: {fileID: 12800000, guid: 8297a2bf97dbbba468bd2518d003a876, type: 3}
+  goldFont: {fileID: 12800000, guid: bae5fb0cf39cfc149943cc49565db3c9, type: 2}
+  neonFont: {fileID: 12800000, guid: e982f992351beda4e88bdb644ea2341c, type: 2}
+  purpleFont: {fileID: 12800000, guid: 1679166d5c47b4a4898eb9776176617c, type: 2}
