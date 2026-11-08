@@ -23,8 +23,8 @@ public class GameplayHUDExtras : MonoBehaviour
 
     [Header("Feedback")]
     [Tooltip("Alpha of the red screen flash when Claire is hit (0 disables).")]
-    [Range(0f, 1f)] public float hitFlashAlpha = 0.28f;
-    public float flashDuration = 0.25f;
+    [Range(0f, 1f)] public float hitFlashAlpha = 0.75f;
+    public float flashDuration = 0.35f;
 
     private GameStartFlow _flow;
     private Transform _hudRoot;
@@ -45,6 +45,9 @@ public class GameplayHUDExtras : MonoBehaviour
     private Transform _healthGroup;
     private Transform _lootGroup;
     private Vector2 _laidOutSize;
+    private Image _statusStripe;
+    private Image _healthFill;
+    private Texture2D _vignetteTexture;
 
     private void Awake()
     {
@@ -63,14 +66,86 @@ public class GameplayHUDExtras : MonoBehaviour
     {
         var hud = _flow != null ? _flow.hudController : null;
         if (hud == null) return;
-        PinToEdge(hud.timerText, new Vector2(0.5f, 1f), new Vector2(0f, -4f));
-        PinToEdge(hud.thiefStatusText, new Vector2(0f, 1f), new Vector2(12f, -4f));
+        PinToEdge(hud.timerText, new Vector2(0.5f, 1f), new Vector2(0f, -5f));
+        PinToEdge(hud.thiefStatusText, new Vector2(0f, 1f), new Vector2(18f, -5f));
         PinToEdge(hud.alertText, new Vector2(0.5f, 0f), new Vector2(0f, 12f));
+        if (hud.timerText != null) hud.timerText.fontStyle = FontStyles.Bold;
+        if (hud.thiefStatusText != null) { hud.thiefStatusText.fontSize = 19f; hud.thiefStatusText.fontStyle = FontStyles.Bold; }
+        if (hud.alertText != null)
+        {
+            hud.alertText.fontStyle = FontStyles.Bold;
+            hud.alertText.rectTransform.sizeDelta = new Vector2(520f, hud.alertText.rectTransform.sizeDelta.y);
+        }
+        BuildHudPanels(hud);
         PinToEdge(hud.controlsHintText, new Vector2(1f, 0f), new Vector2(-12f, -12f));
         if (hud.controlsHintText != null) // wide enough for the whole hint on one line
             hud.controlsHintText.rectTransform.sizeDelta = new Vector2(340f, hud.controlsHintText.rectTransform.sizeDelta.y);
         _healthGroup = hud.healthSlider != null ? ChildOfHudRoot(hud.healthSlider.transform) : null;
         _lootGroup = hud.lootText != null ? ChildOfHudRoot(hud.lootText.transform) : null;
+    }
+
+    /// <summary>Backing panels that give the timer, pressure meter and AJ's status a clear home on any background.</summary>
+    private void BuildHudPanels(HUDController hud)
+    {
+        var top = RuntimeUI.CreateWindow(_hudRoot, "TopPanel (runtime)", null, 0.72f);
+        top.raycastTarget = false;
+        RuntimeUI.Place(top.rectTransform, new Vector2(0.5f, 1f), new Vector2(620f, 196f), Vector2.zero);
+        top.transform.SetAsFirstSibling();
+
+        var chip = RuntimeUI.CreatePanel(_hudRoot, "StatusChip (runtime)", new Color(0.01f, 0.03f, 0.08f, 0.72f));
+        chip.raycastTarget = false;
+        RuntimeUI.Place(chip.rectTransform, new Vector2(0f, 1f), new Vector2(470f, 84f), new Vector2(10f, -4f));
+        chip.transform.SetAsFirstSibling();
+        _statusStripe = RuntimeUI.CreatePanel(chip.transform, "Stripe", Color.green);
+        _statusStripe.raycastTarget = false;
+        var stripe = _statusStripe.rectTransform;
+        stripe.anchorMin = Vector2.zero;
+        stripe.anchorMax = new Vector2(0f, 1f);
+        stripe.pivot = new Vector2(0f, 0.5f);
+        stripe.sizeDelta = new Vector2(5f, 0f);
+
+        if (hud.healthSlider != null && hud.healthSlider.fillRect != null)
+            _healthFill = hud.healthSlider.fillRect.GetComponent<Image>();
+    }
+
+    private void UpdateHudColors()
+    {
+        var hud = _flow != null ? _flow.hudController : null;
+        if (hud == null || _flow == null) return;
+
+        bool caught = hud.thiefReference != null && hud.thiefReference.IsCaught;
+        Color status = caught ? new Color(1f, 0.25f, 0.2f) : new Color(0.25f, 0.95f, 0.45f);
+        if (_statusStripe != null) _statusStripe.color = status;
+        if (hud.thiefStatusText != null) hud.thiefStatusText.color = caught ? status : Color.white;
+
+        if (_healthFill != null)
+        {
+            float health = _flow.ClaireHealth / _flow.MaxHealth;
+            _healthFill.color = health > 0.5f
+                ? Color.Lerp(new Color(1f, 0.8f, 0.2f), new Color(0.35f, 0.95f, 0.45f), (health - 0.5f) * 2f)
+                : Color.Lerp(new Color(1f, 0.2f, 0.15f), new Color(1f, 0.8f, 0.2f), health * 2f);
+        }
+    }
+
+    /// <summary>A soft edge-only mask, so hit and low-health warnings frame the action instead of covering it.</summary>
+    private Sprite CreateVignette()
+    {
+        const int size = 128;
+        _vignetteTexture = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+        var pixels = new Color32[size * size];
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float dx = (x + 0.5f) / size * 2f - 1f;
+                float dy = (y + 0.5f) / size * 2f - 1f;
+                float a = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 1.25f, Mathf.Sqrt(dx * dx + dy * dy)));
+                pixels[y * size + x] = new Color32(255, 255, 255, (byte)(a * 255f));
+            }
+        }
+        _vignetteTexture.SetPixels32(pixels);
+        _vignetteTexture.Apply();
+        return Sprite.Create(_vignetteTexture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f));
     }
 
     private static void PinToEdge(TMP_Text text, Vector2 anchor, Vector2 offset)
@@ -100,7 +175,11 @@ public class GameplayHUDExtras : MonoBehaviour
             _lootGroup.localPosition = new Vector3(size.x * 0.5f - LootGroupRight, size.y * 0.5f - LootGroupTop, _lootGroup.localPosition.z);
     }
 
-    private void OnDestroy() { if (Instance == this) Instance = null; }
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+        if (_vignetteTexture != null) Destroy(_vignetteTexture);
+    }
     private void OnEnable() => GameEvents.OnEvent += OnGameEvent;
     private void OnDisable() => GameEvents.OnEvent -= OnGameEvent;
 
@@ -108,11 +187,11 @@ public class GameplayHUDExtras : MonoBehaviour
     {
         // Pressure meter: top centre, under the timer.
         var group = RuntimeUI.CreateRect(_hudRoot, "PolicePressure (runtime)");
-        RuntimeUI.Place(group, new Vector2(0.5f, 1f), new Vector2(440f, 62f), new Vector2(0f, -105f));
+        RuntimeUI.Place(group, new Vector2(0.5f, 1f), new Vector2(520f, 72f), new Vector2(0f, -106f));
         _pressureLabel = RuntimeUI.CreateText(group, "Label", "POLICE PRESSURE", 22f, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
-        RuntimeUI.Place(_pressureLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(440f, 26f), Vector2.zero);
+        RuntimeUI.Place(_pressureLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(520f, 28f), Vector2.zero);
         _pressureFill = RuntimeUI.CreateBar(group, "Bar", new Color(0f, 0f, 0f, 0.55f), Color.green);
-        RuntimeUI.Place((RectTransform)_pressureFill.transform.parent, new Vector2(0.5f, 0f), new Vector2(440f, 26f), Vector2.zero);
+        RuntimeUI.Place((RectTransform)_pressureFill.transform.parent, new Vector2(0.5f, 0f), new Vector2(520f, 36f), Vector2.zero);
 
         // Distraction indicator: bottom right, above the controls hint.
         var ability = RuntimeUI.CreatePanel(_hudRoot, "DistractionPulse (runtime)", new Color(0f, 0f, 0f, 0.45f));
@@ -130,6 +209,7 @@ public class GameplayHUDExtras : MonoBehaviour
         // Full-screen flash (top of the canvas, never blocks clicks).
         _flash = RuntimeUI.CreatePanel(transform, "ScreenFlash (runtime)", new Color(1f, 0f, 0f, 0f));
         _flash.raycastTarget = false;
+        _flash.sprite = CreateVignette();
         RuntimeUI.Stretch(_flash.rectTransform);
     }
 
@@ -156,6 +236,7 @@ public class GameplayHUDExtras : MonoBehaviour
     private void Update()
     {
         LayoutSceneGroups();
+        UpdateHudColors();
 
         // Pressure meter
         var pressure = PolicePressure.Instance;
@@ -184,6 +265,13 @@ public class GameplayHUDExtras : MonoBehaviour
         // Flash fade
         float k = Mathf.Clamp01((_flashUntil - Time.unscaledTime) / Mathf.Max(0.01f, flashDuration));
         var fc = _flashColor; fc.a *= k;
+
+        // Low health: a slow red pulse at the screen edges, under any brighter flash.
+        if (GameSettings.ScreenFlash && GameStartFlow.IsGameplayActive && _flow.ClaireHealth <= _flow.MaxHealth * _flow.lowHealthFraction)
+        {
+            float lowHealthAlpha = 0.3f + 0.2f * Mathf.Sin(Time.unscaledTime * 5f);
+            if (lowHealthAlpha > fc.a) fc = new Color(1f, 0.05f, 0.05f, lowHealthAlpha);
+        }
         _flash.color = fc;
     }
 }

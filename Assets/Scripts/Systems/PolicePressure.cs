@@ -96,7 +96,9 @@ public class PolicePressure : MonoBehaviour
                 _suppressGainUntil = 0f;
                 Set(startPressure);
                 break;
-            case GameEventType.ClaireCollision: Add(claireCollisionGain); break;
+            case GameEventType.ClaireCollision:
+                if (e.detail != GameStartFlow.ShotDamageDetail) Add(claireCollisionGain);
+                break;
             case GameEventType.AJNearMiss: Add(ajNearMissGain); break;
             case GameEventType.GoldStackCollected: Add(goldStackGain); break;
             case GameEventType.AJRescued: Set(afterRescuePressure); _highArmed = true; break;

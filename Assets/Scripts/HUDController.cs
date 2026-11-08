@@ -138,7 +138,7 @@ public class HUDController : MonoBehaviour
     public void ShowAlert(string message)
     {
         if (alertText == null) return;
-        alertText.text = message;
+        alertText.text = $"<mark=#000000B0 padding=\"24,24,8,8\">{message}</mark>";
         _alertHideAt = Time.unscaledTime + Mathf.Max(0.1f, alertDuration);
     }
 

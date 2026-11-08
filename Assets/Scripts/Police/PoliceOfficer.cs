@@ -28,10 +28,16 @@ public class PoliceOfficer : MonoBehaviour
     private static readonly int FireState = Animator.StringToHash("Fire");
 
     private int _restState = IdleState;
-    private bool _burstDone;
-    private float _burstEndsAt;
+    private enum Shooting { None, Aiming, Firing }
+    private Shooting _shooting;
+    private float _aimEndsAt;
     private float _nextShotAt;
+    private float _flashOffAt;
+    private int _shotsLeft;
+    private bool _volleyDone;       // guards fire one volley per roadblock
+    private float _nextVolleyAt;
     private Renderer _muzzleFlash;
+    private LineRenderer _laser;
 
     private PoliceDirector _director;
     private Animator _animator;
@@ -61,6 +67,15 @@ public class PoliceOfficer : MonoBehaviour
         }
         foreach (var r in GetComponentsInChildren<Renderer>(true))
             if (r.name == PoliceDirector.MuzzleFlashName) _muzzleFlash = r;
+        if (_muzzleFlash != null && director.LaserMaterial != null)
+        {
+            _laser = gameObject.AddComponent<LineRenderer>();
+            _laser.sharedMaterial = director.LaserMaterial;
+            _laser.positionCount = 2;
+            _laser.startWidth = _laser.endWidth = 0.07f;
+            _laser.enabled = false;
+        }
+        _nextVolleyAt = Time.time + Random.Range(0.5f, 2f);
         _postX = transform.position.x;
         state = State.Approaching;
         Face(kind == Kind.Interceptor || kind == Kind.Guard ? 180f : kind == Kind.Sidewalk ? (sidewalkX < 0f ? 90f : -90f) : 0f);
@@ -128,6 +143,9 @@ public class PoliceOfficer : MonoBehaviour
     private void Behave(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {
         float cz = claire.transform.position.z;
+        if ((kind == Kind.Interceptor || (kind == Kind.Sidewalk && state == State.InLane)) && UpdateShooting(claire, p))
+            return;
+
         switch (kind)
         {
             case Kind.Chaser:
@@ -241,7 +259,7 @@ public class PoliceOfficer : MonoBehaviour
     private void BehaveGuard(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {
         state = State.InLane;
-        if (UpdateBurst(claire, p)) return;
+        if (UpdateShooting(claire, p)) return;
 
         float targetX = _postX;
         float nearest = _director.guardLungeDistance;
@@ -255,42 +273,82 @@ public class PoliceOfficer : MonoBehaviour
     }
 
     /// <summary>
-    /// One burst of fire down the guard's own lane as Claire approaches. It only hits her if she is still in
-    /// that lane when the burst ends. Returns true while firing.
+    /// Laser sight, then a volley of bullets. Guards fire straight down their own lane, so the roadblock's gap stays
+    /// safe; other officers aim where Claire was when the laser ended, so changing lane dodges. Returns true while shooting.
     /// </summary>
-    private bool UpdateBurst(PlayerLaneMovement claire, Vector3 p)
+    private bool UpdateShooting(PlayerLaneMovement claire, Vector3 p)
     {
-        if (_burstEndsAt > 0f)
+        if (_muzzleFlash != null && _muzzleFlash.enabled && Time.time >= _flashOffAt) _muzzleFlash.enabled = false;
+
+        Vector3 muzzle = _muzzleFlash != null ? _muzzleFlash.transform.position : p + Vector3.up * 1.3f;
+        Vector3 target = AimPoint(claire, muzzle);
+
+        switch (_shooting)
         {
-            bool shot = Time.time >= _nextShotAt;
-            if (shot)
-            {
-                _nextShotAt = Time.time + 0.2f;
-                ProceduralSfx.Play(ProceduralSfx.Gunshot, 0.5f);
-            }
-            if (_muzzleFlash != null) _muzzleFlash.enabled = Time.time < _nextShotAt - 0.13f;
+            case Shooting.Aiming:
+                _laser.SetPosition(0, muzzle);
+                _laser.SetPosition(1, target);
+                if (Time.time >= _aimEndsAt)
+                {
+                    _laser.enabled = false;
+                    _shooting = Shooting.Firing;
+                    _shotsLeft = _director.volleyShots;
+                    _nextShotAt = 0f;
+                    _animator.CrossFadeInFixedTime(FireState, 0.08f);
+                }
+                return true;
 
-            if (Time.time < _burstEndsAt) return true;
-
-            _burstEndsAt = 0f;
-            if (_muzzleFlash != null) _muzzleFlash.enabled = false;
-            SetRunning(false);
-            if (Mathf.Abs(claire.transform.position.x - p.x) < _director.grabRadiusX)
-                _director.OnGuardShotClaire();
-            return false;
+            case Shooting.Firing:
+                if (Time.time >= _nextShotAt)
+                {
+                    _nextShotAt = Time.time + _director.shotInterval;
+                    _muzzleFlash.enabled = true;
+                    _flashOffAt = Time.time + 0.05f;
+                    _director.FireBullet(muzzle, target);
+                    if (--_shotsLeft <= 0)
+                    {
+                        EndShooting();
+                        SetRunning(kind != Kind.Guard);
+                        return false;
+                    }
+                }
+                return true;
         }
 
         float ahead = p.z - claire.transform.position.z;
-        if (_burstDone || !_hasIdle || !_animator.HasState(0, FireState)
-            || ahead > _director.guardFireRange || ahead < _director.guardLungeDistance)
+        float closest = kind == Kind.Guard ? _director.guardLungeDistance : _director.shootMinDistance;
+        if (_volleyDone || Time.time < _nextVolleyAt || _muzzleFlash == null || _laser == null || !_hasIdle
+            || !_animator.HasState(0, FireState) || ahead > _director.shootRange || ahead < closest
+            || !_director.TryClaimShooter())
             return false;
 
-        _burstDone = true;
-        _burstEndsAt = Time.time + _director.guardBurstSeconds;
-        _nextShotAt = 0f;
-        _animator.CrossFadeInFixedTime(FireState, 0.1f);
+        _shooting = Shooting.Aiming;
+        _aimEndsAt = Time.time + _director.aimSeconds;
+        _volleyDone = kind == Kind.Guard;
+        _laser.enabled = true;
+        Face(180f);
+        _animator.CrossFadeInFixedTime(IdleState, 0.1f);
         return true;
     }
+
+    private Vector3 AimPoint(PlayerLaneMovement claire, Vector3 muzzle)
+    {
+        Vector3 c = claire.transform.position;
+        float x = kind == Kind.Guard ? _postX : c.x;
+        float flight = Mathf.Max(0f, muzzle.z - c.z) / Mathf.Max(1f, _director.bulletSpeed + claire.forwardSpeed);
+        return new Vector3(x, c.y + 1.2f, c.z + claire.forwardSpeed * flight);
+    }
+
+    private void EndShooting()
+    {
+        if (_shooting == Shooting.None) return;
+        _shooting = Shooting.None;
+        _nextVolleyAt = Time.time + Random.Range(3.5f, 6f);
+        if (_laser != null) _laser.enabled = false;
+        if (_director != null) _director.ReleaseShooter();
+    }
+
+    private void OnDestroy() => EndShooting();
 
     private void ConsiderLungeTarget(Transform runner, Vector3 p, ref float nearest, ref float targetX)
     {
@@ -310,7 +368,7 @@ public class PoliceOfficer : MonoBehaviour
     public void Stun(float seconds)
     {
         if (state == State.Leaving) return;
-        _burstEndsAt = 0f;
+        EndShooting();
         if (_muzzleFlash != null) _muzzleFlash.enabled = false;
         state = State.Stunned;
         _stunUntil = Time.time + Mathf.Max(0.1f, seconds);
@@ -320,7 +378,7 @@ public class PoliceOfficer : MonoBehaviour
     public void BeginLeaving()
     {
         state = State.Leaving;
-        _burstEndsAt = 0f;
+        EndShooting();
         if (_muzzleFlash != null) _muzzleFlash.enabled = false;
         lane = -1;
         _leaveSideX = transform.position.x < 0f ? -_director.SidewalkX : _director.SidewalkX;

@@ -23,6 +23,9 @@ public class PoliceHelicopter : MonoBehaviour
     public float swayWidth = 5f;
     public float smoothTime = 1.6f;
 
+    [Range(0f, 1f)] public float maxVolume = 0.55f;
+
+    private AudioSource _audio;
     private Transform _heli;
     private PlayerLaneMovement _claire;
     private bool _engaged;
@@ -38,12 +41,25 @@ public class PoliceHelicopter : MonoBehaviour
         go.name = "Police Helicopter";
         foreach (var c in go.GetComponentsInChildren<Collider>(true)) Destroy(c);
         go.SetActive(false);
+        _audio = ProceduralSfx.AttachHelicopterSound(go);
         _heli = go.transform;
     }
 
     private void Update()
     {
-        if (_heli == null || !GameStartFlow.IsGameplayActive) return;
+        if (_heli == null) return;
+
+        if (!GameStartFlow.IsGameplayActive)
+        {
+            if (_audio.isPlaying) _audio.Pause();
+            return;
+        }
+        if (_heli.gameObject.activeSelf)
+        {
+            if (!_audio.isPlaying) _audio.UnPause();
+            float closeness = Mathf.Clamp01(1f - Vector3.Distance(_heli.position, _claire.transform.position) / 170f);
+            _audio.volume = maxVolume * closeness * GameSettings.SfxVolume;
+        }
 
         float pressure = PolicePressure.Instance != null ? PolicePressure.Instance.Normalized : 0f;
         Vector3 claire = _claire.transform.position;

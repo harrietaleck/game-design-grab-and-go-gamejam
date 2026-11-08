@@ -30,7 +30,7 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
 - **Roadblocks:** police cars parked across three lanes. A **ROADBLOCK** banner shows which lane is open - get to the gap. Hitting one costs 20 health and half your loot. Officers posted at each roadblock lunge at anyone passing close, so reach the gap early.
 - **Pursuer:** one officer is always on your trail. He runs Claire down from behind (dodge when **POLICE BEHIND** shows) and, if she sidesteps him, goes after AJ.
 - **K9:** a police dog hunts Claire from behind (a **K9 BEHIND** banner warns you). A bite costs 10 health; change lane and it runs past.
-- **Roadblock guards** carry handguns and fire one burst down their own lane. Still being in that lane when it ends costs 10 health.
+- **Gunfire:** a red laser sight shows, then officers ahead fire bullets (5 health each, no police pressure). Change lane to dodge. Roadblock guards fire straight down their own lanes, so the open gap stays safe.
 - **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
   cools down after 3 calm seconds. At 100 the police grab AJ.
 - **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.

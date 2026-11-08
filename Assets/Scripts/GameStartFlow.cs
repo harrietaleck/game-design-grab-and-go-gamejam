@@ -380,7 +380,10 @@ public class GameStartFlow : MonoBehaviour
 
     // ---------- Health (single source of truth) ----------
 
-    public void ApplyClaireDamage(float amount)
+    /// <summary>ClaireCollision detail for gunfire, which hurts Claire without raising police pressure.</summary>
+    public const string ShotDamageDetail = "shot";
+
+    public void ApplyClaireDamage(float amount, string detail = null)
     {
         if (!IsGameplayActive || amount <= 0f)
             return;
@@ -388,7 +391,7 @@ public class GameStartFlow : MonoBehaviour
         SetClaireHealth(ClaireHealth - amount);
         // A fatal hit has already ended the run; RunFailed must be the last event of a run.
         if (!_ended)
-            GameEvents.Raise(GameEventType.ClaireCollision, Mathf.RoundToInt(amount));
+            GameEvents.Raise(GameEventType.ClaireCollision, Mathf.RoundToInt(amount), detail);
     }
 
     public void SetClaireHealth(float value)

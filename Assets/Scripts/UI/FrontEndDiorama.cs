@@ -14,6 +14,7 @@ public class FrontEndDiorama : MonoBehaviour
     private Transform _helicopter;
     private Vector3 _helicopterBase;
     private Material _lightMaterial;
+    private AudioSource _helicopterAudio;
 
     private void Start()
     {
@@ -41,6 +42,7 @@ public class FrontEndDiorama : MonoBehaviour
             heli.transform.SetLocalPositionAndRotation(helicopterOffset, Quaternion.Euler(8f, 0f, 0f));
             _helicopter = heli.transform;
             _helicopterBase = helicopterOffset;
+            _helicopterAudio = ProceduralSfx.AttachHelicopterSound(heli);
         }
     }
 
@@ -74,6 +76,7 @@ public class FrontEndDiorama : MonoBehaviour
     private void Update()
     {
         transform.position += Vector3.forward * (speed * Time.deltaTime);
+        if (_helicopterAudio != null) _helicopterAudio.volume = 0.18f * GameSettings.SfxVolume;
         if (_helicopter != null)
             _helicopter.localPosition = _helicopterBase + new Vector3(Mathf.Sin(Time.time * 0.5f) * 3f, Mathf.Sin(Time.time) * 0.5f, 0f);
     }

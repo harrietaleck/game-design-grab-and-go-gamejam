@@ -18,7 +18,7 @@ public class RadioDialogueUI : MonoBehaviour
     public bool IsShowing => _root != null && _root.activeSelf;
 
     // Authoring size (1920x1080 units); RuntimeUI.Place converts it. Never re-use rt.sizeDelta (already converted).
-    private static readonly Vector2 BoxSize = new Vector2(900f, 235f);
+    private static readonly Vector2 BoxSize = new Vector2(780f, 235f);
 
     private GameObject _root;
     private TextMeshProUGUI _speaker;
@@ -47,13 +47,13 @@ public class RadioDialogueUI : MonoBehaviour
         stripe.rectTransform.sizeDelta = new Vector2(8f, 0f);
 
         _speaker = RuntimeUI.CreateText(panel.transform, "Speaker", "AJ  •  RADIO", 20f, TextAlignmentOptions.Left, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(860f, 30f), new Vector2(24f, -8f));
+        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(740f, 30f), new Vector2(24f, -8f));
 
         _line = RuntimeUI.CreateText(panel.transform, "Line", "", 22f, TextAlignmentOptions.TopLeft, Color.white);
-        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(860f, 118f), new Vector2(24f, -40f));
+        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(740f, 118f), new Vector2(24f, -40f));
 
         _options = RuntimeUI.CreateText(panel.transform, "Options", "", 19f, TextAlignmentOptions.BottomLeft, RuntimeUI.Gold);
-        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(860f, 66f), new Vector2(24f, 8f));
+        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(740f, 66f), new Vector2(24f, 8f));
 
         _root = panel.gameObject;
         _root.SetActive(false);

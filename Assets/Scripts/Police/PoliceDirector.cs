@@ -52,11 +52,19 @@ public class PoliceDirector : MonoBehaviour
     [Tooltip("How far a guard can sidestep. Keep below (lane distance - grabRadiusX) so the open gap stays safe.")]
     public float guardLungeReach = 1.5f;
     public float guardLungeSpeed = 6f;
-    [Tooltip("A guard fires one burst when Claire comes within this distance.")]
-    public float guardFireRange = 22f;
-    public float guardBurstSeconds = 0.8f;
-    [Tooltip("Health lost if Claire is still in the guard's lane when the burst ends.")]
-    public float guardShotDamage = 10f;
+
+    [Header("Gunfire")]
+    [Tooltip("Officers ahead of Claire open fire within this distance.")]
+    public float shootRange = 30f;
+    public float shootMinDistance = 10f;
+    [Tooltip("Seconds the laser sight shows before the first shot.")]
+    public float aimSeconds = 0.55f;
+    public int volleyShots = 3;
+    public float shotInterval = 0.18f;
+    public float bulletSpeed = 30f;
+    public float bulletDamage = 5f;
+    [Tooltip("Most officers shooting at the same moment.")]
+    public int maxShooters = 2;
 
     [Header("K9")]
     public float dogSpeed = 10.5f;
@@ -112,7 +120,35 @@ public class PoliceDirector : MonoBehaviour
     private GameObject _dogTemplate;
     private float _nextDogAt = float.MaxValue;
 
+    private int _activeShooters;
+    private Material _bulletMaterial;
+
     public const string MuzzleFlashName = "Muzzle Flash";
+    public Material LaserMaterial { get; private set; }
+
+    public bool TryClaimShooter()
+    {
+        if (_activeShooters >= maxShooters) return false;
+        _activeShooters++;
+        return true;
+    }
+
+    public void ReleaseShooter() => _activeShooters = Mathf.Max(0, _activeShooters - 1);
+
+    public void FireBullet(Vector3 muzzle, Vector3 target)
+    {
+        if (_bulletMaterial == null) return;
+        PoliceBullet.Spawn(this, _bulletMaterial, muzzle, target - muzzle, bulletSpeed);
+        ProceduralSfx.Play(ProceduralSfx.Gunshot, 0.6f);
+    }
+
+    public void OnBulletHitClaire()
+    {
+        if (_flow == null || !GameStartFlow.IsGameplayActive) return;
+        _flow.ApplyClaireDamage(bulletDamage, GameStartFlow.ShotDamageDetail);
+        ProceduralSfx.Play(ProceduralSfx.BulletHit, 0.8f);
+        if (_flow.hudController != null) _flow.hudController.ShowAlert("YOU'RE HIT!");
+    }
 
     // HUD
     private GameObject _warning;
@@ -371,13 +407,6 @@ public class PoliceDirector : MonoBehaviour
         if (_flow.hudController != null) _flow.hudController.ShowAlert(dog ? "K9 BITE!" : "OFFICER GRAB!");
     }
 
-    public void OnGuardShotClaire()
-    {
-        if (_flow == null || !GameStartFlow.IsGameplayActive) return;
-        _flow.ApplyClaireDamage(guardShotDamage);
-        if (_flow.hudController != null) _flow.hudController.ShowAlert("SHOT! LEAVE THAT LANE!");
-    }
-
     public void OnOfficerGrabbedAJ(PoliceOfficer o)
     {
         if (AJ == null || AJ.IsCaught) return;
@@ -517,6 +546,15 @@ public class PoliceDirector : MonoBehaviour
         flashMat.SetColor("_BaseColor", new Color(1f, 0.8f, 0.3f));
         flashMat.EnableKeyword("_EMISSION");
         flashMat.SetColor("_EmissionColor", new Color(4f, 2.6f, 0.8f));
+        _bulletMaterial = flashMat;
+
+        if (LaserMaterial == null)
+        {
+            LaserMaterial = new Material(flashMat) { name = "Laser Sight" };
+            _createdMaterials.Add(LaserMaterial);
+            LaserMaterial.SetColor("_BaseColor", new Color(1f, 0.05f, 0.05f));
+            LaserMaterial.SetColor("_EmissionColor", new Color(5f, 0.2f, 0.2f));
+        }
 
         var flash = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         flash.name = MuzzleFlashName;
@@ -642,7 +680,7 @@ public class PoliceDirector : MonoBehaviour
         tagGo.transform.SetParent(officer.transform, false);
         var text = tagGo.AddComponent<TextMeshPro>();
         text.text = "POLICE";
-        text.fontSize = 4.5f;
+        text.fontSize = 2f;
         text.alignment = TextAlignmentOptions.Center;
         text.fontStyle = FontStyles.Bold;
         text.color = new Color(0.35f, 0.65f, 1f);

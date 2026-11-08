@@ -33,7 +33,7 @@ public class FrontEndUI : MonoBehaviour
         ("GAME RULES", "<color=#19E6FF><b>YOU ARE CLAIRE.</b></color> AJ pulled the heist; you keep him out of handcuffs.\n\n<b>Goal:</b> survive <b>2:00</b> with Claire alive and AJ free.\n\nGrab the loot AJ drops. Dodge traffic, roadblocks and police.\nIf Claire runs out of health, or you fail to rescue AJ, the run is over."),
         ("CONTROLS", "<b>A / D</b> or <b>LEFT / RIGHT</b>   change lane\n<b>SPACE</b> or <b>SHIFT</b>   Distraction Pulse (3 per run)\n<b>1 / 2 / 3</b>   answer AJ on the radio\n<b>ESC</b> or <b>P</b>   pause"),
         ("LOOT AND CRASHES", "AJ drops coins (+1), gold stacks (+5) and rare jewelry (+10 to +50). Run over them.\n\nEvery crash costs health, spills half your loot and raises <b>POLICE PRESSURE</b>. It cools when things stay calm."),
-        ("THE POLICE", "<b>Roadblocks</b> close three lanes. Get to the open one: guards shoot down their own lanes and grab anyone late.\n\nA <b>pursuer</b> and a <b>K9</b> come up behind you. Change lane when the BEHIND warning shows.\n\n<b>Distraction Pulse</b> stuns every officer and cools the pressure."),
+        ("THE POLICE", "<b>Roadblocks</b> close three lanes. Get to the open one: guards fire down their own lanes and grab anyone late.\n\nA <b>pursuer</b> and a <b>K9</b> come up behind you. Change lane when the BEHIND warning shows. A red laser means bullets: sidestep.\n\n<b>Distraction Pulse</b> stuns every officer and cools the pressure."),
         ("SAVING AJ", "If AJ is caught he stops in his lane.\nGet into <b>his lane</b> before you reach him and he is free.\nMiss him and the run is over.\n\n<b>Survive 2:00</b> with Claire alive and AJ free to escape."),
     };
 
