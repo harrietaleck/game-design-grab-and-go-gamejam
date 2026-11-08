@@ -31,6 +31,9 @@ public class RoadblockDirector : MonoBehaviour
     [Tooltip("Health lost when Claire hits a roadblock (traffic costs 10).")]
     public float healthDamage = 20f;
     public float carScale = 0.95f;
+    public int guardsPerRoadblock = 2;
+    [Tooltip("How far in front of the cars (towards the runners) the guards stand.")]
+    public float guardsInFront = 4.2f;
 
     private class Entry
     {
@@ -101,11 +104,29 @@ public class RoadblockDirector : MonoBehaviour
             if (pair) lane++;
         }
 
+        PostGuards(gap, laneCount, z);
         _active.Add(new Entry { root = root, z = z, gap = gap });
 
         var free = new bool[laneCount];
         free[gap] = true;
         return free;
+    }
+
+    /// <summary>Two officers in front of the cars: on the lanes either side of the gap where possible.</summary>
+    private void PostGuards(int gap, int laneCount, float z)
+    {
+        var police = PoliceDirector.Instance;
+        if (police == null) return;
+
+        int posted = 0;
+        for (int offset = 1; offset < laneCount && posted < guardsPerRoadblock; offset++)
+        {
+            foreach (int lane in new[] { gap - offset, gap + offset })
+            {
+                if (lane < 0 || lane >= laneCount || posted >= guardsPerRoadblock) continue;
+                if (police.SpawnGuard(lane, z - guardsInFront)) posted++;
+            }
+        }
     }
 
     /// <summary>A random lane that can be reached from the previous row's free lanes, or -1.</summary>

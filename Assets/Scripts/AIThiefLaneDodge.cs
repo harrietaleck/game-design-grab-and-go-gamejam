@@ -254,6 +254,28 @@ public class AIThiefLaneDodge : MonoBehaviour
         return moved;
     }
 
+    /// <summary>Sidesteps out of 'threatLane' into the nearest clear lane, if there is one. Returns true if AJ moved.</summary>
+    public bool DodgePursuer(int threatLane)
+    {
+        if (_caught || _currentLane != threatLane)
+            return false;
+
+        int[] order = GetLaneOrderByDistance(_currentLane);
+        for (int i = 0; i < order.Length; i++)
+        {
+            int lane = order[i];
+            if (lane == _currentLane || IsLaneBlocked(lane, urgentLookAheadZ) || !IsCrossingClear(_currentLane, lane))
+                continue;
+            _currentLane = lane;
+            _nextDecisionTime = Time.time + decisionCooldown;
+            _laneHoldUntil = Time.time + minLaneHoldSeconds;
+            _emergencyLaneBoostUntil = Time.time + 0.35f;
+            RaiseNearMiss("pursuer dodge");
+            return true;
+        }
+        return false;
+    }
+
     private bool TryPickSafeLane(bool urgent)
     {
         float range = urgent ? urgentLookAheadZ : lookAheadZ;

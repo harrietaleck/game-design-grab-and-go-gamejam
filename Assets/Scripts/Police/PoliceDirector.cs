@@ -46,6 +46,24 @@ public class PoliceDirector : MonoBehaviour
     public float despawnBehind = 30f;
     public float despawnAhead = 160f;
 
+    [Header("Roadblock guards")]
+    [Tooltip("A guard sidesteps at a runner this far from his post.")]
+    public float guardLungeDistance = 9f;
+    [Tooltip("How far a guard can sidestep. Keep below (lane distance - grabRadiusX) so the open gap stays safe.")]
+    public float guardLungeReach = 1.5f;
+    public float guardLungeSpeed = 6f;
+
+    [Header("Pursuer (one officer running after Claire, then AJ)")]
+    public float pursuerSpeed = 9f;         // Claire runs at 6
+    public float pursuerSpawnBehind = 20f;
+    public float pursuerFirstDelay = 12f;
+    [Tooltip("Seconds after one pursuer is gone before the next sets off.")]
+    public float pursuerRespawnSeconds = 8f;
+    [Tooltip("AJ sidesteps when the pursuer gets this close behind him.")]
+    public float pursuerDodgeDistance = 4.5f;
+    [Tooltip("Chance AJ reacts too late and gets caught (he is also caught if no lane is clear).")]
+    [Range(0f, 1f)] public float pursuerCatchChance = 0.25f;
+
     [Header("Grabs")]
     public float grabRadiusX = 1.1f;
     public float grabRadiusZ = 0.7f;
@@ -70,6 +88,8 @@ public class PoliceDirector : MonoBehaviour
     private float _nextSpawnAt;
     private PoliceOfficer _warnedChaser;
     private bool _spottedRaised;
+    private PoliceOfficer _pursuer;
+    private float _nextPursuerAt = float.MaxValue;
 
     // HUD
     private GameObject _warning;
@@ -112,6 +132,7 @@ public class PoliceDirector : MonoBehaviour
             case GameEventType.RunStarted:
                 _nextSpawnAt = Time.time + quietStartSeconds;
                 _spottedRaised = false;
+                _nextPursuerAt = Time.time + pursuerFirstDelay;
                 break;
             case GameEventType.DistractionUsed:
                 foreach (var o in _officers) if (o != null) o.Stun(distractionStunSeconds);
@@ -138,6 +159,7 @@ public class PoliceDirector : MonoBehaviour
             return;
 
         _officers.RemoveAll(o => o == null);
+        UpdatePursuer();
         float p = PolicePressure.Instance != null ? PolicePressure.Instance.Normalized : 0f;
         int maxActive = Mathf.RoundToInt(Mathf.Lerp(maxActiveRange.x, maxActiveRange.y, p));
         if (Time.time < _nextSpawnAt || CountDangerous() >= maxActive) return;
@@ -149,8 +171,35 @@ public class PoliceDirector : MonoBehaviour
     private int CountDangerous()
     {
         int n = 0;
-        foreach (var o in _officers) if (o != null && o.IsDangerous) n++;
+        foreach (var o in _officers)
+            if (o != null && o.IsDangerous && o.kind != PoliceOfficer.Kind.Guard && o.kind != PoliceOfficer.Kind.Pursuer) n++;
         return n;
+    }
+
+    /// <summary>Keeps exactly one pursuer in play, with a short break after each one is shaken off.</summary>
+    private void UpdatePursuer()
+    {
+        if (_pursuer != null && _pursuer.IsDangerous) return;
+        if (_pursuer != null) // walking off: the next one's break starts now
+        {
+            _pursuer = null;
+            _nextPursuerAt = Time.time + pursuerRespawnSeconds;
+            return;
+        }
+        if (Time.time < _nextPursuerAt) return;
+
+        var pos = Claire.transform.position;
+        pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
+        pos.z -= pursuerSpawnBehind;
+        _pursuer = Spawn(PoliceOfficer.Kind.Pursuer, Claire.CurrentLane, pos, 0f);
+    }
+
+    /// <summary>Posts an officer at a roadblock. Returns false if no officer models are available.</summary>
+    public bool SpawnGuard(int lane, float z)
+    {
+        if (_templates.Count == 0 || Claire == null) return false;
+        Spawn(PoliceOfficer.Kind.Guard, lane, new Vector3(LaneMath.SharedLaneX(lane), Claire.transform.position.y, z), 0f);
+        return true;
     }
 
     // ---------------- Spawning ----------------
@@ -189,7 +238,7 @@ public class PoliceDirector : MonoBehaviour
         }
     }
 
-    private void Spawn(PoliceOfficer.Kind kind, int lane, Vector3 pos, float sidewalkX)
+    private PoliceOfficer Spawn(PoliceOfficer.Kind kind, int lane, Vector3 pos, float sidewalkX)
     {
         var template = _templates[Random.Range(0, _templates.Count)];
         var go = Instantiate(template, pos, Quaternion.identity, _root);
@@ -198,6 +247,7 @@ public class PoliceDirector : MonoBehaviour
         var officer = go.AddComponent<PoliceOfficer>();
         officer.Init(this, kind, lane, sidewalkX);
         _officers.Add(officer);
+        return officer;
     }
 
     public void Despawn(PoliceOfficer o)
@@ -315,7 +365,7 @@ public class PoliceDirector : MonoBehaviour
             float best = float.MaxValue;
             foreach (var o in _officers)
             {
-                if (o == null || o.kind != PoliceOfficer.Kind.Chaser || !o.IsDangerous) continue;
+                if (o == null || !o.IsBehindClaireThreat) continue;
                 float behind = cz - o.transform.position.z;
                 if (behind > 0f && behind < chaserSpawnBehind + 2f && behind < best) { best = behind; nearest = o; }
             }

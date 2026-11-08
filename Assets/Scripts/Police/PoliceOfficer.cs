@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class PoliceOfficer : MonoBehaviour
 {
-    public enum Kind { Chaser, Interceptor, Sidewalk }
+    public enum Kind { Chaser, Interceptor, Sidewalk, Guard, Pursuer }
     public enum State { Approaching, InLane, Stunned, Leaving }
 
     public Kind kind;
@@ -15,12 +15,22 @@ public class PoliceOfficer : MonoBehaviour
 
     /// <summary>True when AJ's dodging AI should treat this officer like a blocked lane.</summary>
     public bool BlocksLaneForAI =>
-        state != State.Stunned && state != State.Leaving && kind != Kind.Chaser && lane >= 0;
+        state != State.Stunned && state != State.Leaving && (kind == Kind.Interceptor || kind == Kind.Sidewalk) && lane >= 0;
 
     public bool IsDangerous => state == State.Approaching || state == State.InLane;
 
+    /// <summary>True while this officer is coming up behind Claire (the case the HUD warns about).</summary>
+    public bool IsBehindClaireThreat => IsDangerous && (kind == Kind.Chaser || (kind == Kind.Pursuer && !_chasingAJ));
+
+    private static readonly int RunState = Animator.StringToHash("Run");
+    private static readonly int IdleState = Animator.StringToHash("Idle");
+
     private PoliceDirector _director;
     private Animator _animator;
+    private bool _hasIdle;
+    private float _postX;
+    private bool _chasingAJ;
+    private bool _ajReacted;
     private float _stunUntil;
     private float _leaveSideX;
     private bool _retargeted;
@@ -34,10 +44,15 @@ public class PoliceOfficer : MonoBehaviour
         lane = startLane;
         _sidewalkX = sidewalkX;
         _animator = GetComponentInChildren<Animator>();
-        if (_animator != null) _animator.applyRootMotion = false;
+        if (_animator != null)
+        {
+            _animator.applyRootMotion = false;
+            _hasIdle = _animator.HasState(0, IdleState) && _animator.HasState(0, RunState);
+        }
+        _postX = transform.position.x;
         state = State.Approaching;
-        Face(kind == Kind.Interceptor ? 180f : kind == Kind.Sidewalk ? (sidewalkX < 0f ? 90f : -90f) : 0f);
-        SetRunning(kind != Kind.Sidewalk);
+        Face(kind == Kind.Interceptor || kind == Kind.Guard ? 180f : kind == Kind.Sidewalk ? (sidewalkX < 0f ? 90f : -90f) : 0f);
+        SetRunning(kind != Kind.Sidewalk && kind != Kind.Guard);
     }
 
     private void Update()
@@ -47,7 +62,7 @@ public class PoliceOfficer : MonoBehaviour
             if (_animator != null) _animator.speed = 0f; // freeze pose while paused / after the run
             return;
         }
-        if (_animator != null) _animator.speed = _running ? 1f : 0f;
+        if (_animator != null) _animator.speed = _running || _hasIdle ? 1f : 0f;
 
         var claire = _director.Claire;
         var aj = _director.AJ;
@@ -82,7 +97,7 @@ public class PoliceOfficer : MonoBehaviour
                 _director.OnOfficerGrabbedClaire(this);
                 Stun(_director.afterGrabStunSeconds);
             }
-            else if (aj != null && !aj.IsCaught && !aj.IsInvulnerable && kind != Kind.Chaser && Reaches(aj.transform.position, p))
+            else if (aj != null && !aj.IsCaught && !aj.IsInvulnerable && CanCatchAJ && Reaches(aj.transform.position, p))
             {
                 _director.OnOfficerGrabbedAJ(this);
                 state = State.InLane;
@@ -91,9 +106,12 @@ public class PoliceOfficer : MonoBehaviour
 
         // Despawn far behind / far ahead.
         float cz = claire.transform.position.z;
-        if (p.z < cz - _director.despawnBehind || p.z > cz + _director.despawnAhead)
+        // (Guards are placed with their roadblock, which can be further ahead than despawnAhead.)
+        if (p.z < cz - _director.despawnBehind || (kind != Kind.Guard && p.z > cz + _director.despawnAhead))
             _director.Despawn(this);
     }
+
+    private bool CanCatchAJ => kind != Kind.Chaser && (kind != Kind.Pursuer || _chasingAJ);
 
     private void Behave(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {
@@ -110,6 +128,14 @@ public class PoliceOfficer : MonoBehaviour
                 p.z += _director.chaserSpeed * dt;
                 p.x = Mathf.MoveTowards(p.x, LaneMath.SharedLaneX(lane), 3.5f * dt);
                 if (p.z > cz + 1.5f) BeginLeaving(); // missed her: veer off
+                break;
+
+            case Kind.Pursuer:
+                BehavePursuer(ref p, claire, dt);
+                break;
+
+            case Kind.Guard:
+                BehaveGuard(ref p, claire, dt);
                 break;
 
             case Kind.Interceptor:
@@ -148,6 +174,69 @@ public class PoliceOfficer : MonoBehaviour
         }
     }
 
+    /// <summary>Runs Claire down from behind; if she sidesteps him he carries on after AJ, then gives up.</summary>
+    private void BehavePursuer(ref Vector3 p, PlayerLaneMovement claire, float dt)
+    {
+        float cz = claire.transform.position.z;
+        var aj = _director.AJ;
+        p.z += _director.pursuerSpeed * dt;
+
+        if (!_chasingAJ)
+        {
+            if (!_retargeted && cz - p.z < _director.chaserRetargetDistance)
+            {
+                _retargeted = true;
+                lane = claire.CurrentLane;
+            }
+            if (p.z > cz + 1.5f)
+            {
+                _chasingAJ = true;
+                if (aj != null) lane = aj.CurrentLane; // commits to one lane, so AJ can shake him off
+            }
+        }
+        else
+        {
+            if (aj == null || aj.IsCaught || p.z > aj.transform.position.z + 1.5f)
+            {
+                BeginLeaving();
+                return;
+            }
+            if (!_ajReacted && aj.transform.position.z - p.z < _director.pursuerDodgeDistance)
+            {
+                _ajReacted = true;
+                if (Random.value >= _director.pursuerCatchChance) aj.DodgePursuer(lane);
+            }
+        }
+        p.x = Mathf.MoveTowards(p.x, LaneMath.SharedLaneX(lane), 3.5f * dt);
+    }
+
+    /// <summary>
+    /// Holds a post at a roadblock and sidesteps at whoever comes past. The sidestep stops short of the
+    /// neighbouring lane's centre, so a runner already centred in the open gap is safe and a late one is not.
+    /// </summary>
+    private void BehaveGuard(ref Vector3 p, PlayerLaneMovement claire, float dt)
+    {
+        state = State.InLane;
+        float targetX = _postX;
+        float nearest = _director.guardLungeDistance;
+        ConsiderLungeTarget(claire.transform, p, ref nearest, ref targetX);
+        var aj = _director.AJ;
+        if (aj != null && !aj.IsCaught) ConsiderLungeTarget(aj.transform, p, ref nearest, ref targetX);
+
+        bool moving = Mathf.Abs(p.x - targetX) > 0.05f;
+        if (moving != _running) SetRunning(moving);
+        p.x = Mathf.MoveTowards(p.x, targetX, _director.guardLungeSpeed * dt);
+    }
+
+    private void ConsiderLungeTarget(Transform runner, Vector3 p, ref float nearest, ref float targetX)
+    {
+        float ahead = p.z - runner.position.z;
+        if (ahead < -1f || ahead >= nearest) return;
+        nearest = ahead;
+        float reach = _director.guardLungeReach;
+        targetX = Mathf.Clamp(runner.position.x, _postX - reach, _postX + reach);
+    }
+
     private bool Reaches(Vector3 target, Vector3 p)
     {
         return Mathf.Abs(target.x - p.x) < _director.grabRadiusX && Mathf.Abs(target.z - p.z) < _director.grabRadiusZ;
@@ -173,7 +262,9 @@ public class PoliceOfficer : MonoBehaviour
     private void SetRunning(bool running)
     {
         _running = running;
-        if (_animator != null) _animator.speed = running ? 1f : 0f;
+        if (_animator == null) return;
+        _animator.speed = running || _hasIdle ? 1f : 0f;
+        if (_hasIdle) _animator.CrossFadeInFixedTime(running ? RunState : IdleState, 0.15f);
     }
 
     private void Face(float yaw)

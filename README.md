@@ -27,7 +27,8 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
   interceptors jog towards you from ahead, and sidewalk officers step into the outer lanes. An officer grab costs Claire 15
   health; an officer reaching AJ catches him (rescue time). More officers, and more chasers, as police pressure rises.
   The Distraction Pulse stuns every officer for 3 s.
-- **Roadblocks:** police cars parked across three lanes. A **ROADBLOCK** banner shows which lane is open - get to the gap. Hitting one costs 20 health and half your loot.
+- **Roadblocks:** police cars parked across three lanes. A **ROADBLOCK** banner shows which lane is open - get to the gap. Hitting one costs 20 health and half your loot. Officers posted at each roadblock lunge at anyone passing close, so reach the gap early.
+- **Pursuer:** one officer is always on your trail. He runs Claire down from behind (dodge when **POLICE BEHIND** shows) and, if she sidesteps him, goes after AJ.
 - **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
   cools down after 3 calm seconds. At 100 the police grab AJ.
 - **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.

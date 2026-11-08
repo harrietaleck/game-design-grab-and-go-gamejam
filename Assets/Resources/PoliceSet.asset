@@ -18,4 +18,4 @@ MonoBehaviour:
   officerRunController: {fileID: 9100000, guid: 91fc1e62491c3714bb52f36fadd7580e, type: 2}
   policeCar: {fileID: 115512, guid: 7be733fca5977484eab72a8eca73b1b2, type: 3}
   helicopter: {fileID: 100006, guid: ebfa405660e25c549bb7039f0b44f8ff, type: 3}
-  generatorVersion: 1
+  generatorVersion: 2

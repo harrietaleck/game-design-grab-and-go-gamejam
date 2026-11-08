@@ -18,7 +18,9 @@ public static class PoliceSetBuilder
     private const string RunSource = "Assets/Claire_character1/claire@Running.fbx";
     private const string RunCopy = OfficerRoot + "/Animations/PoliceOfficer@Running.fbx";
     private const string RunController = OfficerRoot + "/Animations/PoliceOfficerRun.controller";
-    private const int Version = 1;
+    private const string IdleSource = "Assets/Claire_character1/claire@Victory Idle.fbx";
+    private const string IdleCopy = OfficerRoot + "/Animations/PoliceOfficer@Idle.fbx";
+    private const int Version = 2;
 
     static PoliceSetBuilder()
     {
@@ -100,14 +102,28 @@ public static class PoliceSetBuilder
 
     private static RuntimeAnimatorController BuildRunController()
     {
-        if (AssetDatabase.LoadMainAssetAtPath(RunSource) == null) return null;
         if (!AssetDatabase.IsValidFolder($"{OfficerRoot}/Animations"))
             AssetDatabase.CreateFolder(OfficerRoot, "Animations");
 
-        if (AssetDatabase.LoadMainAssetAtPath(RunCopy) == null && !AssetDatabase.CopyAsset(RunSource, RunCopy))
+        var run = ImportHumanoidCopy(RunSource, RunCopy);
+        if (run == null) return null;
+        var idle = ImportHumanoidCopy(IdleSource, IdleCopy);
+
+        if (File.Exists(RunController)) AssetDatabase.DeleteAsset(RunController);
+        var controller = AnimatorController.CreateAnimatorControllerAtPath(RunController);
+        var machine = controller.layers[0].stateMachine;
+        machine.AddState("Run").motion = run; // first state added is the default
+        if (idle != null) machine.AddState("Idle").motion = idle;
+        return controller;
+    }
+
+    private static AnimationClip ImportHumanoidCopy(string source, string copy)
+    {
+        if (AssetDatabase.LoadMainAssetAtPath(source) == null) return null;
+        if (AssetDatabase.LoadMainAssetAtPath(copy) == null && !AssetDatabase.CopyAsset(source, copy))
             return null;
 
-        var importer = (ModelImporter)AssetImporter.GetAtPath(RunCopy);
+        var importer = (ModelImporter)AssetImporter.GetAtPath(copy);
         importer.animationType = ModelImporterAnimationType.Human;
         importer.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
         importer.importAnimation = true;
@@ -125,15 +141,9 @@ public static class PoliceSetBuilder
         importer.clipAnimations = clips;
         importer.SaveAndReimport();
 
-        AnimationClip clip = null;
-        foreach (var o in AssetDatabase.LoadAllAssetsAtPath(RunCopy))
-            if (o is AnimationClip a && !a.name.StartsWith("__preview")) { clip = a; break; }
-        if (clip == null) return null;
-
-        if (File.Exists(RunController)) AssetDatabase.DeleteAsset(RunController);
-        var controller = AnimatorController.CreateAnimatorControllerAtPath(RunController);
-        controller.layers[0].stateMachine.AddState("Run").motion = clip;
-        return controller;
+        foreach (var o in AssetDatabase.LoadAllAssetsAtPath(copy))
+            if (o is AnimationClip a && !a.name.StartsWith("__preview")) return a;
+        return null;
     }
 }
 #endif
