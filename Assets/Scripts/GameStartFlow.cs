@@ -142,6 +142,11 @@ public class GameStartFlow : MonoBehaviour
             s_autoStartOnLoad = false;
             StartGame();
         }
+        else if (Application.CanStreamedLevelBeLoaded(FrontEndSceneName))
+        {
+            // Pressing Play in this scene goes through the real menus.
+            SceneManager.LoadScene(FrontEndSceneName);
+        }
     }
 
     private void OnDestroy()

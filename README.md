@@ -58,7 +58,7 @@ Assets/
   Scripts/Dialogue/            AJDialogueController, DialogueFallbackLibrary, RadioDialogueUI, ClaireReplyController,
                                DialogueAPIClient, AJPersonalityProfile
   Scripts/UI/                  runtime-built UI (results, pause, HUD extras, menu guide, onboarding, popups)
-  Editor/BuildSceneSetup.cs    keeps MainScene as build scene 0 (menu: Grab & Go > Fix Build Scenes)
+  Editor/BuildSceneSetup.cs    keeps FrontEnd and MainScene first in the build (menu: Grab & Go > Fix Build Scenes)
   StreamingAssets/dialogue_config.json   LLM dialogue switch (disabled by default)
   ithappy/.../RoadSpawner.cs   road tiles + fair obstacle rows (modified asset-pack script)
 Backend/                       optional Node.js dialogue server (keeps LLM API keys out of the game)
@@ -86,7 +86,7 @@ If the service is off, slow or fails, AJ falls back to prewritten lines instantl
 - See `Docs/REGRESSION_CHECKLIST.md` for what has and has not been play-tested.
 
 ## Credits
-**Design, direction and development:** Harriet Maleck (ST10252836) - game jam March 24-26, 2026, extended October 2026.
+**Design, direction and development:** Harriet Manda (ST10252836) - game jam March 24-26, 2026, extended October 2026.
 
 Third-party assets (original licenses apply):
 - Cartoon City Free (ithappy) - city, road tiles, traffic obstacles

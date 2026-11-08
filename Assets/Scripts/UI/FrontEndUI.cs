@@ -16,7 +16,8 @@ public class FrontEndUI : MonoBehaviour
     private static readonly Vector2 Bottom = new Vector2(0.5f, 0f);
 
     private const string StorySeenKey = "gg_story_seen";
-    private const float SplashSeconds = 2.8f;
+    private const float SplashSeconds = 4.5f;
+    private const float TitleSlamSeconds = 0.45f;
     private static bool s_splashShown;
 
     private static readonly (string title, string body)[] StoryPages =
@@ -29,6 +30,7 @@ public class FrontEndUI : MonoBehaviour
 
     private static readonly (string title, string body)[] GuidePages =
     {
+        ("GAME RULES", "<color=#19E6FF><b>YOU ARE CLAIRE.</b></color> AJ pulled the heist; you keep him out of handcuffs.\n\n<b>Goal:</b> survive <b>2:00</b> with Claire alive and AJ free.\n\nGrab the loot AJ drops. Dodge traffic, roadblocks and police.\nIf Claire runs out of health, or you fail to rescue AJ, the run is over."),
         ("CONTROLS", "<b>A / D</b> or <b>LEFT / RIGHT</b>   change lane\n<b>SPACE</b> or <b>SHIFT</b>   Distraction Pulse (3 per run)\n<b>1 / 2 / 3</b>   answer AJ on the radio\n<b>ESC</b> or <b>P</b>   pause"),
         ("LOOT AND CRASHES", "AJ drops coins (+1) and gold stacks (+5). Run over them.\n\nEvery crash costs health, spills half your loot and raises <b>POLICE PRESSURE</b>. It cools when things stay calm."),
         ("THE POLICE", "<b>Roadblocks</b> close three lanes. The banner shows the open one, and guards grab anyone who arrives late.\n\nA <b>pursuer</b> comes up behind you. Change lane when POLICE BEHIND shows.\n\n<b>Distraction Pulse</b> stuns every officer and cools the pressure."),
@@ -36,7 +38,7 @@ public class FrontEndUI : MonoBehaviour
     };
 
     private const string CreditsText =
-        "<color=#19E6FF><b>DESIGN, DIRECTION AND DEVELOPMENT</b></color>\nHarriet Maleck\n\n" +
+        "<color=#19E6FF><b>DESIGN, DIRECTION AND DEVELOPMENT</b></color>\nHarriet Manda\n\n" +
         "<color=#19E6FF><b>THIRD-PARTY ASSETS</b></color>\n" +
         "Cartoon City Free (ithappy)  -  Devtoid Gold Coins  -  LowPoly Fantasy Bags\n" +
         "Police Officer pack  -  Police Car & Helicopter pack\n" +
@@ -61,16 +63,19 @@ public class FrontEndUI : MonoBehaviour
     private Button _guidePrev, _guideNext, _storyPrev;
     private Image _loadingFill;
     private AudioSource _ambience;
-    private Transform _helicopter;
-    private Vector3 _helicopterBase;
+    private Image _backdrop;
+    private Image _sirenLeft, _sirenRight;
+    private RectTransform _splashTitle;
+    private CanvasGroup _splashDetails;
+    private float _splashStartedAt;
 
     private void Awake()
     {
         Time.timeScale = 1f;
 
-        var dim = RuntimeUI.CreatePanel(transform, "Backdrop", new Color(0.01f, 0.03f, 0.08f, 0.5f));
-        dim.raycastTarget = false;
-        RuntimeUI.Stretch(dim.rectTransform);
+        _backdrop = RuntimeUI.CreatePanel(transform, "Backdrop", new Color(0.01f, 0.03f, 0.08f, 0.5f));
+        _backdrop.raycastTarget = false;
+        RuntimeUI.Stretch(_backdrop.rectTransform);
 
         BuildSplash();
         BuildMain();
@@ -90,7 +95,8 @@ public class FrontEndUI : MonoBehaviour
         else
         {
             s_splashShown = true;
-            _splashEndsAt = Time.unscaledTime + SplashSeconds;
+            _splashStartedAt = Time.unscaledTime;
+            _splashEndsAt = _splashStartedAt + SplashSeconds;
             ShowScreen("Splash");
         }
     }
@@ -105,30 +111,35 @@ public class FrontEndUI : MonoBehaviour
             _ambience.volume = 0.4f * GameSettings.MusicVolume;
             _ambience.Play();
         }
-
-        var set = Resources.Load<PoliceSet>("PoliceSet");
-        if (set != null && set.helicopter != null)
-        {
-            var heli = Instantiate(set.helicopter, new Vector3(-30f, 7f, 34f), Quaternion.Euler(6f, 150f, 8f));
-            foreach (var c in heli.GetComponentsInChildren<Collider>(true)) Destroy(c);
-            _helicopter = heli.transform;
-            _helicopterBase = _helicopter.position;
-        }
     }
 
     private void Update()
     {
         if (_ambience != null) _ambience.volume = 0.4f * GameSettings.MusicVolume;
-        if (_helicopter != null)
-            _helicopter.position = _helicopterBase + new Vector3(Mathf.Sin(Time.time * 0.3f) * 3f, Mathf.Sin(Time.time * 0.8f) * 0.6f, 0f);
 
         if (_current == "Splash")
         {
+            AnimateSplash();
             if (Time.unscaledTime >= _splashEndsAt || Input.anyKeyDown) ShowMain();
             return;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) GoBack();
+    }
+
+    /// <summary>The title slams in, the details fade up, and red and blue police light washes the screen edges.</summary>
+    private void AnimateSplash()
+    {
+        float elapsed = Time.unscaledTime - _splashStartedAt;
+        float slam = Mathf.Clamp01(elapsed / TitleSlamSeconds);
+        float eased = 1f - (1f - slam) * (1f - slam) * (1f - slam);
+        _splashTitle.localScale = Vector3.one * Mathf.Lerp(2.6f, 1f, eased);
+        _splashDetails.alpha = Mathf.Clamp01((elapsed - TitleSlamSeconds) / 0.5f);
+
+        float strength = GameSettings.ScreenFlash ? 0.34f : 0f;
+        bool red = Mathf.Repeat(elapsed * 2.5f, 1f) < 0.5f;
+        _sirenLeft.color = new Color(1f, 0.08f, 0.1f, red ? strength : 0f);
+        _sirenRight.color = new Color(0.1f, 0.3f, 1f, red ? 0f : strength);
     }
 
     private void GoBack()
@@ -160,6 +171,8 @@ public class FrontEndUI : MonoBehaviour
     {
         foreach (var pair in _screens) pair.Value.SetActive(pair.Key == name);
         _current = name;
+        float dim = name == "Splash" ? 0.05f : name == "Main" ? 0.3f : 0.6f;
+        _backdrop.color = new Color(0.01f, 0.03f, 0.08f, dim);
         if (_firstSelected.TryGetValue(name, out var first) && first != null) first.Select();
     }
 
@@ -295,10 +308,35 @@ public class FrontEndUI : MonoBehaviour
     private void BuildSplash()
     {
         var root = NewScreen("Splash");
-        FancyText.Create(root, "Title", "GRAB & GO", 170f, UITheme.Fancy.Gold, Centre, new Vector2(1700f, 260f), new Vector2(0f, 90f));
-        FancyText.Create(root, "Subtitle", "LOOT ON THE RUN", 70f, UITheme.Fancy.Neon, Centre, new Vector2(1500f, 120f), new Vector2(0f, -80f));
-        var by = RuntimeUI.CreateText(root, "Credit", "A game by Harriet Maleck", 30f, TextAlignmentOptions.Center, Color.white);
-        RuntimeUI.Place(by.rectTransform, Bottom, new Vector2(1200f, 60f), new Vector2(0f, 90f));
+
+        _sirenLeft = RuntimeUI.CreatePanel(root, "SirenLeft", Color.clear);
+        _sirenLeft.raycastTarget = false;
+        _sirenLeft.rectTransform.anchorMin = Vector2.zero;
+        _sirenLeft.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+        _sirenLeft.rectTransform.offsetMin = _sirenLeft.rectTransform.offsetMax = Vector2.zero;
+        _sirenRight = RuntimeUI.CreatePanel(root, "SirenRight", Color.clear);
+        _sirenRight.raycastTarget = false;
+        _sirenRight.rectTransform.anchorMin = new Vector2(0.5f, 0f);
+        _sirenRight.rectTransform.anchorMax = Vector2.one;
+        _sirenRight.rectTransform.offsetMin = _sirenRight.rectTransform.offsetMax = Vector2.zero;
+
+        var title = FancyText.Create(root, "Title", "GRAB & GO", 190f, UITheme.Fancy.Gold, Top, new Vector2(1800f, 290f), new Vector2(0f, -70f));
+        _splashTitle = (RectTransform)title.transform;
+
+        var details = RuntimeUI.CreateRect(root, "Details");
+        RuntimeUI.Stretch(details);
+        _splashDetails = details.gameObject.AddComponent<CanvasGroup>();
+        _splashDetails.blocksRaycasts = false;
+        FancyText.Create(details, "Subtitle", "LOOT ON THE RUN", 72f, UITheme.Fancy.Neon, Top, new Vector2(1500f, 120f), new Vector2(0f, -350f));
+
+        var band = RuntimeUI.CreatePanel(details, "TaglineBand", new Color(0.01f, 0.03f, 0.08f, 0.72f));
+        band.raycastTarget = false;
+        RuntimeUI.Place(band.rectTransform, Bottom, new Vector2(1500f, 190f), new Vector2(0f, 60f));
+        var tagline = RuntimeUI.CreateText(band.transform, "Tagline", "YOU ARE NOT THE MAIN CHARACTER.", 44f, TextAlignmentOptions.Center, RuntimeUI.Gold, FontStyles.Bold);
+        RuntimeUI.Place(tagline.rectTransform, Top, new Vector2(1440f, 90f), new Vector2(0f, -14f));
+        var by = RuntimeUI.CreateText(band.transform, "Credit", "A game by Harriet Manda   -   press any key", 28f, TextAlignmentOptions.Center, Color.white);
+        RuntimeUI.Place(by.rectTransform, Bottom, new Vector2(1440f, 60f), new Vector2(0f, 18f));
+
         Register("Splash", root.gameObject, null);
     }
 

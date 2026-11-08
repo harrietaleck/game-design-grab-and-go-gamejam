@@ -274,7 +274,7 @@ None - all implemented requirements are fully functional
 
 ## Sign-Off
 
-**Requirements Author:** Harriet Maleck  
+**Requirements Author:** Harriet Manda  
 **Last Updated:** March 26, 2026  
 **Status:** Core requirements met, polish deferred to post-jam development  
 **Approval:** Ready for submission with documented limitations
