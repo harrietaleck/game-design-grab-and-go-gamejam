@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class PoliceOfficer : MonoBehaviour
 {
-    public enum Kind { Chaser, Interceptor, Sidewalk, Guard, Pursuer }
+    public enum Kind { Chaser, Interceptor, Sidewalk, Guard, Pursuer, Dog }
     public enum State { Approaching, InLane, Stunned, Leaving }
 
     public Kind kind;
@@ -20,10 +20,18 @@ public class PoliceOfficer : MonoBehaviour
     public bool IsDangerous => state == State.Approaching || state == State.InLane;
 
     /// <summary>True while this officer is coming up behind Claire (the case the HUD warns about).</summary>
-    public bool IsBehindClaireThreat => IsDangerous && (kind == Kind.Chaser || (kind == Kind.Pursuer && !_chasingAJ));
+    public bool IsBehindClaireThreat => IsDangerous && (kind == Kind.Chaser || kind == Kind.Dog || (kind == Kind.Pursuer && !_chasingAJ));
 
     private static readonly int RunState = Animator.StringToHash("Run");
     private static readonly int IdleState = Animator.StringToHash("Idle");
+    private static readonly int KneelState = Animator.StringToHash("Kneel");
+    private static readonly int FireState = Animator.StringToHash("Fire");
+
+    private int _restState = IdleState;
+    private bool _burstDone;
+    private float _burstEndsAt;
+    private float _nextShotAt;
+    private Renderer _muzzleFlash;
 
     private PoliceDirector _director;
     private Animator _animator;
@@ -48,7 +56,11 @@ public class PoliceOfficer : MonoBehaviour
         {
             _animator.applyRootMotion = false;
             _hasIdle = _animator.HasState(0, IdleState) && _animator.HasState(0, RunState);
+            if (kind == Kind.Guard && _animator.HasState(0, KneelState) && Random.value < 0.5f)
+                _restState = KneelState;
         }
+        foreach (var r in GetComponentsInChildren<Renderer>(true))
+            if (r.name == PoliceDirector.MuzzleFlashName) _muzzleFlash = r;
         _postX = transform.position.x;
         state = State.Approaching;
         Face(kind == Kind.Interceptor || kind == Kind.Guard ? 180f : kind == Kind.Sidewalk ? (sidewalkX < 0f ? 90f : -90f) : 0f);
@@ -111,7 +123,7 @@ public class PoliceOfficer : MonoBehaviour
             _director.Despawn(this);
     }
 
-    private bool CanCatchAJ => kind != Kind.Chaser && (kind != Kind.Pursuer || _chasingAJ);
+    private bool CanCatchAJ => kind != Kind.Chaser && kind != Kind.Dog && (kind != Kind.Pursuer || _chasingAJ);
 
     private void Behave(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {
@@ -136,6 +148,18 @@ public class PoliceOfficer : MonoBehaviour
 
             case Kind.Guard:
                 BehaveGuard(ref p, claire, dt);
+                break;
+
+            case Kind.Dog:
+                // Hunts Claire from behind, committing to her lane once it is close enough to be warned about.
+                if (!_retargeted && cz - p.z < _director.dogRetargetDistance)
+                {
+                    _retargeted = true;
+                    lane = claire.CurrentLane;
+                }
+                p.z += _director.dogSpeed * dt;
+                p.x = Mathf.MoveTowards(p.x, LaneMath.SharedLaneX(lane), 5f * dt);
+                if (p.z > cz + 1.5f) BeginLeaving(); // she dodged: it runs off
                 break;
 
             case Kind.Interceptor:
@@ -217,6 +241,8 @@ public class PoliceOfficer : MonoBehaviour
     private void BehaveGuard(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {
         state = State.InLane;
+        if (UpdateBurst(claire, p)) return;
+
         float targetX = _postX;
         float nearest = _director.guardLungeDistance;
         ConsiderLungeTarget(claire.transform, p, ref nearest, ref targetX);
@@ -226,6 +252,44 @@ public class PoliceOfficer : MonoBehaviour
         bool moving = Mathf.Abs(p.x - targetX) > 0.05f;
         if (moving != _running) SetRunning(moving);
         p.x = Mathf.MoveTowards(p.x, targetX, _director.guardLungeSpeed * dt);
+    }
+
+    /// <summary>
+    /// One burst of fire down the guard's own lane as Claire approaches. It only hits her if she is still in
+    /// that lane when the burst ends. Returns true while firing.
+    /// </summary>
+    private bool UpdateBurst(PlayerLaneMovement claire, Vector3 p)
+    {
+        if (_burstEndsAt > 0f)
+        {
+            bool shot = Time.time >= _nextShotAt;
+            if (shot)
+            {
+                _nextShotAt = Time.time + 0.2f;
+                ProceduralSfx.Play(ProceduralSfx.Gunshot, 0.5f);
+            }
+            if (_muzzleFlash != null) _muzzleFlash.enabled = Time.time < _nextShotAt - 0.13f;
+
+            if (Time.time < _burstEndsAt) return true;
+
+            _burstEndsAt = 0f;
+            if (_muzzleFlash != null) _muzzleFlash.enabled = false;
+            SetRunning(false);
+            if (Mathf.Abs(claire.transform.position.x - p.x) < _director.grabRadiusX)
+                _director.OnGuardShotClaire();
+            return false;
+        }
+
+        float ahead = p.z - claire.transform.position.z;
+        if (_burstDone || !_hasIdle || !_animator.HasState(0, FireState)
+            || ahead > _director.guardFireRange || ahead < _director.guardLungeDistance)
+            return false;
+
+        _burstDone = true;
+        _burstEndsAt = Time.time + _director.guardBurstSeconds;
+        _nextShotAt = 0f;
+        _animator.CrossFadeInFixedTime(FireState, 0.1f);
+        return true;
     }
 
     private void ConsiderLungeTarget(Transform runner, Vector3 p, ref float nearest, ref float targetX)
@@ -246,6 +310,8 @@ public class PoliceOfficer : MonoBehaviour
     public void Stun(float seconds)
     {
         if (state == State.Leaving) return;
+        _burstEndsAt = 0f;
+        if (_muzzleFlash != null) _muzzleFlash.enabled = false;
         state = State.Stunned;
         _stunUntil = Time.time + Mathf.Max(0.1f, seconds);
         SetRunning(false);
@@ -254,6 +320,8 @@ public class PoliceOfficer : MonoBehaviour
     public void BeginLeaving()
     {
         state = State.Leaving;
+        _burstEndsAt = 0f;
+        if (_muzzleFlash != null) _muzzleFlash.enabled = false;
         lane = -1;
         _leaveSideX = transform.position.x < 0f ? -_director.SidewalkX : _director.SidewalkX;
         SetRunning(true);
@@ -264,7 +332,7 @@ public class PoliceOfficer : MonoBehaviour
         _running = running;
         if (_animator == null) return;
         _animator.speed = running || _hasIdle ? 1f : 0f;
-        if (_hasIdle) _animator.CrossFadeInFixedTime(running ? RunState : IdleState, 0.15f);
+        if (_hasIdle) _animator.CrossFadeInFixedTime(running ? RunState : _restState, 0.15f);
     }
 
     private void Face(float yaw)

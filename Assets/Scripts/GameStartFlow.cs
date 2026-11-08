@@ -83,6 +83,9 @@ public class GameStartFlow : MonoBehaviour
     public int LootValue { get; private set; }
     public int CoinCount { get; private set; }
     public int GoldStackCount { get; private set; }
+    public int JewelCount { get; private set; }
+    /// <summary>Pickups worth at least this much count as jewelry.</summary>
+    public const int JewelValue = 10;
     /// <summary>Total loot value lost to crashes this run.</summary>
     public int LootLost { get; private set; }
     public int CollisionCount { get; private set; }
@@ -238,7 +241,7 @@ public class GameStartFlow : MonoBehaviour
 
         TimeRemaining = RunDuration;
         ClaireHealth = MaxHealth;
-        LootValue = CoinCount = GoldStackCount = CollisionCount = LootLost = 0;
+        LootValue = CoinCount = GoldStackCount = JewelCount = CollisionCount = LootLost = 0;
         RescueSuccessCount = CaptureCount = DistractionsUsed = 0;
         _lowHealthWarned = false;
         CollectiblePickup.ResetRuntimeCollectedValue();
@@ -416,7 +419,9 @@ public class GameStartFlow : MonoBehaviour
             return false;
         int v = Mathf.Max(1, value);
         LootValue += v;
-        if (v >= 5) GoldStackCount++; else CoinCount++;
+        if (v >= JewelValue) JewelCount++;
+        else if (v >= 5) GoldStackCount++;
+        else CoinCount++;
         LootChanged?.Invoke();
 
         GameEvents.Raise(v >= 5 ? GameEventType.GoldStackCollected : GameEventType.CoinCollected, v);

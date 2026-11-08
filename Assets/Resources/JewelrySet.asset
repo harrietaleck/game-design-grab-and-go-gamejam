@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e956c484d995a74098f1e2a47024c89, type: 3}
+  m_Name: JewelrySet
+  m_EditorClassIdentifier: Assembly-CSharp::JewelrySet
+  items:
+  - prefab: {fileID: 3333315807747200268, guid: 56e984a741ffe3b49b4abf4bfdc7a772, type: 3}
+    weight: 6
+    value: 10
+  - prefab: {fileID: 4563730956392895797, guid: c47ae56acf886f04d81d68bce7cf45e5, type: 3}
+    weight: 4
+    value: 15
+  - prefab: {fileID: 6448168225004591357, guid: c83c2af7d459d5e44a3dd7e476b0f2f1, type: 3}
+    weight: 3
+    value: 20
+  - prefab: {fileID: 5309578657684480297, guid: 99a5c936dd3fe43488f5bf4167e4e49e, type: 3}
+    weight: 2
+    value: 30
+  - prefab: {fileID: 8296924352952568853, guid: caba7f7c3f60a9949b6a0625c13db156, type: 3}
+    weight: 1
+    value: 50
+  pickupSize: 0.7

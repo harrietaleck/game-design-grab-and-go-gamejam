@@ -52,6 +52,24 @@ public class PoliceDirector : MonoBehaviour
     [Tooltip("How far a guard can sidestep. Keep below (lane distance - grabRadiusX) so the open gap stays safe.")]
     public float guardLungeReach = 1.5f;
     public float guardLungeSpeed = 6f;
+    [Tooltip("A guard fires one burst when Claire comes within this distance.")]
+    public float guardFireRange = 22f;
+    public float guardBurstSeconds = 0.8f;
+    [Tooltip("Health lost if Claire is still in the guard's lane when the burst ends.")]
+    public float guardShotDamage = 10f;
+
+    [Header("K9")]
+    public float dogSpeed = 10.5f;
+    public float dogSpawnBehind = 24f;
+    public float dogRetargetDistance = 14f;
+    public float dogFirstDelay = 25f;
+    public float dogRespawnSeconds = 15f;
+    public float dogBiteDamage = 10f;
+    public float dogScale = 1.35f;
+
+    [Header("Handgun in the officer's right hand")]
+    public Vector3 gunLocalPosition = new Vector3(0.1f, -0.01f, 0f);
+    public Vector3 gunLocalEuler = new Vector3(296.64f, 137.27f, 312.8f);
 
     [Header("Pursuer (one officer running after Claire, then AJ)")]
     public float pursuerSpeed = 9f;         // Claire runs at 6
@@ -90,6 +108,11 @@ public class PoliceDirector : MonoBehaviour
     private bool _spottedRaised;
     private PoliceOfficer _pursuer;
     private float _nextPursuerAt = float.MaxValue;
+    private PoliceOfficer _dog;
+    private GameObject _dogTemplate;
+    private float _nextDogAt = float.MaxValue;
+
+    public const string MuzzleFlashName = "Muzzle Flash";
 
     // HUD
     private GameObject _warning;
@@ -133,6 +156,7 @@ public class PoliceDirector : MonoBehaviour
                 _nextSpawnAt = Time.time + quietStartSeconds;
                 _spottedRaised = false;
                 _nextPursuerAt = Time.time + pursuerFirstDelay;
+                _nextDogAt = Time.time + dogFirstDelay;
                 break;
             case GameEventType.DistractionUsed:
                 foreach (var o in _officers) if (o != null) o.Stun(distractionStunSeconds);
@@ -160,6 +184,7 @@ public class PoliceDirector : MonoBehaviour
 
         _officers.RemoveAll(o => o == null);
         UpdatePursuer();
+        UpdateDog();
         float p = PolicePressure.Instance != null ? PolicePressure.Instance.Normalized : 0f;
         int maxActive = Mathf.RoundToInt(Mathf.Lerp(maxActiveRange.x, maxActiveRange.y, p));
         if (Time.time < _nextSpawnAt || CountDangerous() >= maxActive) return;
@@ -172,7 +197,7 @@ public class PoliceDirector : MonoBehaviour
     {
         int n = 0;
         foreach (var o in _officers)
-            if (o != null && o.IsDangerous && o.kind != PoliceOfficer.Kind.Guard && o.kind != PoliceOfficer.Kind.Pursuer) n++;
+            if (o != null && o.IsDangerous && o.kind != PoliceOfficer.Kind.Guard && o.kind != PoliceOfficer.Kind.Pursuer && o.kind != PoliceOfficer.Kind.Dog) n++;
         return n;
     }
 
@@ -192,6 +217,25 @@ public class PoliceDirector : MonoBehaviour
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
         pos.z -= pursuerSpawnBehind;
         _pursuer = Spawn(PoliceOfficer.Kind.Pursuer, Claire.CurrentLane, pos, 0f);
+    }
+
+    /// <summary>Keeps one K9 on Claire's trail, with a break after each attack or miss.</summary>
+    private void UpdateDog()
+    {
+        if (_dogTemplate == null) return;
+        if (_dog != null && _dog.IsDangerous) return;
+        if (_dog != null)
+        {
+            _dog = null;
+            _nextDogAt = Time.time + dogRespawnSeconds;
+            return;
+        }
+        if (Time.time < _nextDogAt) return;
+
+        var pos = Claire.transform.position;
+        pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
+        pos.z -= dogSpawnBehind;
+        _dog = Spawn(PoliceOfficer.Kind.Dog, Claire.CurrentLane, pos, 0f, _dogTemplate);
     }
 
     /// <summary>Posts an officer at a roadblock. Returns false if no officer models are available.</summary>
@@ -238,11 +282,11 @@ public class PoliceDirector : MonoBehaviour
         }
     }
 
-    private PoliceOfficer Spawn(PoliceOfficer.Kind kind, int lane, Vector3 pos, float sidewalkX)
+    private PoliceOfficer Spawn(PoliceOfficer.Kind kind, int lane, Vector3 pos, float sidewalkX, GameObject templateOverride = null)
     {
-        var template = _templates[Random.Range(0, _templates.Count)];
+        var template = templateOverride != null ? templateOverride : _templates[Random.Range(0, _templates.Count)];
         var go = Instantiate(template, pos, Quaternion.identity, _root);
-        go.name = $"Police Officer ({kind})";
+        go.name = kind == PoliceOfficer.Kind.Dog ? "Police K9" : $"Police Officer ({kind})";
         go.SetActive(true);
         var officer = go.AddComponent<PoliceOfficer>();
         officer.Init(this, kind, lane, sidewalkX);
@@ -322,8 +366,16 @@ public class PoliceDirector : MonoBehaviour
     public void OnOfficerGrabbedClaire(PoliceOfficer o)
     {
         if (_flow == null || !GameStartFlow.IsGameplayActive) return;
-        _flow.ApplyClaireDamage(claireGrabDamage); // raises ClaireCollision -> pressure, flash, shake, dialogue
-        if (_flow.hudController != null) _flow.hudController.ShowAlert("OFFICER GRAB!");
+        bool dog = o != null && o.kind == PoliceOfficer.Kind.Dog;
+        _flow.ApplyClaireDamage(dog ? dogBiteDamage : claireGrabDamage); // raises ClaireCollision -> pressure, flash, shake, dialogue
+        if (_flow.hudController != null) _flow.hudController.ShowAlert(dog ? "K9 BITE!" : "OFFICER GRAB!");
+    }
+
+    public void OnGuardShotClaire()
+    {
+        if (_flow == null || !GameStartFlow.IsGameplayActive) return;
+        _flow.ApplyClaireDamage(guardShotDamage);
+        if (_flow.hudController != null) _flow.hudController.ShowAlert("SHOT! LEAVE THAT LANE!");
     }
 
     public void OnOfficerGrabbedAJ(PoliceOfficer o)
@@ -382,7 +434,8 @@ public class PoliceDirector : MonoBehaviour
         }
         bool sameLane = nearest.lane == Claire.CurrentLane;
         float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 14f);
-        _warningText.text = sameLane ? "POLICE BEHIND - CHANGE LANE!" : "POLICE BEHIND";
+        string who = nearest.kind == PoliceOfficer.Kind.Dog ? "K9" : "POLICE";
+        _warningText.text = sameLane ? $"{who} BEHIND - CHANGE LANE!" : $"{who} BEHIND";
         for (int i = 0; i < _laneMarks.Length; i++)
         {
             bool officerLane = i == nearest.lane;
@@ -412,9 +465,18 @@ public class PoliceDirector : MonoBehaviour
                 var animator = t.GetComponentInChildren<Animator>(true);
                 if (animator != null && animator.runtimeAnimatorController == null)
                     animator.runtimeAnimatorController = set.officerRunController;
+                GiveHandgun(t, set.handgun);
                 AddTag(t);
                 _templates.Add(t);
             }
+        }
+
+        if (set != null && set.policeDog != null && set.dogController != null)
+        {
+            _dogTemplate = Instantiate(set.policeDog, _templateHolder);
+            _dogTemplate.transform.localScale *= dogScale;
+            StripToVisual(_dogTemplate);
+            _dogTemplate.GetComponentInChildren<Animator>(true).runtimeAnimatorController = set.dogController;
         }
 
         if (_templates.Count == 0)
@@ -428,6 +490,42 @@ public class PoliceDirector : MonoBehaviour
             }
             if (_templates.Count == 0) Debug.LogWarning("[PoliceDirector] No officer templates could be built; police disabled.");
         }
+    }
+
+    /// <summary>Puts the handgun in the officer's right hand (in place of the model's own holstered pistol).</summary>
+    private void GiveHandgun(GameObject officer, GameObject handgunPrefab)
+    {
+        Transform hand = FindByNameContains(officer.transform, "hand_r");
+        if (handgunPrefab == null || hand == null) return;
+
+        foreach (var r in officer.GetComponentsInChildren<Renderer>(true))
+            if (r.name.Contains("pistolet")) r.enabled = false;
+
+        var gun = Instantiate(handgunPrefab, hand, false);
+        gun.name = "Handgun";
+        gun.transform.SetLocalPositionAndRotation(gunLocalPosition, Quaternion.Euler(gunLocalEuler));
+        foreach (var a in gun.GetComponentsInChildren<Animator>(true)) DestroyImmediate(a);
+        foreach (var c in gun.GetComponentsInChildren<Collider>(true)) DestroyImmediate(c);
+
+        var body = gun.GetComponentInChildren<Renderer>(true);
+        var barrel = gun.transform.Find("Barrel_Location");
+        if (body == null || barrel == null) return;
+
+        var flashMat = new Material(body.sharedMaterial) { name = "Muzzle Flash" };
+        _createdMaterials.Add(flashMat);
+        flashMat.SetTexture("_BaseMap", null);
+        flashMat.SetColor("_BaseColor", new Color(1f, 0.8f, 0.3f));
+        flashMat.EnableKeyword("_EMISSION");
+        flashMat.SetColor("_EmissionColor", new Color(4f, 2.6f, 0.8f));
+
+        var flash = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        flash.name = MuzzleFlashName;
+        DestroyImmediate(flash.GetComponent<Collider>());
+        var flashRenderer = flash.GetComponent<Renderer>();
+        flashRenderer.sharedMaterial = flashMat;
+        flashRenderer.enabled = false;
+        flash.transform.SetParent(barrel, false);
+        flash.transform.localScale = Vector3.one * 0.16f;
     }
 
     private GameObject MakeStandIn(GameObject source)

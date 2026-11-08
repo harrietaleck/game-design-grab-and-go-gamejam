@@ -21,7 +21,7 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
 
 **Goal:** survive the **2:00** countdown with Claire alive and AJ free.
 
-- **Loot:** AJ drops gold coins (+1) and gold coin stacks (+5) behind him. Run over them to collect.
+- **Loot:** AJ drops gold coins (+1), gold coin stacks (+5) and rare jewelry (+10 to +50) behind him. Run over them to collect.
 - **Traffic:** every crash costs Claire 10 of her 100 health and raises **police pressure**.
 - **Police officers:** chasers run up from behind in your lane (a **POLICE BEHIND** banner shows their lane - change lanes),
   interceptors jog towards you from ahead, and sidewalk officers step into the outer lanes. An officer grab costs Claire 15
@@ -29,6 +29,8 @@ Unity `6000.0.44f1` - URP 17 - Windows PC - C#
   The Distraction Pulse stuns every officer for 3 s.
 - **Roadblocks:** police cars parked across three lanes. A **ROADBLOCK** banner shows which lane is open - get to the gap. Hitting one costs 20 health and half your loot. Officers posted at each roadblock lunge at anyone passing close, so reach the gap early.
 - **Pursuer:** one officer is always on your trail. He runs Claire down from behind (dodge when **POLICE BEHIND** shows) and, if she sidesteps him, goes after AJ.
+- **K9:** a police dog hunts Claire from behind (a **K9 BEHIND** banner warns you). A bite costs 10 health; change lane and it runs past.
+- **Roadblock guards** carry handguns and fire one burst down their own lane. Still being in that lane when it ends costs 10 health.
 - **Police pressure (0-100):** rises when Claire crashes (+18), AJ has a near miss (+6) or a gold stack is grabbed (+3);
   cools down after 3 calm seconds. At 100 the police grab AJ.
 - **Distraction Pulse:** -35 pressure and no new pressure for 3 s (5 s cooldown). It never steers AJ.
@@ -94,6 +96,7 @@ Third-party assets (original licenses apply):
 - Space Exploration GUI Kit - HUD elements
 - Mixamo - character running animations (Claire, AJ)
 - Mixkit - city ambience, train, siren and coin sounds; one ElevenLabs-generated voice clip
+- German Shepherd (RetroStyle Games), Modern Guns: Handgun (Nokobot), Jewelry Shop pack, police pistol animations (Mixamo)
 - Also imported: Money Pack, Medieval Gold, LowPoly Fantasy Bags, jewellery shop, Explosives, LiquidFire effects
 
 ## AI Ethics Statement

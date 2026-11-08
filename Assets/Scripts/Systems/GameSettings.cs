@@ -100,6 +100,7 @@ public class DifficultyApplier : MonoBehaviour
             police.pursuerCatchChance = easy ? 0.1f : 0.4f;
             police.pursuerRespawnSeconds = easy ? 14f : 5f;
             police.spawnIntervalRange *= easy ? 1.4f : 0.75f;
+            police.dogRespawnSeconds = easy ? 28f : 9f;
         }
 
         var roadblocks = GetComponent<RoadblockDirector>();

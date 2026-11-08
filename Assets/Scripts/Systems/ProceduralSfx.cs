@@ -6,13 +6,15 @@ using UnityEngine;
 /// </summary>
 public static class ProceduralSfx
 {
-    private static AudioClip s_blip, s_pulse, s_alarm, s_rescue;
+    private static AudioClip s_blip, s_pulse, s_alarm, s_rescue, s_gunshot;
     private static AudioSource s_source;
 
     public static AudioClip RadioBlip => s_blip ??= Sweep("RadioBlip", 1400f, 1900f, 0.07f, 0.35f, square: true);
     public static AudioClip DistractionPulse => s_pulse ??= Sweep("DistractionPulse", 900f, 180f, 0.45f, 0.5f, square: false);
     public static AudioClip Alarm => s_alarm ??= TwoTone("Alarm", 880f, 660f, 0.6f, 0.35f);
     public static AudioClip Rescue => s_rescue ??= Sweep("Rescue", 400f, 1200f, 0.3f, 0.45f, square: false);
+
+    public static AudioClip Gunshot => s_gunshot ??= Sweep("Gunshot", 2600f, 120f, 0.09f, 0.7f, square: true);
 
     public static void Play(AudioClip clip, float volume = 1f)
     {

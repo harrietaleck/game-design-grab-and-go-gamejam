@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 972540d4311544b4e957716d1997508b
+guid: 40ee6a63e946c7645ad8e23250cb1558
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
+      name: Crouch Rapid Fire
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 54
+      lastFrame: 23
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

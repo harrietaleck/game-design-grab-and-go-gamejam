@@ -164,7 +164,7 @@ public class LootSpill : MonoBehaviour
         int bestValue = small ? int.MaxValue : int.MinValue;
         foreach (var e in _dropper.dropTable)
         {
-            if (e == null || e.prefab == null) continue;
+            if (e == null || e.prefab == null || e.fallbackValue >= GameStartFlow.JewelValue) continue; // spills are coins only
             if (small ? e.fallbackValue < bestValue : e.fallbackValue > bestValue)
             {
                 bestValue = e.fallbackValue;
@@ -180,7 +180,7 @@ public class LootSpill : MonoBehaviour
         AudioClip clip = null;
         int bestValue = int.MinValue;
         foreach (var e in _dropper.dropTable)
-            if (e != null && e.pickupAudio != null && e.fallbackValue > bestValue) { bestValue = e.fallbackValue; clip = e.pickupAudio; }
+            if (e != null && e.pickupAudio != null && e.fallbackValue < GameStartFlow.JewelValue && e.fallbackValue > bestValue) { bestValue = e.fallbackValue; clip = e.pickupAudio; }
         return clip; // the clinking-coins sound
     }
 }

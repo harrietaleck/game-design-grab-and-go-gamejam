@@ -16,6 +16,9 @@ MonoBehaviour:
   - {fileID: 642909989054810903, guid: a2e2a04d8921316448b92f30ce1d2ed5, type: 3}
   tintPrefabs: 0
   officerRunController: {fileID: 9100000, guid: 91fc1e62491c3714bb52f36fadd7580e, type: 2}
+  handgun: {fileID: 4210100720165400533, guid: 87e308cb23eea97419b3c2623d8bb3fa, type: 3}
   policeCar: {fileID: 115512, guid: 7be733fca5977484eab72a8eca73b1b2, type: 3}
   helicopter: {fileID: 100006, guid: ebfa405660e25c549bb7039f0b44f8ff, type: 3}
-  generatorVersion: 2
+  policeDog: {fileID: 4248197375101405997, guid: 2658abc5fee3a7548a90543920743983, type: 3}
+  dogController: {fileID: 9100000, guid: d34ca6d89cf37214685edd2a17dc8c13, type: 2}
+  generatorVersion: 3

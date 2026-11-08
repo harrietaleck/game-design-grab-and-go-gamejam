@@ -14,6 +14,10 @@ public class ThiefCollectibleDropper : MonoBehaviour
         public bool rotateOnSpawn = false;
         [Tooltip("Spin speed used when rotateOnSpawn is enabled.")]
         public float spinSpeed = 240f;
+        [Tooltip("Spin around the world up axis instead of the coin axis.")]
+        public bool spinAroundUp = false;
+        [Tooltip("If above 0, the drop is scaled so its largest dimension is this many world units.")]
+        public float targetSize = 0f;
         public AudioClip pickupAudio;
         [Range(0f, 1f)] public float pickupAudioVolume = 1f;
     }
@@ -103,13 +107,15 @@ public class ThiefCollectibleDropper : MonoBehaviour
             ? Instantiate(entry.prefab, pos, spawnRotation, tileParent)
             : Instantiate(entry.prefab, pos, spawnRotation);
 
+        if (entry.targetSize > 0f) ScaleToSize(go, entry.targetSize);
+
         CollectiblePickup.EnsureSetup(go, entry.fallbackValue);
         if (entry.rotateOnSpawn)
         {
             var spinner = go.GetComponent<CollectibleSpin>();
             if (spinner == null)
                 spinner = go.AddComponent<CollectibleSpin>();
-            spinner.axis = Vector3.forward;
+            spinner.axis = entry.spinAroundUp ? go.transform.InverseTransformDirection(Vector3.up) : Vector3.forward;
             spinner.speedDegreesPerSecond = Mathf.Abs(entry.spinSpeed);
         }
         var pickup = go.GetComponent<CollectiblePickup>();
@@ -123,6 +129,16 @@ public class ThiefCollectibleDropper : MonoBehaviour
             pickup.pickupAudioVolume = entry.pickupAudioVolume;
         }
         IgnoreThiefCollision(go);
+    }
+
+    private static void ScaleToSize(GameObject go, float size)
+    {
+        var renderers = go.GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) return;
+        Bounds b = renderers[0].bounds;
+        for (int i = 1; i < renderers.Length; i++) b.Encapsulate(renderers[i].bounds);
+        float largest = Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z));
+        if (largest > 0.0001f) go.transform.localScale *= size / largest;
     }
 
     private Transform FindTileParent(Vector3 spawnPos)
