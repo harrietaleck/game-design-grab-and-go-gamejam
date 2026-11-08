@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e4fc703a40c4204b96689960f82726e, type: 3}
   m_Name: UITheme
   m_EditorClassIdentifier: Assembly-CSharp::UITheme
-  generatorVersion: 1
+  generatorVersion: 3
   window:
     texture: {fileID: 2800000, guid: 06edc4e02f9c48647adfed0a778cb8aa, type: 3}
     border: {x: 110, y: 110, z: 110, w: 110}
@@ -37,7 +37,15 @@ MonoBehaviour:
     texture: {fileID: 2800000, guid: 2678aad9451e8e44a9c17d6e98886f05, type: 3}
     border: {x: 100, y: 70, z: 100, w: 70}
     borderScale: 4
-  hudFont: {fileID: 12800000, guid: 8297a2bf97dbbba468bd2518d003a876, type: 3}
+  hudPanel:
+    texture: {fileID: 2800000, guid: 590d490b2b69c6b4a9fd65144443799c, type: 3}
+    border: {x: 26, y: 26, z: 26, w: 26}
+    borderScale: 2.6
+  iconTimer: {fileID: 2800000, guid: 9daf3e561126e0147baa7cf3e3b81602, type: 3}
+  iconPressure: {fileID: 2800000, guid: c0ba0b14b1d033c41a9f47d4b5300273, type: 3}
+  iconStatus: {fileID: 2800000, guid: 3192e0061b5b4644ab81667a892c7aee, type: 3}
+  iconAbility: {fileID: 2800000, guid: 0de5dd36b497ed848be7c5be6a14eaf4, type: 3}
+  hudFont: {fileID: 12800000, guid: 3365d868468c1f143aa3fbb4d8a4e397, type: 3}
   goldFont: {fileID: 12800000, guid: bae5fb0cf39cfc149943cc49565db3c9, type: 2}
   neonFont: {fileID: 12800000, guid: e982f992351beda4e88bdb644ea2341c, type: 2}
   purpleFont: {fileID: 12800000, guid: 1679166d5c47b4a4898eb9776176617c, type: 2}

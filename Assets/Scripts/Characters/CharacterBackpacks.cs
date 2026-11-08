@@ -31,8 +31,27 @@ public class CharacterBackpacks : MonoBehaviour
         }
         var claire = FindFirstObjectByType<PlayerLaneMovement>();
         var aj = FindFirstObjectByType<AIThiefLaneDodge>();
-        if (claire != null) Attach(claire.transform, set.claire, set.boneNames);
+        if (claire != null) Attach(claire.transform, WithShopChoices(set.claire), set.boneNames);
         if (aj != null) Attach(aj.transform, set.aj, set.boneNames);
+    }
+
+    /// <summary>Claire's bag with the shop's equipped model and Bigger Bag size applied.</summary>
+    private static CharacterGearSet.Backpack WithShopChoices(CharacterGearSet.Backpack original)
+    {
+        var shop = ShopSet.Active;
+        int bag = ShopStore.EquippedBag;
+        bool bigger = ShopStore.Owns(ShopStore.BigBag);
+        bool swap = shop != null && shop.bags != null && bag >= 0 && bag < shop.bags.Length;
+        if (original == null || (!swap && !bigger)) return original;
+
+        return new CharacterGearSet.Backpack
+        {
+            prefab = swap ? shop.bags[bag] : original.prefab,
+            height = original.height * (bigger ? 1.35f : 1f),
+            backOffset = original.backOffset,
+            heightOffset = original.heightOffset,
+            flip = original.flip
+        };
     }
 
     private static void Attach(Transform character, CharacterGearSet.Backpack gear, string[] boneNames)

@@ -7,7 +7,11 @@ using UnityEngine;
 public class PoliceOfficer : MonoBehaviour
 {
     public enum Kind { Chaser, Interceptor, Sidewalk, Guard, Pursuer, Dog }
-    public enum State { Approaching, InLane, Stunned, Leaving }
+    /// <summary>
+    /// Police never run from the suspects. Holding = standing ready (at the curb, or waiting out a rescue).
+    /// Leaving = the runners have passed, so the officer turns and gives chase until left behind.
+    /// </summary>
+    public enum State { Approaching, InLane, Stunned, Leaving, Holding }
 
     public Kind kind;
     public State state = State.Approaching;
@@ -50,6 +54,10 @@ public class PoliceOfficer : MonoBehaviour
     private bool _retargeted;
     private float _sidewalkX;
     private bool _running;
+    private float _holdX;
+    private bool _atCurb;
+
+    private bool HoldsGround => kind == Kind.Guard || kind == Kind.Interceptor || kind == Kind.Sidewalk;
 
     public void Init(PoliceDirector director, Kind k, int startLane, float sidewalkX)
     {
@@ -104,13 +112,19 @@ public class PoliceOfficer : MonoBehaviour
                 Behave(ref p, claire, dt);
                 break;
             case State.Stunned:
-                if (Time.time >= _stunUntil) BeginLeaving();
+                if (Time.time >= _stunUntil) ReturnToDuty();
+                break;
+            case State.Holding:
+                bool moving = Mathf.Abs(p.x - _holdX) > 0.05f;
+                if (moving != _running) SetRunning(moving);
+                p.x = Mathf.MoveTowards(p.x, _holdX, 3.5f * dt);
+                if (_atCurb && GameStartFlow.Instance.State == GameStartFlow.RunState.Playing) UpdateShooting(claire, p);
                 break;
             case State.Leaving:
-                // Walk off to the sidewalk and fall behind.
-                p.x = Mathf.MoveTowards(p.x, _leaveSideX, 4f * dt);
+                // Outrun: keeps chasing in the runners' direction, drifting clear of the lanes as it falls behind.
+                p.x = Mathf.MoveTowards(p.x, _leaveSideX, 1.5f * dt);
                 p.z += _director.leaveSpeed * dt;
-                Face(_leaveSideX < p.x ? -90f : 90f);
+                Face(0f);
                 break;
         }
         transform.position = p;
@@ -119,7 +133,7 @@ public class PoliceOfficer : MonoBehaviour
         // contact is suspended, so the rescue can never be interrupted or re-triggered by another grab.
         if (IsDangerous && GameStartFlow.Instance != null && GameStartFlow.Instance.State == GameStartFlow.RunState.Playing)
         {
-            if (Reaches(claire.transform.position, p))
+            if (!claire.IsEvading && Reaches(claire.transform.position, p))
             {
                 _director.OnOfficerGrabbedClaire(this);
                 Stun(_director.afterGrabStunSeconds);
@@ -131,10 +145,18 @@ public class PoliceOfficer : MonoBehaviour
             }
         }
 
-        // Despawn far behind / far ahead.
+        // Once both runners are past, a posted officer turns and gives chase.
         float cz = claire.transform.position.z;
+        if (HoldsGround && state != State.Leaving)
+        {
+            float lastRunner = aj != null ? Mathf.Min(cz, aj.transform.position.z) : cz;
+            if (p.z < lastRunner - 1.5f) BeginLeaving();
+        }
+
+        // Despawn far behind / far ahead. (An officer who has been outrun goes as soon as the camera has left it.)
         // (Guards are placed with their roadblock, which can be further ahead than despawnAhead.)
-        if (p.z < cz - _director.despawnBehind || (kind != Kind.Guard && p.z > cz + _director.despawnAhead))
+        float behindLimit = state == State.Leaving ? _director.outrunDespawnBehind : _director.despawnBehind;
+        if (p.z < cz - behindLimit || (kind != Kind.Guard && p.z > cz + _director.despawnAhead))
             _director.Despawn(this);
     }
 
@@ -185,7 +207,7 @@ public class PoliceOfficer : MonoBehaviour
                 p.z -= _director.interceptorSpeed * dt;
                 p.x = Mathf.MoveTowards(p.x, LaneMath.SharedLaneX(lane), 3f * dt);
                 state = State.InLane;
-                if (!_director.LaneStaysFair(this, lane, p.z)) BeginLeaving();
+                if (!_director.LaneStaysFair(this, lane, p.z)) GoToCurb();
                 break;
 
             case Kind.Sidewalk:
@@ -203,7 +225,7 @@ public class PoliceOfficer : MonoBehaviour
                             state = State.InLane;
                             SetRunning(true);
                         }
-                        else BeginLeaving();
+                        else GoToCurb();
                     }
                 }
                 else
@@ -373,6 +395,60 @@ public class PoliceOfficer : MonoBehaviour
         state = State.Stunned;
         _stunUntil = Time.time + Mathf.Max(0.1f, seconds);
         SetRunning(false);
+    }
+
+    /// <summary>The lane must stay open (fairness): take a stand at the curb, facing the runners, gun ready.</summary>
+    public void GoToCurb()
+    {
+        EndShooting();
+        state = State.Holding;
+        _atCurb = true;
+        lane = -1;
+        _holdX = transform.position.x < 0f ? -_director.SidewalkX : _director.SidewalkX;
+        Face(180f);
+    }
+
+    /// <summary>During a rescue posted officers wait, facing the runners, and do not interfere.</summary>
+    public void HoldForRescue(bool stepOutOfLane)
+    {
+        if (state == State.Leaving) return;
+        if (!HoldsGround)
+        {
+            BeginLeaving();
+            return;
+        }
+        if (state == State.Holding && !stepOutOfLane) return;
+
+        EndShooting();
+        if (_muzzleFlash != null) _muzzleFlash.enabled = false;
+        state = State.Holding;
+        float x = transform.position.x;
+        _holdX = stepOutOfLane ? x + (x <= 0f ? -1.8f : 1.8f) : kind == Kind.Guard ? _postX : x;
+        Face(180f);
+        SetRunning(false);
+    }
+
+    /// <summary>Back to work after a rescue. Officers at the curb stay there.</summary>
+    public void ResumeAfterRescue()
+    {
+        if (state == State.Holding && !_atCurb) ReturnToDuty();
+    }
+
+    private void ReturnToDuty()
+    {
+        if (!HoldsGround)
+        {
+            BeginLeaving();
+            return;
+        }
+        if (_atCurb || (kind != Kind.Guard && lane < 0))
+        {
+            GoToCurb();
+            return;
+        }
+        state = State.InLane;
+        Face(180f);
+        SetRunning(kind != Kind.Guard);
     }
 
     public void BeginLeaving()

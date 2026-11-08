@@ -64,7 +64,7 @@ public class HUDController : MonoBehaviour
     {
         // MainScene still stores the old hint text; show the full current controls instead.
         if (string.IsNullOrEmpty(controlsHint) || controlsHint == LegacyControlsHint)
-            controlsHint = "A/D move   SPACE distract   ESC pause";
+            controlsHint = "A/D move   W jump   S dodge   SPACE distract   ESC pause";
         if (alertText != null) alertText.text = "";
         if (lootText != null)
         {
@@ -105,7 +105,9 @@ public class HUDController : MonoBehaviour
         _hideControlsAt = Time.unscaledTime + Mathf.Max(0f, hideControlsAfterSeconds);
         if (controlsHintText != null)
         {
-            controlsHintText.text = controlsHint;
+            controlsHintText.text = UnityEngine.InputSystem.Gamepad.current != null
+                ? "Stick move   A jump   B dodge   X distract   START pause"
+                : controlsHint;
             controlsHintText.gameObject.SetActive(true);
         }
         if (alertText != null) alertText.text = "";
@@ -138,6 +140,8 @@ public class HUDController : MonoBehaviour
     public void ShowAlert(string message)
     {
         if (alertText == null) return;
+        // Slides in only when appearing, so a run of pickups doesn't keep moving it.
+        if (string.IsNullOrEmpty(alertText.text) && alertText.TryGetComponent<SidePopup>(out var popup)) popup.Play();
         alertText.text = $"<mark=#000000B0 padding=\"24,24,8,8\">{message}</mark>";
         _alertHideAt = Time.unscaledTime + Mathf.Max(0.1f, alertDuration);
     }
@@ -154,6 +158,14 @@ public class HUDController : MonoBehaviour
     {
         if (timerText == null) return;
         var flow = GameStartFlow.Instance;
+        var mission = RoadblockDirector.Instance;
+        if (mission != null && mission.MissionActive)
+        {
+            timerText.text = mission.ProgressText;
+            timerText.color = timerNormalColor;
+            return;
+        }
+
         float max = flow != null ? flow.RunDuration : Mathf.Max(1f, maxGameTimeSeconds);
         float remaining = flow != null ? flow.TimeRemaining : max;
 

@@ -67,19 +67,24 @@ public class GameplayHUDExtras : MonoBehaviour
         var hud = _flow != null ? _flow.hudController : null;
         if (hud == null) return;
         PinToEdge(hud.timerText, new Vector2(0.5f, 1f), new Vector2(0f, -5f));
-        PinToEdge(hud.thiefStatusText, new Vector2(0f, 1f), new Vector2(18f, -5f));
-        PinToEdge(hud.alertText, new Vector2(0.5f, 0f), new Vector2(0f, 12f));
+        PinToEdge(hud.thiefStatusText, new Vector2(0f, 1f), new Vector2(40f, -6f));
+        PinToEdge(hud.alertText, new Vector2(0f, 0f), new Vector2(12f, 72f));
         if (hud.timerText != null) hud.timerText.fontStyle = FontStyles.Bold;
         if (hud.thiefStatusText != null) { hud.thiefStatusText.fontSize = 19f; hud.thiefStatusText.fontStyle = FontStyles.Bold; }
         if (hud.alertText != null)
         {
             hud.alertText.fontStyle = FontStyles.Bold;
-            hud.alertText.rectTransform.sizeDelta = new Vector2(520f, hud.alertText.rectTransform.sizeDelta.y);
+            hud.alertText.alignment = TextAlignmentOptions.BottomLeft;
+            hud.alertText.rectTransform.sizeDelta = new Vector2(300f, hud.alertText.rectTransform.sizeDelta.y);
+            SidePopup.Attach(hud.alertText.rectTransform, fromRight: false);
         }
         BuildHudPanels(hud);
         PinToEdge(hud.controlsHintText, new Vector2(1f, 0f), new Vector2(-12f, -12f));
         if (hud.controlsHintText != null) // wide enough for the whole hint on one line
-            hud.controlsHintText.rectTransform.sizeDelta = new Vector2(340f, hud.controlsHintText.rectTransform.sizeDelta.y);
+        {
+            hud.controlsHintText.rectTransform.sizeDelta = new Vector2(430f, hud.controlsHintText.rectTransform.sizeDelta.y);
+            RuntimeUI.FitOnOneLine(hud.controlsHintText);
+        }
         _healthGroup = hud.healthSlider != null ? ChildOfHudRoot(hud.healthSlider.transform) : null;
         _lootGroup = hud.lootText != null ? ChildOfHudRoot(hud.lootText.transform) : null;
     }
@@ -87,22 +92,22 @@ public class GameplayHUDExtras : MonoBehaviour
     /// <summary>Backing panels that give the timer, pressure meter and AJ's status a clear home on any background.</summary>
     private void BuildHudPanels(HUDController hud)
     {
-        var top = RuntimeUI.CreateWindow(_hudRoot, "TopPanel (runtime)", null, 0.72f);
-        top.raycastTarget = false;
-        RuntimeUI.Place(top.rectTransform, new Vector2(0.5f, 1f), new Vector2(620f, 196f), Vector2.zero);
+        var theme = UITheme.Active;
+        var top = RuntimeUI.CreateHudPanel(_hudRoot, "TopPanel (runtime)");
+        RuntimeUI.Place(top.rectTransform, new Vector2(0.5f, 1f), new Vector2(620f, 200f), new Vector2(0f, 2f));
         top.transform.SetAsFirstSibling();
+        if (theme != null)
+        {
+            RuntimeUI.CreateIcon(top.transform, "TimerIcon", theme.iconTimer, new Vector2(0.5f, 1f), 56f, new Vector2(-225f, -24f));
+            var shield = RuntimeUI.CreateIcon(top.transform, "PressureIcon", theme.iconPressure, new Vector2(0.5f, 1f), 40f, new Vector2(-248f, -102f));
+            if (shield != null) shield.color = new Color(0.8f, 0.72f, 1f);
+        }
 
-        var chip = RuntimeUI.CreatePanel(_hudRoot, "StatusChip (runtime)", new Color(0.01f, 0.03f, 0.08f, 0.72f));
-        chip.raycastTarget = false;
-        RuntimeUI.Place(chip.rectTransform, new Vector2(0f, 1f), new Vector2(470f, 84f), new Vector2(10f, -4f));
+        var chip = RuntimeUI.CreateHudPanel(_hudRoot, "StatusChip (runtime)");
+        RuntimeUI.Place(chip.rectTransform, new Vector2(0f, 1f), new Vector2(480f, 108f), new Vector2(2f, 6f));
         chip.transform.SetAsFirstSibling();
-        _statusStripe = RuntimeUI.CreatePanel(chip.transform, "Stripe", Color.green);
-        _statusStripe.raycastTarget = false;
-        var stripe = _statusStripe.rectTransform;
-        stripe.anchorMin = Vector2.zero;
-        stripe.anchorMax = new Vector2(0f, 1f);
-        stripe.pivot = new Vector2(0f, 0.5f);
-        stripe.sizeDelta = new Vector2(5f, 0f);
+        if (theme != null)
+            _statusStripe = RuntimeUI.CreateIcon(chip.transform, "StatusIcon", theme.iconStatus, new Vector2(0f, 0.5f), 54f, new Vector2(18f, 0f));
 
         if (hud.healthSlider != null && hud.healthSlider.fillRect != null)
             _healthFill = hud.healthSlider.fillRect.GetComponent<Image>();
@@ -194,17 +199,19 @@ public class GameplayHUDExtras : MonoBehaviour
         RuntimeUI.Place((RectTransform)_pressureFill.transform.parent, new Vector2(0.5f, 0f), new Vector2(520f, 36f), Vector2.zero);
 
         // Distraction indicator: bottom right, above the controls hint.
-        var ability = RuntimeUI.CreatePanel(_hudRoot, "DistractionPulse (runtime)", new Color(0f, 0f, 0f, 0.45f));
-        ability.raycastTarget = false;
-        RuntimeUI.Place(ability.rectTransform, new Vector2(1f, 0f), new Vector2(330f, 64f), new Vector2(-24f, 110f));
+        var ability = RuntimeUI.CreateHudPanel(_hudRoot, "DistractionPulse (runtime)");
+        RuntimeUI.Place(ability.rectTransform, new Vector2(1f, 0f), new Vector2(560f, 104f), new Vector2(-16f, 96f));
         _abilityCooldownFill = RuntimeUI.CreatePanel(ability.transform, "Cooldown", new Color(0.1f, 0.9f, 1f, 0.25f));
         _abilityCooldownFill.raycastTarget = false;
-        RuntimeUI.Stretch(_abilityCooldownFill.rectTransform);
+        RuntimeUI.Stretch(_abilityCooldownFill.rectTransform, 22f);
+        if (UITheme.Active != null)
+            RuntimeUI.CreateIcon(ability.transform, "AbilityIcon", UITheme.Active.iconAbility, new Vector2(0f, 0.5f), 44f, new Vector2(30f, 0f));
         _abilityCooldownFill.type = Image.Type.Filled;
         _abilityCooldownFill.fillMethod = Image.FillMethod.Horizontal;
         _abilityCooldownFill.sprite = RuntimeUI.WhiteSprite;
         _abilityText = RuntimeUI.CreateText(ability.transform, "Text", "", 24f, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
         RuntimeUI.Stretch(_abilityText.rectTransform, 4f);
+        _abilityText.rectTransform.offsetMin += new Vector2(70f * RuntimeUI.U, 0f);
 
         // Full-screen flash (top of the canvas, never blocks clicks).
         _flash = RuntimeUI.CreatePanel(transform, "ScreenFlash (runtime)", new Color(1f, 0f, 0f, 0f));
@@ -254,10 +261,10 @@ public class GameplayHUDExtras : MonoBehaviour
         var pulse = DistractionPulse.Instance;
         if (pulse != null)
         {
-            string dots = new string('●', Mathf.Max(0, pulse.ChargesLeft)) + new string('○', Mathf.Max(0, pulse.chargesPerRun - pulse.ChargesLeft));
+            string dots = new string('●', Mathf.Max(0, pulse.ChargesLeft)) + new string('○', Mathf.Max(0, pulse.TotalCharges - pulse.ChargesLeft));
             _abilityText.text = pulse.CooldownRemaining > 0f
                 ? $"DISTRACT  {dots}  <size=80%>{pulse.CooldownRemaining:0.0}s</size>"
-                : $"[SPACE] DISTRACT  {dots}";
+                : $"[{(GameInput.UsingGamepad ? "X" : "SPACE")}] DISTRACT  {dots}";
             _abilityText.color = pulse.ChargesLeft > 0 ? Color.white : new Color(1f, 1f, 1f, 0.4f);
             _abilityCooldownFill.fillAmount = 1f - pulse.Cooldown01;
         }

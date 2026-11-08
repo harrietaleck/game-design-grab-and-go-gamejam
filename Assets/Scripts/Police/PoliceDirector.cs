@@ -42,7 +42,10 @@ public class PoliceDirector : MonoBehaviour
     public float sidewalkSpawnAhead = 50f;
     public float sidewalkStepDistance = 16f;
     public float sidewalkStepSpeed = 4f;
-    public float leaveSpeed = 2f;
+    [Tooltip("Speed of an officer the runners have passed, still chasing but slower than Claire (6).")]
+    public float leaveSpeed = 5f;
+    [Tooltip("An outrun officer disappears this far behind Claire (behind the camera).")]
+    public float outrunDespawnBehind = 12f;
     public float despawnBehind = 30f;
     public float despawnAhead = 160f;
 
@@ -198,16 +201,13 @@ public class PoliceDirector : MonoBehaviour
                 foreach (var o in _officers) if (o != null) o.Stun(distractionStunSeconds);
                 break;
             case GameEventType.AJCaught:
-                // Resolve every active encounter: officers stop being hazards and walk off, so nothing conflicts
+                // Resolve every active encounter: posted officers stand and wait, so nothing conflicts
                 // with the rescue (RescueController stays the only authority). New spawns are already paused
                 // because Update only spawns in RunState.Playing.
-                foreach (var o in _officers) if (o != null && o.state != PoliceOfficer.State.Leaving) o.BeginLeaving();
+                foreach (var o in _officers) if (o != null) o.HoldForRescue(false);
                 break;
             case GameEventType.AJRescued:
-                // Officers around AJ are shaken off by the rescue.
-                if (AJ != null)
-                    foreach (var o in _officers)
-                        if (o != null && Mathf.Abs(o.transform.position.z - AJ.transform.position.z) < 15f) o.Stun(1f);
+                foreach (var o in _officers) if (o != null) o.ResumeAfterRescue();
                 break;
         }
     }
@@ -223,11 +223,14 @@ public class PoliceDirector : MonoBehaviour
         UpdateDog();
         float p = PolicePressure.Instance != null ? PolicePressure.Instance.Normalized : 0f;
         int maxActive = Mathf.RoundToInt(Mathf.Lerp(maxActiveRange.x, maxActiveRange.y, p));
-        if (Time.time < _nextSpawnAt || CountDangerous() >= maxActive) return;
+        if (Time.time < _nextSpawnAt || CountDangerous() >= maxActive || !ThreatWindowOpen) return;
 
         _nextSpawnAt = Time.time + Mathf.Lerp(spawnIntervalRange.x, spawnIntervalRange.y, p) * Random.Range(0.8f, 1.2f);
         SpawnFor(p);
     }
+
+    /// <summary>New threats hold off near a roadblock and during the breather after one.</summary>
+    private static bool ThreatWindowOpen => RoadblockDirector.Instance == null || RoadblockDirector.Instance.ThreatWindowOpen;
 
     private int CountDangerous()
     {
@@ -247,7 +250,7 @@ public class PoliceDirector : MonoBehaviour
             _nextPursuerAt = Time.time + pursuerRespawnSeconds;
             return;
         }
-        if (Time.time < _nextPursuerAt) return;
+        if (Time.time < _nextPursuerAt || !ThreatWindowOpen || (_dog != null && _dog.IsDangerous)) return;
 
         var pos = Claire.transform.position;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
@@ -266,7 +269,7 @@ public class PoliceDirector : MonoBehaviour
             _nextDogAt = Time.time + dogRespawnSeconds;
             return;
         }
-        if (Time.time < _nextDogAt) return;
+        if (Time.time < _nextDogAt || !ThreatWindowOpen || (_pursuer != null && _pursuer.IsDangerous)) return;
 
         var pos = Claire.transform.position;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
@@ -356,7 +359,7 @@ public class PoliceDirector : MonoBehaviour
         foreach (var obstacle in FindObjectsByType<LaneObstacle>(FindObjectsSortMode.None))
         {
             var op = obstacle.transform.position;
-            if (Mathf.Abs(op.z - z) > 4f) continue;
+            if (Mathf.Abs(op.z - z) > 4f || obstacle.passableByRunners) continue;
             blocked[LaneMath.SharedNearestLane(op.x)] = true;
         }
         if (blocked[lane]) return false;
@@ -393,7 +396,7 @@ public class PoliceDirector : MonoBehaviour
             float z = o.transform.position.z;
             if (z < zMin || z > zMax) continue;
             if (o.lane == lane || Mathf.Abs(o.transform.position.x - LaneMath.SharedLaneX(lane)) < LaneMath.SharedLaneDistance * 0.5f)
-                o.BeginLeaving();
+                o.HoldForRescue(true);
         }
     }
 
@@ -418,18 +421,20 @@ public class PoliceDirector : MonoBehaviour
     private void BuildWarningUI()
     {
         Transform root = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
-        var panel = RuntimeUI.CreateWindow(root, "PoliceWarning (runtime)", new Color(0.55f, 0.65f, 1f, 1f), 0.7f);
+        var panel = RuntimeUI.CreateHudPanel(root, "PoliceWarning (runtime)");
         panel.raycastTarget = false;
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 0f), new Vector2(520f, 96f), new Vector2(0f, 250f));
+        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 0.5f), new Vector2(680f, 130f), new Vector2(16f, -20f));
+        SidePopup.Attach(panel.rectTransform, fromRight: false);
         _warningText = RuntimeUI.CreateText(panel.transform, "Text", "POLICE BEHIND!", 30f, TextAlignmentOptions.Center, Color.white, FontStyles.Bold);
-        RuntimeUI.Place(_warningText.rectTransform, new Vector2(0.5f, 1f), new Vector2(500f, 44f), new Vector2(0f, -4f));
+        RuntimeUI.Place(_warningText.rectTransform, new Vector2(0.5f, 1f), new Vector2(620f, 50f), new Vector2(0f, -14f));
+        RuntimeUI.FitOnOneLine(_warningText);
         _laneMarks = new Image[LaneMath.SharedLaneCount];
         for (int i = 0; i < _laneMarks.Length; i++)
         {
             var mark = RuntimeUI.CreatePanel(panel.transform, $"Lane{i}", new Color(1f, 1f, 1f, 0.25f));
             mark.raycastTarget = false;
             float x = (i - (_laneMarks.Length - 1) * 0.5f) * 110f;
-            RuntimeUI.Place(mark.rectTransform, new Vector2(0.5f, 0f), new Vector2(90f, 28f), new Vector2(x, 10f));
+            RuntimeUI.Place(mark.rectTransform, new Vector2(0.5f, 0f), new Vector2(90f, 28f), new Vector2(x, 22f));
             _laneMarks[i] = mark;
         }
         _warning = panel.gameObject;

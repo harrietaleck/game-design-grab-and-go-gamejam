@@ -32,10 +32,9 @@ public class RadioDialogueUI : MonoBehaviour
 
     public void Build(Transform canvasRoot)
     {
-        var panel = RuntimeUI.CreateWindow(canvasRoot, "RadioDialogue (runtime)", null, 0.75f);
-        panel.raycastTarget = false;
+        var panel = RuntimeUI.CreateHudPanel(canvasRoot, "RadioDialogue (runtime)");
         // Compact, top-left (under the status text) so it never covers the road or Claire.
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -90f));
+        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -112f));
         _group = panel.gameObject.AddComponent<CanvasGroup>();
         _group.blocksRaycasts = false;
 
@@ -66,7 +65,7 @@ public class RadioDialogueUI : MonoBehaviour
         if (_root == null) return;
         var rt = (RectTransform)_root.transform;
         if (top) RuntimeUI.Place(rt, new Vector2(0.5f, 1f), BoxSize, new Vector2(0f, -20f));
-        else RuntimeUI.Place(rt, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -90f));
+        else RuntimeUI.Place(rt, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -112f));
     }
 
     public void Show(string speaker, string line)

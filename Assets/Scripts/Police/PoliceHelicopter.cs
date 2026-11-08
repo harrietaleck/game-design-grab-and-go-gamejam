@@ -25,6 +25,7 @@ public class PoliceHelicopter : MonoBehaviour
 
     [Range(0f, 1f)] public float maxVolume = 0.55f;
 
+    private Transform _beam;
     private AudioSource _audio;
     private Transform _heli;
     private PlayerLaneMovement _claire;
@@ -43,6 +44,64 @@ public class PoliceHelicopter : MonoBehaviour
         go.SetActive(false);
         _audio = ProceduralSfx.AttachHelicopterSound(go);
         _heli = go.transform;
+        CreateSearchlight();
+    }
+
+    /// <summary>A visible beam plus a real spot light that tracks Claire.</summary>
+    private void CreateSearchlight()
+    {
+        var fx = Resources.Load<Material>("FxParticle");
+        if (fx == null) return;
+
+        var mesh = new Mesh { name = "Searchlight Cone" };
+        const int sides = 16;
+        var vertices = new Vector3[sides * 2];
+        var triangles = new int[sides * 6];
+        for (int i = 0; i < sides; i++)
+        {
+            float a = i / (float)sides * Mathf.PI * 2f;
+            var ring = new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0f);
+            vertices[i * 2] = ring * 0.03f;
+            vertices[i * 2 + 1] = ring * 0.14f + Vector3.forward;
+            int next = (i + 1) % sides;
+            int t = i * 6;
+            triangles[t] = i * 2; triangles[t + 1] = next * 2; triangles[t + 2] = i * 2 + 1;
+            triangles[t + 3] = next * 2; triangles[t + 4] = next * 2 + 1; triangles[t + 5] = i * 2 + 1;
+        }
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateBounds();
+
+        var beam = new GameObject("Searchlight");
+        beam.AddComponent<MeshFilter>().sharedMesh = mesh;
+        var material = new Material(fx);
+        material.SetColor("_BaseColor", new Color(1f, 0.96f, 0.8f, 0.16f));
+        material.SetFloat("_Cull", 0f);
+        beam.AddComponent<MeshRenderer>().sharedMaterial = material;
+        beam.SetActive(false);
+        _beam = beam.transform;
+
+        var spot = new GameObject("Spot").AddComponent<Light>();
+        spot.transform.SetParent(_beam, false);
+        spot.type = LightType.Spot;
+        spot.spotAngle = 16f;
+        spot.range = 120f;
+        spot.intensity = 60f;
+        spot.color = new Color(1f, 0.96f, 0.8f);
+    }
+
+    private void LateUpdate()
+    {
+        if (_beam == null || _heli == null) return;
+        bool on = _heli.gameObject.activeSelf && _engaged;
+        if (_beam.gameObject.activeSelf != on) _beam.gameObject.SetActive(on);
+        if (!on) return;
+
+        Vector3 from = _heli.position + Vector3.down * 1.2f;
+        Vector3 to = _claire.transform.position;
+        _beam.position = from;
+        _beam.rotation = Quaternion.LookRotation(to - from);
+        _beam.localScale = new Vector3(Vector3.Distance(from, to), Vector3.Distance(from, to), Vector3.Distance(from, to));
     }
 
     private void Update()

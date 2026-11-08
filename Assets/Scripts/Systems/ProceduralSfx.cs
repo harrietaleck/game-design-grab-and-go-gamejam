@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public static class ProceduralSfx
 {
-    private static AudioClip s_blip, s_pulse, s_alarm, s_rescue, s_gunshot, s_hit, s_helicopter;
+    private static AudioClip s_blip, s_pulse, s_alarm, s_rescue, s_gunshot, s_hit, s_helicopter, s_jump, s_dodge;
     private static AudioSource s_source;
 
     public static AudioClip RadioBlip => s_blip ??= Sweep("RadioBlip", 1400f, 1900f, 0.07f, 0.35f, square: true);
@@ -16,6 +16,9 @@ public static class ProceduralSfx
 
     public static AudioClip Gunshot => s_gunshot ??= Noise("Gunshot", 0.22f, 0.9f, 28f, 0.35f);
     public static AudioClip BulletHit => s_hit ??= Noise("BulletHit", 0.12f, 0.8f, 40f, 0.12f);
+
+    public static AudioClip Jump => s_jump ??= Sweep("Jump", 280f, 760f, 0.16f, 0.4f, square: false);
+    public static AudioClip Dodge => s_dodge ??= Noise("Dodge", 0.25f, 0.45f, 11f, 0.7f);
 
     /// <summary>A seamless looping helicopter chop.</summary>
     public static AudioClip HelicopterLoop => s_helicopter ??= Chop("HelicopterLoop", 1f, 11);

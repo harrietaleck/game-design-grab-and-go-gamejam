@@ -19,6 +19,25 @@ public class LaneObstacle : MonoBehaviour
     [Tooltip("Fraction of Claire's loot value lost (and spilled from her bag) when she hits this obstacle.")]
     [Range(0f, 1f)] public float lootLossFraction = 0.5f;
 
+    [Tooltip("Spike strips and barrier arms: AJ's AI does not steer around these, he jumps or slides instead.")]
+    public bool passableByRunners = false;
+    [Tooltip("Claire clears this obstacle by sliding.")]
+    public bool clearedByDodge = false;
+
+    [Tooltip("If above 0, Claire clears this obstacle when at least this high. 0 = work it out from the object's name.")]
+    public float clearHeight = 0f;
+
+    /// <summary>Bins can be jumped with one jump; cars need Double Jump Shoes; vans and roadblocks cannot be jumped.</summary>
+    private float ClearHeight
+    {
+        get
+        {
+            if (clearHeight > 0f) return clearHeight;
+            if (name.Contains("Trash")) return 0.5f;
+            return name.Contains("Van") ? 99f : 1.6f;
+        }
+    }
+
     [Tooltip("Invoked when the obstacle is hit by the handler.")]
     public UnityEvent onHit;
 
@@ -34,7 +53,7 @@ public class LaneObstacle : MonoBehaviour
         {
             // Also support AI dodging runner collisions.
             var aiMovement = other.GetComponentInParent<AIThiefLaneDodge>();
-            if (aiMovement == null)
+            if (aiMovement == null || passableByRunners)
                 return;
 
             // Just rescued: AJ barges through instead of being caught again immediately.
@@ -59,14 +78,31 @@ public class LaneObstacle : MonoBehaviour
         }
         else
         {
+            if (handlerMovement.HeightAboveGround >= ClearHeight || (clearedByDodge && handlerMovement.IsDodging))
+            {
+                if (GameStartFlow.Instance != null) GameStartFlow.Instance.NearMissCount++;
+                return; // jumped or slid it
+            }
+
+            if (GameStartFlow.Instance != null && GameStartFlow.Instance.IsClaireInvulnerable)
+                return; // still protected from the last hit
+
+            if (SkateboardRide.Instance != null && SkateboardRide.Instance.TryAbsorbCrash())
+            {
+                onHit?.Invoke();
+                if (destroyOnHit)
+                    Destroy(gameObject);
+                return;
+            }
+
             if (disableHandlerMovementOnHit)
                 handlerMovement.enabled = false;
-            
+
             // Lose part of the loot first (so a fatal crash still costs loot), then apply health damage.
             // Both go through the run controller, the single source of truth. The obstacle is destroyed below,
             // so one obstacle can only do this once.
             var flow = GameStartFlow.Instance;
-            int lost = flow != null ? flow.SpillLoot(lootLossFraction) : 0;
+            int lost = flow != null ? flow.SpillLoot(ShopStore.Owns(ShopStore.BigBag) ? 0.15f : 0.25f) : 0;
             if (flow != null)
                 flow.ApplyClaireDamage(healthDamage);
             var hud = FindFirstObjectByType<HUDController>();

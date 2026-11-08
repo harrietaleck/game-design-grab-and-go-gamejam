@@ -84,7 +84,7 @@ public static class PoliceSetBuilder
         Debug.Log($"[PoliceSetBuilder] {AssetPath} ready ({converted} materials converted to URP).");
     }
 
-    private static int ConvertMaterialsToUrp(string folder)
+    public static int ConvertMaterialsToUrp(string folder)
     {
         if (!AssetDatabase.IsValidFolder(folder)) return 0;
         int count = 0;
@@ -226,7 +226,7 @@ public static class PoliceSetBuilder
         return controller;
     }
 
-    private static AnimationClip LoopGeneric(string path)
+    public static AnimationClip LoopGeneric(string path)
     {
         if (AssetDatabase.LoadMainAssetAtPath(path) == null) return null;
         LoopInPlace((ModelImporter)AssetImporter.GetAtPath(path));
@@ -250,7 +250,7 @@ public static class PoliceSetBuilder
         importer.SaveAndReimport();
     }
 
-    private static AnimationClip FirstClip(string path)
+    public static AnimationClip FirstClip(string path)
     {
         foreach (var o in AssetDatabase.LoadAllAssetsAtPath(path))
             if (o is AnimationClip a && !a.name.StartsWith("__preview")) return a;

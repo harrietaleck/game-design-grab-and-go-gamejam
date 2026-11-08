@@ -41,6 +41,14 @@ public class UITheme : ScriptableObject
     public Slice barFill = new Slice();
     public Slice barRed = new Slice();
 
+    [Header("Space Exploration GUI Kit (gameplay HUD)")]
+    [Tooltip("Framed panel behind every in-game HUD element.")]
+    public Slice hudPanel = new Slice();
+    public Texture2D iconTimer;
+    public Texture2D iconPressure;
+    public Texture2D iconStatus;
+    public Texture2D iconAbility;
+
     [Header("Fonts")]
     [Tooltip("Sci-Fi UI font used for all HUD text (converted to a TextMeshPro font at runtime).")]
     public Font hudFont;
@@ -97,6 +105,28 @@ public class UITheme : ScriptableObject
                 }
             }
             return _hudFontAsset;
+        }
+    }
+
+    [System.NonSerialized] private Material _hudTextMaterial;
+
+    /// <summary>The HUD font's material with an outline and drop shadow, so text reads on any background.</summary>
+    public Material HudTextMaterial
+    {
+        get
+        {
+            if (_hudTextMaterial == null && HudFontAsset != null)
+            {
+                _hudTextMaterial = new Material(HudFontAsset.material) { name = "HUD Text (outlined)" };
+                _hudTextMaterial.EnableKeyword(ShaderUtilities.Keyword_Outline);
+                _hudTextMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.17f);
+                _hudTextMaterial.SetColor(ShaderUtilities.ID_OutlineColor, new Color(0.07f, 0.04f, 0.2f, 1f));
+                _hudTextMaterial.EnableKeyword(ShaderUtilities.Keyword_Underlay);
+                _hudTextMaterial.SetColor(ShaderUtilities.ID_UnderlayColor, new Color(0f, 0f, 0f, 0.55f));
+                _hudTextMaterial.SetFloat(ShaderUtilities.ID_UnderlayOffsetX, 0.45f);
+                _hudTextMaterial.SetFloat(ShaderUtilities.ID_UnderlayOffsetY, -0.55f);
+            }
+            return _hudTextMaterial;
         }
     }
 

@@ -76,7 +76,7 @@ public class GameStartFlow : MonoBehaviour
     public RunEndReason EndReason { get; private set; } = RunEndReason.None;
     public float TimeRemaining { get; private set; }
     public float RunDuration => Mathf.Max(1f, hudController != null ? hudController.maxGameTimeSeconds : runDurationSeconds);
-    public float TimeSurvived => Mathf.Clamp(RunDuration - TimeRemaining, 0f, RunDuration);
+    public float TimeSurvived { get; private set; }
     public float RunProgress01 => Mathf.Clamp01(TimeSurvived / RunDuration);
     public float ClaireHealth { get; private set; }
     public float MaxHealth => Mathf.Max(1f, hudController != null ? hudController.maxHealth : claireMaxHealth);
@@ -84,6 +84,15 @@ public class GameStartFlow : MonoBehaviour
     public int CoinCount { get; private set; }
     public int GoldStackCount { get; private set; }
     public int JewelCount { get; private set; }
+    /// <summary>Obstacles Claire cleared by jumping or sliding this run.</summary>
+    public int NearMissCount { get; set; }
+
+    private const float HitProtectionSeconds = 1f;
+    private float _protectedUntil;
+
+    /// <summary>True briefly after a hit, so one mistake can't chain into several.</summary>
+    public bool IsClaireInvulnerable => IsGameplayActive && Time.time < _protectedUntil;
+    public void GrantHitProtection() => _protectedUntil = Time.time + HitProtectionSeconds;
     /// <summary>Pickups worth at least this much count as jewelry.</summary>
     public const int JewelValue = 10;
     /// <summary>Total loot value lost to crashes this run.</summary>
@@ -93,7 +102,7 @@ public class GameStartFlow : MonoBehaviour
     public int CaptureCount { get; set; }
     public int DistractionsUsed { get; set; }
     public int RunStartFrame { get; private set; } = -1;
-    public bool WasSuccessful => EndReason == RunEndReason.TimeUpEscaped;
+    public bool WasSuccessful => EndReason == RunEndReason.TimeUpEscaped || EndReason == RunEndReason.ReachedVan;
 
     /// <summary>Hook for the police-pressure system (Stage 2). Returns 0 when it is not present.</summary>
     public Func<float> PolicePressureProvider;
@@ -123,6 +132,7 @@ public class GameStartFlow : MonoBehaviour
             menuPanel.SetActive(true);
         if (hudPanel != null)
             hudPanel.SetActive(false);
+        ReplaceOldMenuArt();
 
         TimeRemaining = RunDuration;
         ClaireHealth = MaxHealth;
@@ -150,6 +160,17 @@ public class GameStartFlow : MonoBehaviour
             // Pressing Play in this scene goes through the real menus.
             SceneManager.LoadScene(FrontEndSceneName);
         }
+    }
+
+    /// <summary>MainScene's old menu only shows for an instant now, on the way to the front end: show the title art there.</summary>
+    private void ReplaceOldMenuArt()
+    {
+        if (menuPanel == null || !Application.CanStreamedLevelBeLoaded(FrontEndSceneName)) return;
+        var art = Resources.Load<Sprite>("SplashArt");
+        var image = menuPanel.GetComponent<Image>();
+        if (art == null || image == null) return;
+        image.sprite = art;
+        foreach (Transform child in menuPanel.transform) child.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -185,8 +206,11 @@ public class GameStartFlow : MonoBehaviour
         if (State == RunState.Playing || State == RunState.AJCaught)
         {
             // Scaled time: the countdown stops while paused.
+            TimeSurvived += Time.deltaTime;
             TimeRemaining = Mathf.Max(0f, TimeRemaining - Time.deltaTime);
-            if (TimeRemaining <= 0f)
+            // The clock only ends the run as a fallback, if the van mission could not be set up.
+            bool mission = RoadblockDirector.Instance != null && RoadblockDirector.Instance.MissionActive;
+            if (TimeRemaining <= 0f && !mission)
             {
                 GameEvents.Raise(GameEventType.TimeUp);
                 EndRun(State == RunState.AJCaught ? RunEndReason.TimeUpWhileCaught : RunEndReason.TimeUpEscaped);
@@ -204,11 +228,11 @@ public class GameStartFlow : MonoBehaviour
                 break;
             case RunState.Playing:
             case RunState.AJCaught:
-                if (AnyKeyDown(pauseKeys))
+                if (AnyKeyDown(pauseKeys) || GameInput.PausePad)
                     SetPaused(true);
                 break;
             case RunState.Paused:
-                if (AnyKeyDown(pauseKeys) && (PauseBackHandler == null || !PauseBackHandler()))
+                if ((AnyKeyDown(pauseKeys) || GameInput.PausePad || GameInput.BackPad) && (PauseBackHandler == null || !PauseBackHandler()))
                     SetPaused(false);
                 break;
             case RunState.Results:
@@ -240,6 +264,9 @@ public class GameStartFlow : MonoBehaviour
         RunStartFrame = Time.frameCount;
 
         TimeRemaining = RunDuration;
+        TimeSurvived = 0f;
+        NearMissCount = 0;
+        _protectedUntil = 0f;
         ClaireHealth = MaxHealth;
         LootValue = CoinCount = GoldStackCount = JewelCount = CollisionCount = LootLost = 0;
         RescueSuccessCount = CaptureCount = DistractionsUsed = 0;
@@ -314,7 +341,7 @@ public class GameStartFlow : MonoBehaviour
         if (hudController != null)
             hudController.EndRun(StatusTextFor(reason));
 
-        GameEvents.Raise(reason == RunEndReason.TimeUpEscaped ? GameEventType.RunWon : GameEventType.RunFailed, 0, reason.ToString());
+        GameEvents.Raise(WasSuccessful ? GameEventType.RunWon : GameEventType.RunFailed, 0, reason.ToString());
         RunEnded?.Invoke(reason);
     }
 
@@ -322,7 +349,8 @@ public class GameStartFlow : MonoBehaviour
     {
         switch (reason)
         {
-            case RunEndReason.TimeUpEscaped: return "ESCAPED";
+            case RunEndReason.TimeUpEscaped:
+            case RunEndReason.ReachedVan: return "ESCAPED";
             case RunEndReason.ClaireOutOfHealth: return "CLAIRE DOWN";
             case RunEndReason.AJCaptured: return "BUSTED";
             case RunEndReason.TimeUpWhileCaught: return "TIME UP";
@@ -385,8 +413,9 @@ public class GameStartFlow : MonoBehaviour
 
     public void ApplyClaireDamage(float amount, string detail = null)
     {
-        if (!IsGameplayActive || amount <= 0f)
+        if (!IsGameplayActive || amount <= 0f || IsClaireInvulnerable)
             return;
+        GrantHitProtection();
         CollisionCount++;
         SetClaireHealth(ClaireHealth - amount);
         // A fatal hit has already ended the run; RunFailed must be the last event of a run.

@@ -48,7 +48,7 @@ public class PoliceBullet : MonoBehaviour
         transform.position = to;
 
         Vector3 claire = _director.Claire.transform.position;
-        if (from.z - claire.z > 0f && to.z - claire.z <= 0.3f && Mathf.Abs(to.x - claire.x) < HitRadiusX)
+        if (!_director.Claire.IsEvading && from.z - claire.z > 0f && to.z - claire.z <= 0.3f && Mathf.Abs(to.x - claire.x) < HitRadiusX)
         {
             ImpactSparks.Burst(new Vector3(to.x, claire.y + 1.2f, claire.z), _material, 10);
             _director.OnBulletHitClaire();

@@ -23,7 +23,7 @@ public class RescueController : MonoBehaviour
     }
 
     [Tooltip("Minimum seconds Claire gets to line up with AJ. If he is closer than this, he is placed further up the road.")]
-    public float minRescueWindowSeconds = 1.8f;
+    public float minRescueWindowSeconds = 3f;
     [Tooltip("Claire 'reaches' AJ when she is this close behind him (Z).")]
     public float reachDistance = 0.6f;
     [Tooltip("AJ's lead over Claire to restore after a rescue.")]
@@ -116,8 +116,8 @@ public class RescueController : MonoBehaviour
 
         // Banner: direction + remaining window
         string dir = claireLane == ajLane ? "HOLD THIS LANE!" : claireLane < ajLane
-            ? $"MOVE RIGHT  {new string('▶', ajLane - claireLane)}"
-            : $"{new string('◀', claireLane - ajLane)}  MOVE LEFT";
+            ? $"MOVE RIGHT  {new string('>', ajLane - claireLane)}"
+            : $"{new string('<', claireLane - ajLane)}  MOVE LEFT";
         _bannerText.text = $"AJ IS CAUGHT!  GET IN HIS LANE\n<size=80%>{dir}</size>";
         _bannerText.color = claireLane == ajLane ? RuntimeUI.Accent : RuntimeUI.Gold;
         _bannerFill.fillAmount = window01;
@@ -176,12 +176,13 @@ public class RescueController : MonoBehaviour
     private void BuildBanner()
     {
         Transform root = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
-        var panel = RuntimeUI.CreateWindow(root, "RescueBanner (runtime)", new Color(1f, 0.45f, 0.45f, 1f), 0.7f);
+        var panel = RuntimeUI.CreateHudPanel(root, "RescueBanner (runtime)", new Color(1f, 0.72f, 0.72f));
         panel.raycastTarget = false;
-        // Right of centre and below the pressure meter: the radio box fills the top-left during a rescue.
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 1f), new Vector2(960f, 150f), new Vector2(460f, -200f));
+        // On the right edge, under the loot counter: the radio box fills the top-left during a rescue.
+        RuntimeUI.Place(panel.rectTransform, new Vector2(1f, 1f), new Vector2(780f, 160f), new Vector2(-16f, -205f));
+        SidePopup.Attach(panel.rectTransform, fromRight: true);
         _bannerText = RuntimeUI.CreateText(panel.transform, "Text", "", 30f, TextAlignmentOptions.Center, RuntimeUI.Gold, FontStyles.Bold);
-        RuntimeUI.Place(_bannerText.rectTransform, new Vector2(0.5f, 1f), new Vector2(930f, 112f), new Vector2(0f, -4f));
+        RuntimeUI.Place(_bannerText.rectTransform, new Vector2(0.5f, 1f), new Vector2(730f, 104f), new Vector2(0f, -12f));
         _bannerText.fontSizeMax = _bannerText.fontSize;
         _bannerText.fontSizeMin = 10f;
         _bannerText.enableAutoSizing = true;

@@ -40,6 +40,7 @@ public class RunOverlayUI : MonoBehaviour
     private void Awake()
     {
         _flow = GetComponent<GameStartFlow>();
+        gameObject.AddComponent<GamepadMenuFocus>();
         MakeCanvasResponsive();
         Build();
     }
@@ -72,7 +73,11 @@ public class RunOverlayUI : MonoBehaviour
     private void Update()
     {
         if (_resultsGroup != null && _resultsPanel.activeSelf)
+        {
             _resultsGroup.alpha = Mathf.Clamp01((Time.unscaledTime - _resultsShownAt) / 0.35f);
+            // A player mashing A to jump must not press Retry the instant the run ends.
+            _resultsGroup.interactable = Time.unscaledTime - _resultsShownAt > 0.8f;
+        }
     }
 
     private void Build()
@@ -182,8 +187,9 @@ public class RunOverlayUI : MonoBehaviour
         _resultsStats.text =
             $"Loot value{col}<b>{f.LootValue}</b>\n" +
             $"Coins{col}<b>{f.CoinCount}</b>\n" +
-            $"Gold stacks{col}<b>{f.GoldStackCount}</b>\n" +
-            $"Jewelry{col}<b>{f.JewelCount}</b>\n" +
+            $"Roadblocks{col}<b>{(RoadblockDirector.Instance != null ? RoadblockDirector.Instance.RoadblocksPassed : 0)}/{RoadblockDirector.TotalRoadblocks}</b>\n" +
+            $"Rating{col}<b>{ProgressionStore.Stars(f)}/3 STARS</b>\n" +
+            $"Gold / jewelry{col}<b>{f.GoldStackCount} / {f.JewelCount}</b>\n" +
             $"Loot lost{col}<b>{f.LootLost}</b>\n" +
             $"Time survived{col}<b>{RuntimeUI.FormatTime(f.TimeSurvived)}</b>\n" +
             $"Claire's health{col}<b>{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}</b>\n" +
@@ -205,6 +211,7 @@ public class RunOverlayUI : MonoBehaviour
     {
         switch (reason)
         {
+            case RunEndReason.ReachedVan: return "Five roadblocks down. Claire and AJ made it to the van.";
             case RunEndReason.TimeUpEscaped: return "Claire kept AJ free until the clock ran out. Clean getaway.";
             case RunEndReason.ClaireOutOfHealth: return "Claire took too many hits and couldn't keep up.";
             case RunEndReason.AJCaptured: return "Claire missed AJ during the rescue. He was caught.";

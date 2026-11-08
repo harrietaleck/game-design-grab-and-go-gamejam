@@ -26,6 +26,8 @@ public class DistractionPulse : MonoBehaviour
     [Tooltip("Seconds during which new pressure is ignored after a pulse.")]
     public float suppressSeconds = 3f;
 
+    /// <summary>Charges per run, including the shop's Extra Distraction.</summary>
+    public int TotalCharges => chargesPerRun + (ShopStore.Owns(ShopStore.ExtraCharge) ? 1 : 0);
     public int ChargesLeft { get; private set; }
     public float CooldownRemaining => Mathf.Max(0f, _readyAt - Time.time);
     public float Cooldown01 => cooldownSeconds <= 0f ? 0f : CooldownRemaining / cooldownSeconds;
@@ -42,7 +44,7 @@ public class DistractionPulse : MonoBehaviour
     {
         Instance = this;
         _flow = GetComponent<GameStartFlow>();
-        ChargesLeft = chargesPerRun;
+        ChargesLeft = TotalCharges;
     }
 
     private void OnDestroy() { if (Instance == this) Instance = null; }
@@ -53,7 +55,7 @@ public class DistractionPulse : MonoBehaviour
     {
         if (e.type == GameEventType.RunStarted)
         {
-            ChargesLeft = chargesPerRun;
+            ChargesLeft = TotalCharges;
             _readyAt = 0f;
         }
     }
@@ -61,6 +63,11 @@ public class DistractionPulse : MonoBehaviour
     private void Update()
     {
         if (!CanUseNow) return;
+        if (GameInput.DistractPad)
+        {
+            TryActivate();
+            return;
+        }
         for (int i = 0; i < activateKeys.Length; i++)
         {
             if (Input.GetKeyDown(activateKeys[i]))

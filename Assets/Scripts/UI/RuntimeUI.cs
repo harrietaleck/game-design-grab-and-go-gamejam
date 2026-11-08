@@ -79,7 +79,50 @@ public static class RuntimeUI
         if (text == null) return;
         var theme = UITheme.Active;
         var font = theme != null ? theme.HudFontAsset : null;
-        if (font != null) text.font = font;
+        if (font == null) return;
+        text.font = font;
+        if (theme.HudTextMaterial != null) text.fontSharedMaterial = theme.HudTextMaterial;
+    }
+
+    /// <summary>Keeps a label on one line, shrinking it if needed to fit its box.</summary>
+    public static void FitOnOneLine(TMP_Text text)
+    {
+        text.fontSizeMax = text.fontSize;
+        text.fontSizeMin = 8f;
+        text.textWrappingMode = TextWrappingModes.NoWrap;
+        text.enableAutoSizing = true;
+    }
+
+    /// <summary>A framed panel from the Space Exploration GUI Kit, used by all gameplay HUD elements.</summary>
+    public static Image CreateHudPanel(Transform parent, string name, Color? tint = null)
+    {
+        var theme = UITheme.Active;
+        var sprite = theme != null ? theme.hudPanel.GetSprite() : null;
+        if (sprite == null)
+        {
+            var plain = CreatePanel(parent, name, PanelDark);
+            plain.raycastTarget = false;
+            return plain;
+        }
+
+        var panel = CreatePanel(parent, name, tint ?? Color.white);
+        panel.sprite = sprite;
+        panel.type = Image.Type.Sliced;
+        panel.pixelsPerUnitMultiplier = theme.hudPanel.borderScale;
+        panel.raycastTarget = false;
+        return panel;
+    }
+
+    /// <summary>A small icon image, or null if the texture is missing. Size and offset are in authoring units.</summary>
+    public static Image CreateIcon(Transform parent, string name, Texture2D texture, Vector2 anchor, float size, Vector2 offset)
+    {
+        if (texture == null) return null;
+        var icon = CreatePanel(parent, name, Color.white);
+        icon.raycastTarget = false;
+        icon.preserveAspect = true;
+        icon.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        Place(icon.rectTransform, anchor, new Vector2(size, size), offset);
+        return icon;
     }
 
     /// <summary>

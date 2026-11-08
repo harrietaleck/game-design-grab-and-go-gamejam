@@ -102,6 +102,20 @@ public class ThiefCollectibleDropper : MonoBehaviour
         var pos = new Vector3(x, transform.position.y + dropYOffset, z);
 
         Transform tileParent = parentToTileRoot ? FindTileParent(pos) : null;
+        CreateDrop(entry, pos, tileParent);
+    }
+
+    /// <summary>Places a basic coin on the road (coin trails that guide the player).</summary>
+    public void SpawnTrailCoin(Vector3 pos, Transform parent)
+    {
+        DropEntry cheapest = null;
+        foreach (var e in dropTable)
+            if (e != null && e.prefab != null && (cheapest == null || e.fallbackValue < cheapest.fallbackValue)) cheapest = e;
+        if (cheapest != null) CreateDrop(cheapest, pos, parent);
+    }
+
+    private void CreateDrop(DropEntry entry, Vector3 pos, Transform tileParent)
+    {
         Quaternion spawnRotation = entry.prefab.transform.rotation;
         GameObject go = tileParent != null
             ? Instantiate(entry.prefab, pos, spawnRotation, tileParent)

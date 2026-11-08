@@ -103,17 +103,115 @@ public class AIThiefLaneDodge : MonoBehaviour
     {
         laneCount = LaneMath.ClampLaneCount(laneCount);
         _currentLane = GetNearestLaneIndex(transform.position.x);
+        _groundY = transform.position.y;
+        if (ShopStore.Owns(ShopStore.Sprint)) forwardSpeed *= ShopStore.SprintMultiplier;
+    }
+
+    /// <summary>Multiplied onto forward speed (the skateboard sets it).</summary>
+    public float SpeedMultiplier { get; set; } = 1f;
+    /// <summary>Extra height while standing on a skateboard.</summary>
+    public float RideHeight { get; set; }
+
+    private const float HopVelocity = 6.5f;
+    private const float HopGravity = 22f;
+    private float _groundY;
+    private float _hopHeight;
+    private float _hopVelocity;
+
+    private static readonly int SlideState = Animator.StringToHash("Slide");
+    private float _slideEndsAt;
+    private static readonly int JumpState = Animator.StringToHash("Jump");
+    private static readonly int RunState = Animator.StringToHash("Running");
+    private static readonly int SkateState = Animator.StringToHash("Skate");
+    private Animator _animator;
+    private bool _hopAnimating;
+
+    private void StartHop()
+    {
+        _hopVelocity = HopVelocity;
+        if (_animator == null) _animator = GetComponentInChildren<Animator>();
+        if (_animator == null || RideHeight > 0f || !_animator.HasState(0, JumpState)) return;
+
+        float length = 0f;
+        foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+            if (clip.name == "Player Jump") length = clip.length;
+        if (length <= 0f) return;
+        _animator.CrossFadeInFixedTime(JumpState, 0.06f);
+        _animator.speed = length / (2f * HopVelocity / HopGravity);
+        _hopAnimating = true;
+    }
+
+    /// <summary>Jumps a spike strip or slides under a barrier arm.</summary>
+    public void PassHazard(bool slide)
+    {
+        if (_caught || _hopHeight > 0f) return;
+        if (!slide)
+        {
+            StartHop();
+            return;
+        }
+
+        if (_animator == null) _animator = GetComponentInChildren<Animator>();
+        if (_animator == null || RideHeight > 0f || !_animator.HasState(0, SlideState)) return;
+        float length = 0f;
+        foreach (var clip in _animator.runtimeAnimatorController.animationClips)
+            if (clip.name == "Player Slide") length = clip.length;
+        if (length <= 0f) return;
+        const float seconds = 0.6f;
+        _animator.CrossFadeInFixedTime(SlideState, 0.06f);
+        _animator.speed = length / seconds;
+        _hopAnimating = true;
+        _slideEndsAt = Time.time + seconds;
+    }
+
+    /// <summary>AJ reaches the getaway van and climbs in.</summary>
+    public void BoardVan()
+    {
+        moveForward = false;
+        foreach (var r in GetComponentsInChildren<Renderer>()) r.enabled = false;
+    }
+
+    private void EndHopAnimation()
+    {
+        if (!_hopAnimating) return;
+        _hopAnimating = false;
+        _animator.CrossFadeInFixedTime(RideHeight > 0f ? SkateState : RunState, 0.12f);
+        if (!_caught) _animator.speed = 1f; // the rescue freezes a caught AJ's animation
+    }
+
+    private void UpdateHeight()
+    {
+        if (_slideEndsAt > 0f && Time.time >= _slideEndsAt)
+        {
+            _slideEndsAt = 0f;
+            EndHopAnimation();
+        }
+
+        if (_hopHeight > 0f || _hopVelocity > 0f)
+        {
+            _hopVelocity -= HopGravity * Time.deltaTime;
+            _hopHeight = Mathf.Max(0f, _hopHeight + _hopVelocity * Time.deltaTime);
+            if (_hopHeight <= 0f)
+            {
+                _hopVelocity = 0f;
+                EndHopAnimation();
+            }
+        }
+        Vector3 p = transform.position;
+        p.y = _groundY + _hopHeight + RideHeight;
+        transform.position = p;
     }
 
     private void Update()
     {
-        if (_caught)
-            return;
         if (GameStartFlow.Instance != null && !GameStartFlow.IsGameplayActive)
+            return;
+        UpdateHeight();
+        if (_caught)
             return;
 
         if (moveForward)
-            transform.position += new Vector3(0f, 0f, CurrentForwardSpeed() * Time.deltaTime);
+            transform.position += new Vector3(0f, 0f, CurrentForwardSpeed() * SpeedMultiplier * Time.deltaTime);
 
         // Urgent: obstacle very close ahead in current lane - dodge immediately (no cooldown, no random skip).
         if (IsLaneBlocked(_currentLane, urgentLookAheadZ))
@@ -202,7 +300,8 @@ public class AIThiefLaneDodge : MonoBehaviour
         float nearest = maxRange;
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i] == null || hits[i].GetComponentInParent<LaneObstacle>() == null) continue;
+            var obstacle = hits[i] != null ? hits[i].GetComponentInParent<LaneObstacle>() : null;
+            if (obstacle == null || obstacle.passableByRunners) continue;
             float dz = hits[i].bounds.min.z - transform.position.z;
             if (dz >= 0f && dz < nearest) nearest = dz;
         }
@@ -213,6 +312,7 @@ public class AIThiefLaneDodge : MonoBehaviour
     {
         if (Time.time < _nextNearMissEventAt) return;
         _nextNearMissEventAt = Time.time + nearMissEventCooldown;
+        if (_hopHeight <= 0f) StartHop(); // a little leap as he dodges
         GameEvents.Raise(GameEventType.AJNearMiss, 0, detail);
     }
 
@@ -334,7 +434,8 @@ public class AIThiefLaneDodge : MonoBehaviour
                 continue;
 
             // Collider might be on a child; search parents so AI can still "see" the LaneObstacle.
-            if (hits[i].GetComponentInParent<LaneObstacle>() != null)
+            var hitObstacle = hits[i].GetComponentInParent<LaneObstacle>();
+            if (hitObstacle != null && !hitObstacle.passableByRunners)
                 return true;
         }
 

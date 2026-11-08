@@ -21,11 +21,16 @@ public class OnboardingTips : MonoBehaviour
 
     private static readonly (float at, string text)[] Tips =
     {
-        (1.0f,  "A / D to change lanes"),
+        (1.0f,  "A / D change lanes, W jumps, S dodges"),
         (7.0f,  "Run over the loot AJ drops"),
         (14.0f, "Crashes raise POLICE PRESSURE"),
         (20.0f, "SPACE: Distraction Pulse cools the police"),
         (28.0f, "If AJ is caught: get in his lane to save him"),
+        (36.0f, "Red laser? Bullets are coming: change lane"),
+        (44.0f, "BEHIND warning: a chaser or K9 is on you, change lane"),
+        (52.0f, "Roadblock: the banner shows the open lane"),
+        (60.0f, "Grab a skateboard: it soaks up one crash"),
+        (68.0f, "Spikes: jump. Barrier arm: slide."),
     };
     private const float TipSeconds = 4.5f;
 
@@ -40,11 +45,12 @@ public class OnboardingTips : MonoBehaviour
     {
         _flow = GetComponent<GameStartFlow>();
         Transform root = _flow != null && _flow.hudPanel != null ? _flow.hudPanel.transform : transform;
-        var panel = RuntimeUI.CreatePanel(root, "OnboardingTip (runtime)", new Color(0f, 0f, 0f, 0.55f));
-        panel.raycastTarget = false;
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0.5f, 0f), new Vector2(640f, 56f), new Vector2(0f, 175f));
+        var panel = RuntimeUI.CreateHudPanel(root, "OnboardingTip (runtime)");
+        RuntimeUI.Place(panel.rectTransform, new Vector2(1f, 0f), new Vector2(820f, 84f), new Vector2(-16f, 215f));
+        SidePopup.Attach(panel.rectTransform, fromRight: true);
         _text = RuntimeUI.CreateText(panel.transform, "Text", "", 26f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Stretch(_text.rectTransform, 4f);
+        RuntimeUI.Stretch(_text.rectTransform, 24f);
+        RuntimeUI.FitOnOneLine(_text);
         _box = panel.gameObject;
         _box.SetActive(false);
     }
@@ -90,7 +96,7 @@ public class OnboardingTips : MonoBehaviour
         float t = _flow.TimeSurvived;
         if (_next < Tips.Length && t >= Tips[_next].at)
         {
-            _text.text = Tips[_next].text;
+            _text.text = _next == 0 && GameInput.UsingGamepad ? "Stick moves, A jumps, B dodges" : Tips[_next].text;
             _box.SetActive(true);
             _hideAt = t + TipSeconds;
             _next++;

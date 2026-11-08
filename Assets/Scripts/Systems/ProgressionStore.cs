@@ -17,6 +17,17 @@ public class ProgressionStore : MonoBehaviour
         RunOverlayUI.ExtraResultsLines = BuildResultsLines;
     }
 
+    private const int EscapeBonusPoints = 100;
+    private const int RoadblockPoints = 15;
+    private const int RescuePoints = 20;
+    private const int NearMissPoints = 5;
+
+    /// <summary>0 for a failed run. A getaway earns 1, plus 1 for 50+ health, plus 1 for 50+ loot or two rescues.</summary>
+    public static int Stars(GameStartFlow f)
+    {
+        if (!f.WasSuccessful) return 0;
+        return 1 + (f.ClaireHealth >= 50f ? 1 : 0) + (f.LootValue >= 50 || f.RescueSuccessCount >= 2 ? 1 : 0);
+    }
     private const string KeyBestLoot = "gg_best_loot";
     private const string KeyBestTime = "gg_best_time";
     private const string KeyGetaways = "gg_getaways";
@@ -50,7 +61,7 @@ public class ProgressionStore : MonoBehaviour
             return;
 
         PlayerPrefs.SetInt(KeyRuns, Runs + 1);
-        if (reason == RunEndReason.TimeUpEscaped)
+        if (_flow.WasSuccessful)
             PlayerPrefs.SetInt(KeyGetaways, Getaways + 1);
         if (_flow.RescueSuccessCount > 0)
             PlayerPrefs.SetInt(KeyRescues, Rescues + _flow.RescueSuccessCount);
@@ -67,6 +78,12 @@ public class ProgressionStore : MonoBehaviour
         }
         PlayerPrefs.Save();
         ScoreboardStore.Record(_flow.LootValue, _flow.TimeSurvived, GameStartFlow.StatusTextFor(reason));
+        int roadblocks = RoadblockDirector.Instance != null ? RoadblockDirector.Instance.RoadblocksPassed : 0;
+        ShopStore.Award(_flow.LootValue
+                        + roadblocks * RoadblockPoints
+                        + _flow.RescueSuccessCount * RescuePoints
+                        + _flow.NearMissCount * NearMissPoints
+                        + (_flow.WasSuccessful ? EscapeBonusPoints : 0));
     }
 
     private static string BuildResultsLines(GameStartFlow f)
@@ -74,12 +91,12 @@ public class ProgressionStore : MonoBehaviour
         // RunEnded listeners run before the results screen reads this (same frame, after EndRun).
         string bestLoot = LastRunNewBestLoot ? "<b>NEW BEST LOOT!</b>" : $"Best loot {BestLoot}";
         string bestTime = LastRunNewBestTime && !f.WasSuccessful ? "<b>NEW BEST TIME!</b>" : $"Best time {RuntimeUI.FormatTime(BestTime)}";
-        return $"{bestLoot}   •   {bestTime}\nGetaways {Getaways}/{Runs}   •   Rescues {Rescues}";
+        return $"{bestLoot}   •   {bestTime}\n<b>+{ShopStore.LastAward} POINTS</b>   •   Getaways {Getaways}/{Runs}   •   Rescues {Rescues}";
     }
 
     public static string MenuSummary()
     {
         if (Runs == 0) return "No runs yet. Get AJ out of the city!";
-        return $"Best loot {BestLoot}   •   Best time {RuntimeUI.FormatTime(BestTime)}   •   Getaways {Getaways}/{Runs}";
+        return $"{ShopStore.Points} points   •   Best loot {BestLoot}   •   Best time {RuntimeUI.FormatTime(BestTime)}   •   Getaways {Getaways}/{Runs}";
     }
 }

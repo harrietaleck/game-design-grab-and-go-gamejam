@@ -9,7 +9,8 @@ public static class UIThemeBuilder
     private const string AssetPath = "Assets/Resources/UITheme.asset";
     private const string Skin = "Assets/Sci-Fi UI/_SciFi_GUISkin_";
     private const string MkFonts = "Assets/SoftEffects/EditFolder";
-    private const int Version = 1;
+    private const string Kit = "Assets/Space_Exploration_GUI_Kit";
+    private const int Version = 3;
 
     static UIThemeBuilder()
     {
@@ -35,7 +36,13 @@ public static class UIThemeBuilder
         Set(theme.barFill, $"{Skin}/Bonus_Assets/bars/background_bar1.png", new Vector4(100, 70, 100, 70), 4f);
         Set(theme.barRed, $"{Skin}/Bonus_Assets/bars/bar_red1.png", new Vector4(100, 70, 100, 70), 4f);
 
-        theme.hudFont = AssetDatabase.LoadAssetAtPath<Font>($"{Skin}/Skin_Assets/font/zekton free.ttf");
+        Set(theme.hudPanel, $"{Kit}/Containers/Medium/pause-container-medium.png", new Vector4(26, 26, 26, 26), 2.6f);
+        theme.iconTimer = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Kit}/Picto_Icons/White/location-64.png");
+        theme.iconPressure = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Kit}/Picto_Icons/White/shield-64.png");
+        theme.iconStatus = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Kit}/Picto_Icons/White/person-64.png");
+        theme.iconAbility = AssetDatabase.LoadAssetAtPath<Texture2D>($"{Kit}/Picto_Icons/White/bolt-64.png");
+
+        theme.hudFont = AssetDatabase.LoadAssetAtPath<Font>($"{Kit}/Fonts/Font Sources/Righteous-Regular.ttf");
         theme.purpleFont = AssetDatabase.LoadAssetAtPath<Font>($"{MkFonts}/Coiny-Regular_SEFont_0/Coiny-Regular_se_rep.fontsettings");
         theme.goldFont = AssetDatabase.LoadAssetAtPath<Font>($"{MkFonts}/Coiny-Regular_SEFont_0 1/Coiny-Regular_se_rep.fontsettings");
         theme.neonFont = AssetDatabase.LoadAssetAtPath<Font>($"{MkFonts}/Coiny-Regular_SEFont_0 2/Coiny-Regular_se_rep.fontsettings");

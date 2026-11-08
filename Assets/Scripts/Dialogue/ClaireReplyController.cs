@@ -118,7 +118,8 @@ public class ClaireReplyController : MonoBehaviour
         _hideAt = Time.unscaledTime + optionsVisibleSeconds;
         _lastPromptAt = Time.unscaledTime;
         _promptsThisRun++;
-        _dialogue.UI.ShowOptions($"[1] {replies[0].text}   [2] {replies[1].text}\n[3] {replies[2].text}");
+        bool pad = GameInput.UsingGamepad;
+        _dialogue.UI.ShowOptions($"[{(pad ? "LB" : "1")}] {replies[0].text}   [{(pad ? "Y" : "2")}] {replies[1].text}\n[{(pad ? "RB" : "3")}] {replies[2].text}");
     }
 
     private void Update()
@@ -134,6 +135,7 @@ public class ClaireReplyController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) pick = 0;
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) pick = 1;
         else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) pick = 2;
+        else pick = GameInput.ReplyPad;
         if (pick < 0) return;
 
         var reply = _current[pick];

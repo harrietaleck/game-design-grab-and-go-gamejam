@@ -18,6 +18,7 @@ public class FrontEndDiorama : MonoBehaviour
 
     private void Start()
     {
+        MoodDirector.ApplyLook();
         var set = Resources.Load<PoliceSet>("PoliceSet");
         if (set == null) return;
 
