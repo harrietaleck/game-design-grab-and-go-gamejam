@@ -34,7 +34,7 @@ public class FrontEndUI : MonoBehaviour
         ("CONTROLS", "<b>A / D</b> or <b>LEFT / RIGHT</b>   change lane\n<b>W</b> or <b>UP</b>   jump     <b>S</b> or <b>DOWN</b>   dodge\n<b>SPACE</b> or <b>SHIFT</b>   Distraction Pulse (3 per run)\n<b>1 / 2 / 3</b>   answer AJ on the radio\n<b>ESC</b> or <b>P</b>   pause\n\n<color=#19E6FF><b>GAMEPAD</b></color>   stick or d-pad move, up jump, down dodge\n<b>A</b> jump   <b>B</b> dodge   <b>X</b> distract   <b>LB / Y / RB</b> radio   <b>START</b> pause"),
         ("JUMP, DODGE AND SKATE", "<b>Jump</b> spike strips and bins. <b>Slide</b> under barrier arms. Either move makes bullets and grabs miss.\n\nRun over a <b>skateboard</b> and Claire and AJ both ride, faster. The board takes the hit from one crash.\n\nRuns earn <b>points</b>. Spend them in the <b>SHOP</b>."),
         ("LOOT AND CRASHES", "AJ drops coins (+1), gold stacks (+5) and rare jewelry (+10 to +50). Run over them.\n\nEvery crash costs health, spills a quarter of your loot and raises <b>POLICE PRESSURE</b>. It cools when things stay calm.\n\nA hit gives you a second of protection. <b>First-aid kits</b> wait past each roadblock."),
-        ("ROADBLOCKS AND GUNFIRE", "<b>Roadblocks</b> close three lanes, and the banner shows the open one. Hitting a car costs 20 health and a quarter of your loot.\n\nGuards fire down their own lanes and grab anyone who arrives late.\n\nA <b>red laser</b> means bullets are coming. Change lane to dodge. Each hit costs 5 health."),
+        ("ROADBLOCKS AND GUNFIRE", "<b>Roadblocks</b> close three lanes, and the banner shows the open one. Hitting a car costs 20 health and a quarter of your loot.\n\nGuards fire down their own lanes and grab anyone who arrives late.\n\nA <b>red laser</b> means bullets are coming. Change lane to dodge. Each hit costs 5 health.\n\n<b>Tear gas</b> fills one lane. It slows you and clouds your view, so go around it."),
         ("POLICE ON YOUR TAIL", "A <b>pursuer</b> grabs for 15 health. Dodge him and he goes after AJ.\n\nA <b>K9</b> bites for 10 health. Change lane and it runs past.\n\nWatch for the BEHIND warning.\n\n<b>Distraction Pulse</b> stuns every officer and cools the pressure."),
         ("SAVING AJ", "If AJ is caught he stops in his lane.\nGet into <b>his lane</b> before you reach him and he is free.\nMiss him and the run is over.\n\n<b>Reach the van</b> with Claire alive and AJ free to escape."),
     };
@@ -377,9 +377,9 @@ public class FrontEndUI : MonoBehaviour
 
         var options = new (GameSettings.DifficultyLevel level, string title, string body)[]
         {
-            (GameSettings.DifficultyLevel.Easy, "EASY", "Fewer police.\nRoadblocks further apart.\nAJ rarely gets caught."),
-            (GameSettings.DifficultyLevel.Normal, "NORMAL", "The getaway as designed."),
-            (GameSettings.DifficultyLevel.Hard, "HARD", "More police, sooner.\nRoadblocks hit harder.\nAJ needs saving often."),
+            (GameSettings.DifficultyLevel.Easy, "EASY", "<b>Clear morning.</b>\nFewer police.\nRoadblocks further apart.\nAJ rarely gets caught."),
+            (GameSettings.DifficultyLevel.Normal, "NORMAL", "<b>Late afternoon.</b>\nThe getaway as designed."),
+            (GameSettings.DifficultyLevel.Hard, "HARD", "<b>Night chase.</b>\nMore police, sooner.\nRoadblocks hit harder.\nAJ needs saving often."),
         };
 
         Button first = null;
@@ -392,6 +392,7 @@ public class FrontEndUI : MonoBehaviour
             RuntimeUI.Place(card.rectTransform, Centre, new Vector2(540f, 560f), new Vector2(x, 10f));
             var body = RuntimeUI.CreateText(card.transform, "Body", option.body, 30f, TextAlignmentOptions.Center, Color.white);
             RuntimeUI.Place(body.rectTransform, Top, new Vector2(470f, 300f), new Vector2(0f, -60f));
+            RuntimeUI.FitInBox(body);
             var pick = RuntimeUI.CreateButton(card.transform, "Select " + option.title, option.title, () => OnDifficultyChosen(option.level));
             RuntimeUI.Place((RectTransform)pick.transform, Bottom, new Vector2(400f, 96f), new Vector2(0f, 50f));
             if (option.level == GameSettings.DifficultyLevel.Normal) first = pick;
@@ -411,6 +412,7 @@ public class FrontEndUI : MonoBehaviour
         title = FancyText.Create(card.transform, "Title", "", 60f, UITheme.Fancy.Gold, Top, new Vector2(1420f, 110f), new Vector2(0f, -44f));
         body = RuntimeUI.CreateText(card.transform, "Body", "", 36f, TextAlignmentOptions.Center, Color.white);
         RuntimeUI.Place(body.rectTransform, Top, new Vector2(1300f, 560f), new Vector2(0f, -180f));
+        RuntimeUI.FitInBox(body);
 
         prev = RuntimeUI.CreateButton(card.transform, "PrevButton", "PREVIOUS", onPrev);
         RuntimeUI.Place((RectTransform)prev.transform, Bottom, new Vector2(380f, 84f), new Vector2(-430f, 50f));
@@ -428,6 +430,7 @@ public class FrontEndUI : MonoBehaviour
         FancyText.Create(card.transform, "Title", "CREDITS", 64f, UITheme.Fancy.Neon, Top, new Vector2(1420f, 110f), new Vector2(0f, -40f));
         var text = RuntimeUI.CreateText(card.transform, "Body", CreditsText, 30f, TextAlignmentOptions.Center, Color.white);
         RuntimeUI.Place(text.rectTransform, Top, new Vector2(1380f, 640f), new Vector2(0f, -160f));
+        RuntimeUI.FitInBox(text);
         var back = RuntimeUI.CreateButton(card.transform, "BackButton", "BACK", ShowMain);
         RuntimeUI.Place((RectTransform)back.transform, Bottom, new Vector2(360f, 84f), new Vector2(0f, 46f));
         Register("Credits", card.gameObject, back);

@@ -18,7 +18,10 @@ public class RadioDialogueUI : MonoBehaviour
     public bool IsShowing => _root != null && _root.activeSelf;
 
     // Authoring size (1920x1080 units); RuntimeUI.Place converts it. Never re-use rt.sizeDelta (already converted).
-    private static readonly Vector2 BoxSize = new Vector2(780f, 235f);
+    private static readonly Vector2 BoxSize = new Vector2(780f, 270f);
+    private static readonly Vector2 DockedTop = new Vector2(20f, -112f);
+    private static readonly Vector2 DockedBelowTimer = new Vector2(20f, -210f); // on narrow screens the timer panel reaches this far left
+    private const float TimerPanelHalfWidth = 130f; // canvas units
 
     private GameObject _root;
     private TextMeshProUGUI _speaker;
@@ -34,43 +37,47 @@ public class RadioDialogueUI : MonoBehaviour
     {
         var panel = RuntimeUI.CreateHudPanel(canvasRoot, "RadioDialogue (runtime)");
         // Compact, top-left (under the status text) so it never covers the road or Claire.
-        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -112f));
+        RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 1f), BoxSize, DockedTop);
         _group = panel.gameObject.AddComponent<CanvasGroup>();
         _group.blocksRaycasts = false;
 
         var stripe = RuntimeUI.CreatePanel(panel.transform, "Stripe", RuntimeUI.Accent);
         stripe.raycastTarget = false;
+        // Everything sits inside the frame art, which has a margin of about 30 units around its edge.
         stripe.rectTransform.anchorMin = new Vector2(0f, 0f);
         stripe.rectTransform.anchorMax = new Vector2(0f, 1f);
         stripe.rectTransform.pivot = new Vector2(0f, 0.5f);
-        stripe.rectTransform.sizeDelta = new Vector2(8f, 0f);
+        stripe.rectTransform.offsetMin = new Vector2(30f, 30f) * RuntimeUI.U;
+        stripe.rectTransform.offsetMax = new Vector2(38f, -30f) * RuntimeUI.U;
 
         _speaker = RuntimeUI.CreateText(panel.transform, "Speaker", "AJ  •  RADIO", 20f, TextAlignmentOptions.Left, RuntimeUI.Accent, FontStyles.Bold);
-        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(740f, 30f), new Vector2(24f, -8f));
+        RuntimeUI.Place(_speaker.rectTransform, new Vector2(0f, 1f), new Vector2(690f, 34f), new Vector2(54f, -32f));
 
         _line = RuntimeUI.CreateText(panel.transform, "Line", "", 22f, TextAlignmentOptions.TopLeft, Color.white);
-        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(740f, 118f), new Vector2(24f, -40f));
+        RuntimeUI.Place(_line.rectTransform, new Vector2(0f, 1f), new Vector2(690f, 110f), new Vector2(54f, -68f));
 
         _options = RuntimeUI.CreateText(panel.transform, "Options", "", 19f, TextAlignmentOptions.BottomLeft, RuntimeUI.Gold);
-        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(740f, 66f), new Vector2(24f, 8f));
+        RuntimeUI.Place(_options.rectTransform, new Vector2(0f, 0f), new Vector2(690f, 62f), new Vector2(54f, 28f));
 
         _root = panel.gameObject;
         _root.SetActive(false);
         _audio = FindFirstObjectByType<AudioDirector>();
     }
 
-    /// <summary>Moves the box to the top of the screen (used on the results screen so it never covers buttons).</summary>
-    public void DockTop(bool top)
+    /// <summary>Keeps the box clear of the timer panel, whatever the screen shape.</summary>
+    private void PlaceClearOfTimer()
     {
-        if (_root == null) return;
         var rt = (RectTransform)_root.transform;
-        if (top) RuntimeUI.Place(rt, new Vector2(0.5f, 1f), BoxSize, new Vector2(0f, -20f));
-        else RuntimeUI.Place(rt, new Vector2(0f, 1f), BoxSize, new Vector2(20f, -112f));
+        float canvasWidth = rt.parent is RectTransform parent ? parent.rect.width : 800f;
+        float boxRight = (DockedTop.x + BoxSize.x) * RuntimeUI.U;
+        bool fits = boxRight < canvasWidth * 0.5f - TimerPanelHalfWidth;
+        RuntimeUI.Place(rt, new Vector2(0f, 1f), BoxSize, fits ? DockedTop : DockedBelowTimer);
     }
 
     public void Show(string speaker, string line)
     {
         if (_root == null || string.IsNullOrEmpty(line)) return;
+        PlaceClearOfTimer();
         _speaker.text = $"{speaker.ToUpperInvariant()}  •  RADIO";
         _fullText = line;
         _line.text = line;

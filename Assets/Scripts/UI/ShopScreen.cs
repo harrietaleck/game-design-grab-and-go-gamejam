@@ -57,6 +57,7 @@ public class ShopScreen : MonoBehaviour
         RuntimeUI.FitOnOneLine(_detailName);
         _detailBody = RuntimeUI.CreateText(detail.transform, "Body", "", 26f, TextAlignmentOptions.Top, Color.white);
         RuntimeUI.Place(_detailBody.rectTransform, new Vector2(0.5f, 1f), new Vector2(570f, 170f), new Vector2(0f, -96f));
+        RuntimeUI.FitInBox(_detailBody);
     }
 
     private void AddTab(Transform parent, string label, Tab tab, float x)

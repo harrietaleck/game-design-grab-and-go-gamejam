@@ -3,8 +3,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 /// <summary>
-/// The look of a late-afternoon getaway: low warm sun, distance haze, a filmic grade with bloom on the police lights,
-/// plus dust at Claire's feet and leaves blowing down the street.
+/// The look of the getaway, set by difficulty: clear morning (Easy), late afternoon (Normal) or night (Hard).
+/// Also adds dust at Claire's feet and leaves blowing down the street.
 /// </summary>
 public class MoodDirector : MonoBehaviour
 {
@@ -24,37 +24,95 @@ public class MoodDirector : MonoBehaviour
     private Texture2D _softDot;
     private VolumeProfile _profile;
 
+    private class Look
+    {
+        public Vector3 sunAngles;
+        public Color sunColor, fogColor, filter;
+        public float sunIntensity, shadowStrength, fogDensity, bloom, bloomThreshold, saturation, contrast, vignette;
+    }
+
+    // Each difficulty is a time of day: the harder the run, the later it gets.
+    private static readonly Look Morning = new Look
+    {
+        sunAngles = new Vector3(58f, 318f, 0f), sunColor = new Color(1f, 0.97f, 0.9f), sunIntensity = 1.35f, shadowStrength = 0.6f,
+        fogColor = new Color(0.75f, 0.87f, 1f), fogDensity = 0.0035f,
+        bloom = 0.3f, bloomThreshold = 1.1f, saturation = 8f, contrast = 5f, vignette = 0.12f, filter = Color.white
+    };
+    private static readonly Look Afternoon = new Look
+    {
+        sunAngles = new Vector3(34f, 318f, 0f), sunColor = new Color(1f, 0.87f, 0.68f), sunIntensity = 1.55f, shadowStrength = 0.72f,
+        fogColor = new Color(0.68f, 0.78f, 0.95f), fogDensity = 0.0055f,
+        bloom = 0.55f, bloomThreshold = 1.05f, saturation = 14f, contrast = 12f, vignette = 0.24f, filter = new Color(1f, 0.97f, 0.93f)
+    };
+    private static readonly Look Night = new Look
+    {
+        sunAngles = new Vector3(42f, 210f, 0f), sunColor = new Color(0.5f, 0.62f, 1f), sunIntensity = 0.4f, shadowStrength = 0.5f,
+        fogColor = new Color(0.05f, 0.07f, 0.15f), fogDensity = 0.011f,
+        bloom = 0.75f, bloomThreshold = 1f, saturation = 6f, contrast = 16f, vignette = 0.34f, filter = new Color(0.88f, 0.92f, 1f)
+    };
+
+    private static Material s_nightSky;
+
+    /// <summary>The front end keeps the afternoon look; only a run follows the difficulty.</summary>
+    private static GameSettings.DifficultyLevel CurrentLevel =>
+        GameStartFlow.Instance != null ? GameSettings.Difficulty : GameSettings.DifficultyLevel.Normal;
+
+    public static bool IsNight => CurrentLevel == GameSettings.DifficultyLevel.Hard;
+
+    /// <summary>The sky for this run: the day sky, darkened at night.</summary>
+    public static Material SkyFor(Material daySky)
+    {
+        if (!IsNight || daySky == null) return daySky;
+        if (s_nightSky == null)
+        {
+            s_nightSky = new Material(daySky) { name = "Night Sky" };
+            s_nightSky.SetColor("_Tint", new Color(0.14f, 0.18f, 0.36f));
+            s_nightSky.SetFloat("_Exposure", 0.45f);
+        }
+        return s_nightSky;
+    }
+
     /// <summary>Applies the lighting and grade to the current scene. Also used by the front end.</summary>
     public static VolumeProfile ApplyLook()
     {
+        var level = CurrentLevel;
+        var look = level == GameSettings.DifficultyLevel.Easy ? Morning : level == GameSettings.DifficultyLevel.Hard ? Night : Afternoon;
+
         foreach (var light in FindObjectsByType<Light>(FindObjectsSortMode.None))
         {
             if (light.type != LightType.Directional) continue;
-            light.transform.rotation = Quaternion.Euler(34f, 318f, 0f);
-            light.color = new Color(1f, 0.87f, 0.68f);
-            light.intensity = 1.55f;
-            light.shadowStrength = 0.72f;
+            light.transform.rotation = Quaternion.Euler(look.sunAngles);
+            light.color = look.sunColor;
+            light.intensity = look.sunIntensity;
+            light.shadowStrength = look.shadowStrength;
+        }
+
+        if (look == Night)
+        {
+            RenderSettings.ambientMode = AmbientMode.Flat;
+            RenderSettings.ambientLight = new Color(0.24f, 0.27f, 0.42f);
+            RenderSettings.reflectionIntensity = 0.3f;
         }
 
         RenderSettings.fog = true;
         RenderSettings.fogMode = FogMode.ExponentialSquared;
-        RenderSettings.fogColor = new Color(0.68f, 0.78f, 0.95f);
-        RenderSettings.fogDensity = 0.0055f;
+        RenderSettings.fogColor = look.fogColor;
+        RenderSettings.fogDensity = look.fogDensity;
 
         if (Camera.main != null)
             Camera.main.GetUniversalAdditionalCameraData().renderPostProcessing = true;
 
         var profile = ScriptableObject.CreateInstance<VolumeProfile>();
         var bloom = profile.Add<Bloom>();
-        bloom.intensity.Override(0.55f);
-        bloom.threshold.Override(1.05f);
+        bloom.intensity.Override(look.bloom);
+        bloom.threshold.Override(look.bloomThreshold);
         bloom.scatter.Override(0.6f);
         var grade = profile.Add<ColorAdjustments>();
-        grade.saturation.Override(14f);
-        grade.contrast.Override(12f);
-        grade.colorFilter.Override(new Color(1f, 0.97f, 0.93f));
+        grade.saturation.Override(look.saturation);
+        grade.contrast.Override(look.contrast);
+        grade.colorFilter.Override(look.filter);
         var vignette = profile.Add<Vignette>();
-        vignette.intensity.Override(0.24f);
+        vignette.intensity.Override(look.vignette);
         vignette.smoothness.Override(0.45f);
         profile.Add<Tonemapping>().mode.Override(TonemappingMode.Neutral);
 
@@ -72,9 +130,52 @@ public class MoodDirector : MonoBehaviour
         var fx = Resources.Load<Material>("FxParticle");
         if (_claire == null || fx == null) return;
 
+        if (IsNight) BuildNightLights();
         _softDot = CreateSoftDot();
         _dust = CreateDust(fx);
         _weather = CreateLeaves(fx).transform;
+    }
+
+    private const float LampSpacing = 18f;
+    private const float LampSideX = 8.5f;
+    private Light[] _lamps;
+
+    /// <summary>A beam from the camera keeps obstacles readable, and warm pools of light roll along the street.</summary>
+    private void BuildNightLights()
+    {
+        if (Camera.main != null)
+        {
+            var beam = new GameObject("Night Beam").AddComponent<Light>();
+            beam.transform.SetParent(Camera.main.transform, false);
+            beam.type = LightType.Spot;
+            beam.spotAngle = 70f;
+            beam.range = 90f;
+            beam.intensity = 90f;
+            beam.color = new Color(0.95f, 0.95f, 1f);
+            beam.shadows = LightShadows.None;
+        }
+
+        _lamps = new Light[6];
+        for (int i = 0; i < _lamps.Length; i++)
+        {
+            var lamp = new GameObject("Street Pool Light").AddComponent<Light>();
+            lamp.type = LightType.Point;
+            lamp.range = 15f;
+            lamp.intensity = 8f;
+            lamp.color = new Color(1f, 0.78f, 0.48f);
+            lamp.shadows = LightShadows.None;
+            _lamps[i] = lamp;
+        }
+    }
+
+    private void PlaceLamps(float claireZ)
+    {
+        float start = Mathf.Floor(claireZ / LampSpacing) * LampSpacing;
+        for (int i = 0; i < _lamps.Length; i++)
+        {
+            float side = i % 2 == 0 ? -1f : 1f;
+            _lamps[i].transform.position = new Vector3(side * LampSideX, 6f, start + (i / 2) * LampSpacing);
+        }
     }
 
     private void OnDestroy()
@@ -87,6 +188,7 @@ public class MoodDirector : MonoBehaviour
     {
         if (_claire == null || _dust == null) return;
         Vector3 c = _claire.transform.position;
+        if (_lamps != null) PlaceLamps(c.z);
         _dust.transform.position = new Vector3(c.x, c.y - _claire.RideHeight + 0.05f, c.z - 0.3f);
         _weather.position = new Vector3(0f, c.y + 6f, c.z + 22f);
         var emission = _dust.emission;
@@ -123,7 +225,7 @@ public class MoodDirector : MonoBehaviour
 
     private ParticleSystem CreateDust(Material fx)
     {
-        var system = CreateSystem("Runner Dust", fx, new Color(0.85f, 0.78f, 0.66f, 0.3f));
+        var system = CreateSystem("Runner Dust", fx, IsNight ? new Color(0.45f, 0.48f, 0.6f, 0.2f) : new Color(0.85f, 0.78f, 0.66f, 0.3f));
         var main = system.main;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.startLifetime = 0.55f;
@@ -147,7 +249,7 @@ public class MoodDirector : MonoBehaviour
 
     private ParticleSystem CreateLeaves(Material fx)
     {
-        var system = CreateSystem("Street Leaves", fx, new Color(1f, 0.82f, 0.45f, 0.85f));
+        var system = CreateSystem("Street Leaves", fx, IsNight ? new Color(0.45f, 0.5f, 0.75f, 0.5f) : new Color(1f, 0.82f, 0.45f, 0.85f));
         var main = system.main;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.startLifetime = 5f;

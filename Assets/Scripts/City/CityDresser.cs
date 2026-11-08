@@ -347,9 +347,11 @@ public class CityDresser : MonoBehaviour
         s.cursorZ = maxZ + gap;
     }
 
+    private const float NightAccentChance = 0.7f; // lit windows make the night city read
+
     private GameObject PickBuilding(Stream s)
     {
-        GameObject[] pool = _set.accentBuildings != null && _set.accentBuildings.Length > 0 && Random.value < _set.accentChance
+        GameObject[] pool = _set.accentBuildings != null && _set.accentBuildings.Length > 0 && Random.value < (MoodDirector.IsNight ? NightAccentChance : _set.accentChance)
             ? _set.accentBuildings
             : _set.buildings;
         if (pool == null || pool.Length == 0) return null;
@@ -490,15 +492,9 @@ public class CityDresser : MonoBehaviour
     {
         if (_set.skybox != null)
         {
-            RenderSettings.skybox = _set.skybox;
+            RenderSettings.skybox = MoodDirector.SkyFor(_set.skybox);
             DynamicGI.UpdateEnvironment();
         }
-        if (_set.useFog)
-        {
-            RenderSettings.fog = true;
-            RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogColor = _set.fogColor;
-            RenderSettings.fogDensity = _set.fogDensity;
-        }
+        // Fog belongs to MoodDirector, which sets it per difficulty.
     }
 }

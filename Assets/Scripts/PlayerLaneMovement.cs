@@ -42,6 +42,8 @@ public class PlayerLaneMovement : MonoBehaviour
 
     /// <summary>Multiplied onto forward speed (the skateboard sets it).</summary>
     public float SpeedMultiplier { get; set; } = 1f;
+    /// <summary>Temporary slowdown from hazards such as tear gas; separate from the skateboard's multiplier.</summary>
+    public float HazardSpeedMultiplier { get; set; } = 1f;
     /// <summary>Extra height while standing on a skateboard.</summary>
     public float RideHeight { get; set; }
 
@@ -156,7 +158,7 @@ public class PlayerLaneMovement : MonoBehaviour
         // Auto-move forward so the runner/prototype advances without player input.
         if (moveForward)
         {
-            transform.position += new Vector3(0f, 0f, forwardSpeed * SpeedMultiplier * Time.deltaTime);
+            transform.position += new Vector3(0f, 0f, forwardSpeed * SpeedMultiplier * HazardSpeedMultiplier * Time.deltaTime);
         }
 
         MovePlayer();

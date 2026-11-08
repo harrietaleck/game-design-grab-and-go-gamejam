@@ -17,7 +17,9 @@ public static class RuntimeUI
     /// <summary>Font multiplier (slightly larger than U so text matches the original 16-24pt HUD fonts).</summary>
     public const float F = 0.6f;
 
-    public static readonly Color PanelDark = new Color(0.03f, 0.05f, 0.12f, 0.88f);
+    private const float ButtonArtMargin = 0.16f;
+
+    public static readonly Color PanelDark =new Color(0.03f, 0.05f, 0.12f, 0.88f);
     public static readonly Color Accent = new Color(0.1f, 0.9f, 1f, 1f);
     public static readonly Color Gold = new Color(1f, 0.82f, 0.25f, 1f);
     public static readonly Color Danger = new Color(1f, 0.3f, 0.25f, 1f);
@@ -93,6 +95,14 @@ public static class RuntimeUI
         text.enableAutoSizing = true;
     }
 
+    /// <summary>Lets a multi-line text wrap as usual but shrink if it would spill out of its box.</summary>
+    public static void FitInBox(TMP_Text text)
+    {
+        text.fontSizeMax = text.fontSize;
+        text.fontSizeMin = 9f;
+        text.enableAutoSizing = true;
+    }
+
     /// <summary>A framed panel from the Space Exploration GUI Kit, used by all gameplay HUD elements.</summary>
     public static Image CreateHudPanel(Transform parent, string name, Color? tint = null)
     {
@@ -134,9 +144,14 @@ public static class RuntimeUI
         var theme = UITheme.Active;
         var sprite = theme != null ? theme.window.GetSprite() : null;
         if (sprite == null)
-            return CreatePanel(parent, name, PanelDark);
+        {
+            var flat = CreatePanel(parent, name, PanelDark);
+            flat.gameObject.AddComponent<ScaleToFitParent>();
+            return flat;
+        }
 
         var frame = CreatePanel(parent, name, glassTint ?? new Color(0.75f, 0.92f, 1f, 1f));
+        frame.gameObject.AddComponent<ScaleToFitParent>();
         frame.sprite = sprite;
         frame.type = Image.Type.Sliced;
         frame.pixelsPerUnitMultiplier = theme.window.borderScale;
@@ -176,6 +191,15 @@ public static class RuntimeUI
         if (onClick != null) btn.onClick.AddListener(onClick);
         var text = CreateText(img.transform, "Label", label, 30f, TextAlignmentOptions.Center, labelColor, FontStyles.Bold);
         Stretch(text.rectTransform, normal != null ? 14f : 0f);
+        if (normal != null)
+        {
+            // The button art has wide empty margins, so labels are kept to the visible bar.
+            text.rectTransform.anchorMin = new Vector2(ButtonArtMargin, 0f);
+            text.rectTransform.anchorMax = new Vector2(1f - ButtonArtMargin, 1f);
+            text.rectTransform.offsetMin = new Vector2(0f, text.rectTransform.offsetMin.y);
+            text.rectTransform.offsetMax = new Vector2(0f, text.rectTransform.offsetMax.y);
+        }
+        FitOnOneLine(text);
         return btn;
     }
 
@@ -248,5 +272,21 @@ public static class RuntimeUI
     {
         int total = Mathf.Max(0, Mathf.FloorToInt(seconds));
         return $"{total / 60:00}:{total % 60:00}";
+    }
+}
+
+/// <summary>Shrinks a window that is too big for the current screen shape, so nothing is cut off.</summary>
+public class ScaleToFitParent : MonoBehaviour
+{
+    private const float Margin = 8f;
+
+    private void LateUpdate()
+    {
+        var rt = (RectTransform)transform;
+        if (!(rt.parent is RectTransform parent)) return;
+        Vector2 size = rt.rect.size;
+        if (size.x <= 0f || size.y <= 0f) return;
+        float scale = Mathf.Min(1f, (parent.rect.width - Margin * 2f) / size.x, (parent.rect.height - Margin * 2f) / size.y);
+        rt.localScale = new Vector3(scale, scale, 1f);
     }
 }

@@ -72,12 +72,31 @@ public class FancyText : MonoBehaviour
 
     public void SetText(string text)
     {
-        if (_legacy != null) _legacy.text = text;
+        if (_legacy != null)
+        {
+            _legacy.text = text;
+            FitLegacyToBox();
+        }
         if (_tmp != null) _tmp.text = text;
     }
 
     public void SetStyle(UITheme.Fancy style)
     {
-        if (style != _style) Build(style);
+        if (style == _style) return;
+        string text = _legacy != null ? _legacy.text : _tmp != null ? _tmp.text : "";
+        Build(style);
+        SetText(text);
+    }
+
+    /// <summary>These fonts overflow their box by design, so long headlines are scaled down to stay inside it.</summary>
+    private void FitLegacyToBox()
+    {
+        int native = Mathf.Max(1, _legacy.fontSize);
+        float scale = (_size * RuntimeUI.F) / native;
+        float boxWidth = _box.x * RuntimeUI.U;
+        float width = _legacy.preferredWidth * scale;
+        if (width > boxWidth && width > 0f) scale *= boxWidth / width;
+        _legacy.rectTransform.localScale = Vector3.one * scale;
+        _legacy.rectTransform.sizeDelta = (_box * RuntimeUI.U) / Mathf.Max(0.0001f, scale);
     }
 }

@@ -31,9 +31,11 @@ public class RunOverlayUI : MonoBehaviour
     private GameObject _resultsScoreboard;
     private FancyText _resultsTitle;
     private TextMeshProUGUI _resultsReason;
-    private TextMeshProUGUI _resultsStats;
+    private TextMeshProUGUI[] _statValues;
     private TextMeshProUGUI _resultsExtra;
+    private string _resultsComment;
     private Button _retryButton;
+    private Button _nextButton;
     private CanvasGroup _resultsGroup;
     private float _resultsShownAt;
 
@@ -77,6 +79,8 @@ public class RunOverlayUI : MonoBehaviour
             _resultsGroup.alpha = Mathf.Clamp01((Time.unscaledTime - _resultsShownAt) / 0.35f);
             // A player mashing A to jump must not press Retry the instant the run ends.
             _resultsGroup.interactable = Time.unscaledTime - _resultsShownAt > 0.8f;
+            if (_resultsGroup.interactable && _resultsCard.activeSelf && _nextButton.gameObject.activeSelf && Input.GetKeyDown(KeyCode.N))
+                OnNextDifficulty();
         }
     }
 
@@ -121,35 +125,71 @@ public class RunOverlayUI : MonoBehaviour
         _resultsGroup = dim.gameObject.AddComponent<CanvasGroup>();
         _resultsPanel = dim.gameObject;
 
-        var card = RuntimeUI.CreateWindow(dim.transform, "Card", null, 0.7f);
-        RuntimeUI.Place(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1000f, 1080f), Vector2.zero);
+        // A near-opaque backing: names floating over the 3D scene must not show through the numbers.
+        var card = RuntimeUI.CreateWindow(dim.transform, "Card", null, 0.94f);
+        RuntimeUI.Place(card.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(1240f, 940f), Vector2.zero);
 
         _resultsTitle = FancyText.Create(card.transform, "Title", "GETAWAY", 64f, UITheme.Fancy.Gold,
-            new Vector2(0.5f, 1f), new Vector2(960f, 100f), new Vector2(0f, -45f));
+            new Vector2(0.5f, 1f), new Vector2(1120f, 100f), new Vector2(0f, -40f));
 
         _resultsReason = RuntimeUI.CreateText(card.transform, "Reason", "", 28f, TextAlignmentOptions.Center, Color.white);
-        RuntimeUI.Place(_resultsReason.rectTransform, new Vector2(0.5f, 1f), new Vector2(940f, 100f), new Vector2(0f, -130f));
+        RuntimeUI.Place(_resultsReason.rectTransform, new Vector2(0.5f, 1f), new Vector2(1120f, 96f), new Vector2(0f, -142f));
+        _resultsReason.fontSizeMax = _resultsReason.fontSize;
+        _resultsReason.fontSizeMin = 9f;
+        _resultsReason.enableAutoSizing = true;
 
-        _resultsStats = RuntimeUI.CreateText(card.transform, "Stats", "", 30f, TextAlignmentOptions.TopLeft, Color.white);
-        RuntimeUI.Place(_resultsStats.rectTransform, new Vector2(0.5f, 1f), new Vector2(600f, 520f), new Vector2(0f, -250f));
+        _statValues = new TextMeshProUGUI[StatLabels.Length];
+        for (int i = 0; i < StatLabels.Length; i++)
+            _statValues[i] = BuildStatRow(card.transform, i);
 
         _resultsExtra = RuntimeUI.CreateText(card.transform, "Extra", "", 26f, TextAlignmentOptions.Center, RuntimeUI.Gold);
-        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 0f), new Vector2(940f, 100f), new Vector2(0f, 196f));
+        RuntimeUI.Place(_resultsExtra.rectTransform, new Vector2(0.5f, 1f), new Vector2(1120f, 110f), new Vector2(0f, -558f));
+        _resultsExtra.fontSizeMax = _resultsExtra.fontSize;
+        _resultsExtra.fontSizeMin = 9f;
+        _resultsExtra.enableAutoSizing = true;
 
+        var grey = new Color(0.85f, 0.85f, 0.9f);
+        _nextButton = RuntimeUI.CreateButton(card.transform, "NextDifficultyButton", "NEXT", OnNextDifficulty);
+        RuntimeUI.Place((RectTransform)_nextButton.transform, new Vector2(0.5f, 0f), new Vector2(550f, 80f), new Vector2(-285f, 130f));
         _retryButton = RuntimeUI.CreateButton(card.transform, "RetryButton", "RETRY  (R)", OnRetry);
-        RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(-220f, 118f));
-        var homeButton = RuntimeUI.CreateButton(card.transform, "HomeButton", "HOME  (ESC)", OnMenu, new Color(0.85f, 0.85f, 0.9f));
-        RuntimeUI.Place((RectTransform)homeButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(220f, 118f));
-        var scoresButton = RuntimeUI.CreateButton(card.transform, "ScoreboardButton", "SCOREBOARD", OpenResultsScoreboard, new Color(0.85f, 0.85f, 0.9f));
-        RuntimeUI.Place((RectTransform)scoresButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(-220f, 36f));
-        var quitButton = RuntimeUI.CreateButton(card.transform, "QuitButton", "QUIT", GameNavigation.Quit, new Color(0.85f, 0.85f, 0.9f));
-        RuntimeUI.Place((RectTransform)quitButton.transform, new Vector2(0.5f, 0f), new Vector2(420f, 72f), new Vector2(220f, 36f));
+        RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(550f, 80f), new Vector2(285f, 130f));
+        var homeButton = RuntimeUI.CreateButton(card.transform, "HomeButton", "HOME  (ESC)", OnMenu, grey);
+        RuntimeUI.Place((RectTransform)homeButton.transform, new Vector2(0.5f, 0f), new Vector2(365f, 80f), new Vector2(-385f, 36f));
+        var scoresButton = RuntimeUI.CreateButton(card.transform, "ScoreboardButton", "SCOREBOARD", OpenResultsScoreboard, grey);
+        RuntimeUI.Place((RectTransform)scoresButton.transform, new Vector2(0.5f, 0f), new Vector2(365f, 80f), new Vector2(0f, 36f));
+        var quitButton = RuntimeUI.CreateButton(card.transform, "QuitButton", "QUIT", GameNavigation.Quit, grey);
+        RuntimeUI.Place((RectTransform)quitButton.transform, new Vector2(0.5f, 0f), new Vector2(365f, 80f), new Vector2(385f, 36f));
 
         _resultsCard = card.gameObject;
         _resultsScoreboard = SharedScreens.BuildScoreboard(dim.transform, CloseResultsScoreboard, allowClear: false);
         _resultsScoreboard.SetActive(false);
 
         _resultsPanel.SetActive(false);
+    }
+
+    private static readonly string[] StatLabels =
+    {
+        "Loot value", "Coins", "Gold / jewelry", "Loot lost", "Rating",
+        "Roadblocks", "Time survived", "Claire's health", "Hits taken", "Rescues"
+    };
+    private const int RowsPerColumn = 5;
+
+    /// <summary>One row of the two-column table; label and value have their own boxes so they can never collide.</summary>
+    private static TextMeshProUGUI BuildStatRow(Transform card, int index)
+    {
+        int row = index % RowsPerColumn;
+        float x = index < RowsPerColumn ? -285f : 285f;
+        var back = RuntimeUI.CreatePanel(card, "Stat " + StatLabels[index], new Color(1f, 1f, 1f, row % 2 == 0 ? 0.07f : 0f));
+        back.raycastTarget = false;
+        RuntimeUI.Place(back.rectTransform, new Vector2(0.5f, 1f), new Vector2(550f, 60f), new Vector2(x, -246f - row * 60f));
+
+        var label = RuntimeUI.CreateText(back.transform, "Label", StatLabels[index], 28f, TextAlignmentOptions.Left, Color.white);
+        RuntimeUI.Place(label.rectTransform, new Vector2(0f, 0.5f), new Vector2(330f, 54f), new Vector2(16f, 0f));
+        RuntimeUI.FitOnOneLine(label);
+        var value = RuntimeUI.CreateText(back.transform, "Value", "", 28f, TextAlignmentOptions.Right, Color.white, FontStyles.Bold);
+        RuntimeUI.Place(value.rectTransform, new Vector2(1f, 0.5f), new Vector2(190f, 54f), new Vector2(-16f, 0f));
+        RuntimeUI.FitOnOneLine(value);
+        return value;
     }
 
     private void OnStateChanged(GameStartFlow.RunState oldState, GameStartFlow.RunState newState)
@@ -181,20 +221,26 @@ public class RunOverlayUI : MonoBehaviour
         bool won = f.WasSuccessful;
         _resultsTitle.SetStyle(won ? UITheme.Fancy.Gold : UITheme.Fancy.Purple);
         _resultsTitle.SetText(won ? "GETAWAY SUCCESSFUL!" : "GETAWAY FAILED");
-        _resultsReason.text = ReasonText(f.EndReason);
+        RefreshReason();
 
-        const string col = "<pos=60%>"; // a fixed value column; tab stops vary with label width
-        _resultsStats.text =
-            $"Loot value{col}<b>{f.LootValue}</b>\n" +
-            $"Coins{col}<b>{f.CoinCount}</b>\n" +
-            $"Roadblocks{col}<b>{(RoadblockDirector.Instance != null ? RoadblockDirector.Instance.RoadblocksPassed : 0)}/{RoadblockDirector.TotalRoadblocks}</b>\n" +
-            $"Rating{col}<b>{ProgressionStore.Stars(f)}/3 STARS</b>\n" +
-            $"Gold / jewelry{col}<b>{f.GoldStackCount} / {f.JewelCount}</b>\n" +
-            $"Loot lost{col}<b>{f.LootLost}</b>\n" +
-            $"Time survived{col}<b>{RuntimeUI.FormatTime(f.TimeSurvived)}</b>\n" +
-            $"Claire's health{col}<b>{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}</b>\n" +
-            $"Hits taken{col}<b>{f.CollisionCount}</b>\n" +
-            $"Rescues{col}<b>{f.RescueSuccessCount}/{f.CaptureCount}</b>";
+        // Same order as StatLabels.
+        int roadblocks = RoadblockDirector.Instance != null ? RoadblockDirector.Instance.RoadblocksPassed : 0;
+        string[] values =
+        {
+            f.LootValue.ToString(), f.CoinCount.ToString(), $"{f.GoldStackCount} / {f.JewelCount}", f.LootLost.ToString(),
+            $"{ProgressionStore.Stars(f)}/3 STARS",
+            $"{roadblocks}/{RoadblockDirector.TotalRoadblocks}", RuntimeUI.FormatTime(f.TimeSurvived),
+            $"{Mathf.CeilToInt(f.ClaireHealth)}/{Mathf.CeilToInt(f.MaxHealth)}", f.CollisionCount.ToString(),
+            $"{f.RescueSuccessCount}/{f.CaptureCount}"
+        };
+        for (int i = 0; i < values.Length; i++) _statValues[i].text = values[i];
+
+        // A win offers the next difficulty, except on Hard, where there is none.
+        bool hasNext = won && GameSettings.Difficulty != GameSettings.DifficultyLevel.Hard;
+        _nextButton.gameObject.SetActive(hasNext);
+        if (hasNext)
+            _nextButton.GetComponentInChildren<TMP_Text>().text = $"NEXT: {NextDifficulty().ToString().ToUpperInvariant()}  (N)";
+        RuntimeUI.Place((RectTransform)_retryButton.transform, new Vector2(0.5f, 0f), new Vector2(550f, 80f), new Vector2(hasNext ? 285f : 0f, 130f));
 
         string extra = null;
         try { extra = ExtraResultsLines?.Invoke(f); } catch (System.Exception e) { Debug.LogException(e); }
@@ -205,6 +251,30 @@ public class RunOverlayUI : MonoBehaviour
         _resultsPanel.SetActive(true);
         _resultsPanel.transform.SetAsLastSibling();
         if (_retryButton != null) _retryButton.Select();
+    }
+
+    /// <summary>AJ's last word goes inside the results card, so the radio box never sits on top of it.</summary>
+    public void SetResultsComment(string speaker, string line)
+    {
+        _resultsComment = string.IsNullOrEmpty(line) ? null : $"{speaker}: \"{line}\"";
+        RefreshReason();
+    }
+
+    private void RefreshReason()
+    {
+        if (_flow == null) return;
+        string reason = ReasonText(_flow.EndReason);
+        _resultsReason.text = _resultsComment == null ? reason : $"{reason}\n<size=80%><i>{_resultsComment}</i></size>";
+    }
+
+    private static GameSettings.DifficultyLevel NextDifficulty() =>
+        GameSettings.Difficulty == GameSettings.DifficultyLevel.Easy ? GameSettings.DifficultyLevel.Normal : GameSettings.DifficultyLevel.Hard;
+
+    private void OnNextDifficulty()
+    {
+        GameSettings.Difficulty = NextDifficulty();
+        GameSettings.Save();
+        OnRetry();
     }
 
     public static string ReasonText(RunEndReason reason)
