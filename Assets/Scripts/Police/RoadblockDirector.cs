@@ -6,8 +6,8 @@ using UnityEngine.UI;
 /// <summary>
 /// Police roadblocks: patrol cars parked across three of the four lanes, leaving one open gap.
 /// They replace a normal traffic row (so spacing and reachability rules still apply), use LaneObstacle triggers
-/// (so Claire's damage, AJ's dodging, the rescue and officer fairness all work unchanged), and are announced
-/// on the HUD with the open lane well before Claire reaches them.
+/// (so AJ's dodging, the rescue and officer fairness all work unchanged), and are announced on the HUD with the
+/// open lane well before Claire reaches them. Claire reaching a closed lane ends the run.
 /// </summary>
 public class RoadblockDirector : MonoBehaviour
 {
@@ -32,8 +32,6 @@ public class RoadblockDirector : MonoBehaviour
     public Vector2 hazardSpacing = new Vector2(55f, 32f);
     [Tooltip("The HUD warning appears when Claire is this far away.")]
     public float warningDistance = 48f;
-    [Tooltip("Health lost when Claire hits a roadblock (traffic costs 10).")]
-    public float healthDamage = 20f;
     public float carScale = 0.95f;
     public int guardsPerRoadblock = 2;
     [Tooltip("How far in front of the cars (towards the runners) the guards stand.")]
@@ -437,7 +435,7 @@ public class RoadblockDirector : MonoBehaviour
         go.transform.position = new Vector3(LaneMath.SharedLaneX(lane), root.position.y + 1f, z);
 
         var obstacle = go.AddComponent<LaneObstacle>();
-        obstacle.healthDamage = healthDamage;
+        obstacle.catchesClaire = true;
         obstacle.clearHeight = 99f; // roadblocks cannot be jumped
         LaneObstacleSpawner.EnsureObstacleSetup(go);
         go.GetComponent<BoxCollider>().size = new Vector3(LaneMath.SharedLaneDistance * 0.75f, 8f, depth);

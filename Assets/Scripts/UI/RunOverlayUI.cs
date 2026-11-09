@@ -285,6 +285,7 @@ public class RunOverlayUI : MonoBehaviour
             case RunEndReason.TimeUpEscaped: return "Claire kept AJ free until the clock ran out. Clean getaway.";
             case RunEndReason.ClaireOutOfHealth: return "Claire took too many hits and couldn't keep up.";
             case RunEndReason.AJCaptured: return "Claire missed AJ during the rescue. He was caught.";
+            case RunEndReason.CaughtAtRoadblock: return "Claire ran straight into the roadblock and the police caught her.";
             case RunEndReason.TimeUpWhileCaught: return "Time ran out while AJ was still caught.";
             case RunEndReason.Abandoned: return "Run abandoned.";
             default: return "";

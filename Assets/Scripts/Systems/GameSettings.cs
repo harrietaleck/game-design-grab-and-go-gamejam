@@ -91,7 +91,18 @@ public class DifficultyApplier : MonoBehaviour
 
     private void Start()
     {
-        if (GameSettings.Difficulty == GameSettings.DifficultyLevel.Normal) return;
+        if (GameSettings.Difficulty == GameSettings.DifficultyLevel.Normal)
+        {
+            var k9 = GetComponent<PoliceDirector>();
+            if (k9 != null)
+            {
+                k9.maxDogs = 2;
+                k9.dogPackGapSeconds = 4f;
+                k9.dogFirstDelay = 18f;
+                k9.dogRespawnSeconds = 12f;
+            }
+            return;
+        }
         bool easy = GameSettings.Difficulty == GameSettings.DifficultyLevel.Easy;
 
         var police = GetComponent<PoliceDirector>();
@@ -100,15 +111,19 @@ public class DifficultyApplier : MonoBehaviour
             police.pursuerCatchChance = easy ? 0.1f : 0.4f;
             police.pursuerRespawnSeconds = easy ? 14f : 5f;
             police.spawnIntervalRange *= easy ? 1.4f : 0.75f;
-            police.dogRespawnSeconds = easy ? 28f : 9f;
+            police.dogRespawnSeconds = easy ? 28f : 7f;
+            if (!easy)
+            {
+                police.maxDogs = 3;
+                police.dogPackGapSeconds = 2f;
+                police.dogBiteDamage = 15f;
+                police.dogFirstDelay = 10f;
+            }
         }
 
         var roadblocks = GetComponent<RoadblockDirector>();
         if (roadblocks != null)
-        {
             roadblocks.spacingRange *= easy ? 1.4f : 0.75f;
-            roadblocks.healthDamage = easy ? 15f : 25f;
-        }
     }
 }
 

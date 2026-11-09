@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 06146ca047784da986bbd1484c14a804, type: 3}
   m_Name: ShopSet
   m_EditorClassIdentifier: Assembly-CSharp::ShopSet
   boards:

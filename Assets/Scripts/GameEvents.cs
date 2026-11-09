@@ -10,7 +10,8 @@ public enum RunEndReason
     AJCaptured,         // Rescue failed (Claire missed AJ)
     TimeUpWhileCaught,  // Timer reached 0 while AJ was still caught
     Abandoned,          // Player quit to menu mid-run
-    ReachedVan          // Cleared the roadblocks and reached the getaway van -> success
+    ReachedVan,         // Cleared the roadblocks and reached the getaway van -> success
+    CaughtAtRoadblock   // Claire reached a roadblock in a closed lane
 }
 
 /// <summary>Gameplay facts other systems (HUD, dialogue, audio) can react to. Never fabricated: raised only by the system that owns the fact.</summary>

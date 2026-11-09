@@ -34,6 +34,8 @@ public class PlayerLaneMovement : MonoBehaviour
     [Header("Jump (W / Up) and Dodge (S / Down)")]
     public float jumpHeight = 1.25f;
     public float doubleJumpHeight = 1.5f;
+    [Tooltip("Jump height while the Jump Boost is active: enough to clear traffic.")]
+    public float boostedJumpHeight = 3.4f;
     public float jumpGravity = 26f;
     [Tooltip("Seconds the dodge slide lasts. Bullets and grabs miss during it.")]
     public float dodgeSeconds = 0.5f;
@@ -46,6 +48,10 @@ public class PlayerLaneMovement : MonoBehaviour
     public float HazardSpeedMultiplier { get; set; } = 1f;
     /// <summary>Extra height while standing on a skateboard.</summary>
     public float RideHeight { get; set; }
+
+    /// <summary>Set by the Jump Boost pickup while it is running.</summary>
+    public bool JumpBoosted { get; set; }
+    public event System.Action BoostedJump;
 
     public float HeightAboveGround => _jumpHeightNow;
     public bool IsDodging => Time.time < _dodgeUntil;
@@ -168,14 +174,22 @@ public class PlayerLaneMovement : MonoBehaviour
     private void TryJump()
     {
         if (IsDodging) return;
-        if (_jumpsUsed == 0)
+        if (_jumpsUsed == 0 && JumpBoosted)
+        {
+            _jumpsUsed = 1;
+            _jumpVelocity = Mathf.Sqrt(2f * jumpGravity * boostedJumpHeight);
+            ProceduralSfx.Play(ProceduralSfx.Jump, 0.9f);
+            if (RideHeight <= 0f) PlayAction(DoubleJumpState, "Player Double Jump", AirTime(boostedJumpHeight));
+            BoostedJump?.Invoke();
+        }
+        else if (_jumpsUsed == 0)
         {
             _jumpsUsed = 1;
             _jumpVelocity = Mathf.Sqrt(2f * jumpGravity * jumpHeight);
             ProceduralSfx.Play(ProceduralSfx.Jump, 0.5f);
             if (RideHeight <= 0f) PlayAction(JumpState, "Player Jump", AirTime(jumpHeight));
         }
-        else if (_jumpsUsed == 1 && ShopStore.Owns(ShopStore.DoubleJump))
+        else if (_jumpsUsed == 1 && !JumpBoosted && ShopStore.Owns(ShopStore.DoubleJump))
         {
             _jumpsUsed = 2;
             _jumpVelocity = Mathf.Sqrt(2f * jumpGravity * doubleJumpHeight);

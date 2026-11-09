@@ -76,6 +76,10 @@ public class PoliceDirector : MonoBehaviour
     public float dogFirstDelay = 25f;
     public float dogRespawnSeconds = 15f;
     public float dogBiteDamage = 10f;
+    [Tooltip("K9s on the road at once.")]
+    public int maxDogs = 1;
+    [Tooltip("Seconds between dogs joining a pack, so each one can be dodged.")]
+    public float dogPackGapSeconds = 4f;
     public float dogScale = 1.35f;
 
     [Header("Handgun in the officer's right hand")]
@@ -119,7 +123,7 @@ public class PoliceDirector : MonoBehaviour
     private bool _spottedRaised;
     private PoliceOfficer _pursuer;
     private float _nextPursuerAt = float.MaxValue;
-    private PoliceOfficer _dog;
+    private readonly List<PoliceOfficer> _dogs = new();
     private GameObject _dogTemplate;
     private float _nextDogAt = float.MaxValue;
 
@@ -250,7 +254,7 @@ public class PoliceDirector : MonoBehaviour
             _nextPursuerAt = Time.time + pursuerRespawnSeconds;
             return;
         }
-        if (Time.time < _nextPursuerAt || !ThreatWindowOpen || (_dog != null && _dog.IsDangerous)) return;
+        if (Time.time < _nextPursuerAt || !ThreatWindowOpen || (maxDogs <= 1 && AnyDogDangerous)) return;
 
         var pos = Claire.transform.position;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
@@ -258,23 +262,23 @@ public class PoliceDirector : MonoBehaviour
         _pursuer = Spawn(PoliceOfficer.Kind.Pursuer, Claire.CurrentLane, pos, 0f);
     }
 
-    /// <summary>Keeps one K9 on Claire's trail, with a break after each attack or miss.</summary>
+    private bool AnyDogDangerous => _dogs.Exists(d => d != null && d.IsDangerous);
+
+    /// <summary>Keeps K9s on Claire's trail, with a break after each attack or miss. A pack arrives one dog at a time.</summary>
     private void UpdateDog()
     {
         if (_dogTemplate == null) return;
-        if (_dog != null && _dog.IsDangerous) return;
-        if (_dog != null)
-        {
-            _dog = null;
-            _nextDogAt = Time.time + dogRespawnSeconds;
-            return;
-        }
-        if (Time.time < _nextDogAt || !ThreatWindowOpen || (_pursuer != null && _pursuer.IsDangerous)) return;
+        if (_dogs.RemoveAll(d => d == null || !d.IsDangerous) > 0 && _dogs.Count == 0) // the break starts when the pack is gone
+            _nextDogAt = Mathf.Max(_nextDogAt, Time.time + dogRespawnSeconds);
+
+        if (_dogs.Count >= maxDogs || Time.time < _nextDogAt || !ThreatWindowOpen) return;
+        if (maxDogs <= 1 && _pursuer != null && _pursuer.IsDangerous) return;
 
         var pos = Claire.transform.position;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
         pos.z -= dogSpawnBehind;
-        _dog = Spawn(PoliceOfficer.Kind.Dog, Claire.CurrentLane, pos, 0f, _dogTemplate);
+        _dogs.Add(Spawn(PoliceOfficer.Kind.Dog, Claire.CurrentLane, pos, 0f, _dogTemplate));
+        _nextDogAt = Time.time + dogPackGapSeconds;
     }
 
     /// <summary>Posts an officer at a roadblock. Returns false if no officer models are available.</summary>

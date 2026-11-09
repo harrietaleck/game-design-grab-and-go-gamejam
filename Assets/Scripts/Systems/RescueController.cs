@@ -31,6 +31,12 @@ public class RescueController : MonoBehaviour
     [Tooltip("Seconds AJ ignores obstacles right after a rescue.")]
     public float postRescueInvulnerability = 2.5f;
 
+    public const string CauseExhausted = "exhausted"; // police pressure maxed out
+    private const int RescueCoinCost = 10;
+    private static readonly int HitState = Animator.StringToHash("Hit");
+    private static readonly int TiredState = Animator.StringToHash("Tired");
+    private bool _tiredRun;
+
     private GameStartFlow _flow;
     private AIThiefLaneDodge _aj;
     private PlayerLaneMovement _claire;
@@ -72,7 +78,14 @@ public class RescueController : MonoBehaviour
             return;
 
         _active = true;
-        if (_ajAnimator != null) _ajAnimator.speed = 0f;
+        _tiredRun = false;
+        if (_ajAnimator != null)
+        {
+            _ajAnimator.speed = 1f;
+            int reaction = cause == CauseExhausted ? TiredState : HitState;
+            if (_ajAnimator.HasState(0, reaction)) _ajAnimator.CrossFadeInFixedTime(reaction, 0.1f);
+            else _ajAnimator.speed = 0f; // the reaction clips are missing: hold the pose
+        }
 
         // Snap AJ into the centre of his lane so the target is unambiguous.
         int ajLane = LaneMath.SharedNearestLane(_aj.transform.position.x);
@@ -92,13 +105,31 @@ public class RescueController : MonoBehaviour
             PoliceDirector.Instance.ClearLane(ajLane, _claire.transform.position.z - 1f, ajPos.z + 3f);
 
         if (_flow.hudController != null)
-            _flow.hudController.ShowAlert(cause == "police" ? "THE POLICE GRABBED AJ!" : "AJ IS CAUGHT!");
+            _flow.hudController.ShowAlert(cause == CauseExhausted ? "AJ IS EXHAUSTED!" : cause == "police" ? "THE POLICE GRABBED AJ!" : "AJ IS HURT!");
         ProceduralSfx.Play(ProceduralSfx.Alarm, 0.7f);
         _banner.SetActive(true);
     }
 
+    /// <summary>AJ visibly tires while police pressure is high, and recovers when it drops.</summary>
+    private void UpdateTiredRun()
+    {
+        if (_aj == null || _ajAnimator == null || _flow == null || _aj.IsCaught || !_ajAnimator.HasState(0, TiredState)) return;
+        if (_aj.AnimationBusy)
+        {
+            _tiredRun = false; // the jump, slide or skateboard has taken over the animator
+            return;
+        }
+        var pressure = PolicePressure.Instance;
+        bool want = _flow.State == GameStartFlow.RunState.Playing && pressure != null && pressure.IsHigh;
+        if (want == _tiredRun) return;
+        _tiredRun = want;
+        if (want) _ajAnimator.CrossFadeInFixedTime(TiredState, 0.2f);
+        else _aj.ResumeRunAnimation();
+    }
+
     private void Update()
     {
+        UpdateTiredRun();
         if (!_active || _flow == null)
             return;
         if (_flow.State == GameStartFlow.RunState.Paused)
@@ -134,13 +165,15 @@ public class RescueController : MonoBehaviour
     private void Succeed()
     {
         _active = false;
-        if (_ajAnimator != null) _ajAnimator.speed = 1f;
+        _aj.ResumeRunAnimation();
         _aj.Release();
         _aj.BeginRecovery(_claire.transform, recoveryGap, postRescueInvulnerability);
         if (_flow.ExitAJCaught())
         {
             GameEvents.Raise(GameEventType.AJRescued);
-            if (_flow.hudController != null) _flow.hudController.ShowAlert("AJ RESCUED!");
+            int coins = _flow.SpendCoins(RescueCoinCost);
+            RescueSparkles.Create(_aj.transform, _claire.transform, postRescueInvulnerability);
+            if (_flow.hudController != null) _flow.hudController.ShowAlert(coins > 0 ? $"AJ HEALED!  -{coins} COINS" : "AJ RESCUED!");
             ProceduralSfx.Play(ProceduralSfx.Rescue, 0.8f);
             if (GameplayHUDExtras.Instance != null) GameplayHUDExtras.Instance.Flash(new Color(0.2f, 1f, 0.5f, 0.25f));
         }

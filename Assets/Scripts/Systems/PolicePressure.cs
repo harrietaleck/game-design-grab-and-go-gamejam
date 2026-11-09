@@ -145,7 +145,7 @@ public class PolicePressure : MonoBehaviour
         {
             if (_thief == null) _thief = FindFirstObjectByType<AIThiefLaneDodge>();
             if (_thief != null && !_thief.IsCaught)
-                _thief.SetCaught("police");
+                _thief.SetCaught(RescueController.CauseExhausted);
         }
     }
 }

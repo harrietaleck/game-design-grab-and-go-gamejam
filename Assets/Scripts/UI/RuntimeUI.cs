@@ -200,6 +200,7 @@ public static class RuntimeUI
             text.rectTransform.offsetMax = new Vector2(0f, text.rectTransform.offsetMax.y);
         }
         FitOnOneLine(text);
+        btn.gameObject.AddComponent<ButtonHover>().SetLabel(text);
         return btn;
     }
 
@@ -272,6 +273,80 @@ public static class RuntimeUI
     {
         int total = Mathf.Max(0, Mathf.FloorToInt(seconds));
         return $"{total / 60:00}:{total % 60:00}";
+    }
+}
+
+/// <summary>
+/// Hovered or gamepad-focused buttons grow and turn their label gold. Hovering also moves focus to the button,
+/// so only one button is ever highlighted. Uses unscaled time because menus run while the game is frozen.
+/// </summary>
+public class ButtonHover : MonoBehaviour,
+    UnityEngine.EventSystems.IPointerEnterHandler, UnityEngine.EventSystems.IPointerExitHandler,
+    UnityEngine.EventSystems.ISelectHandler, UnityEngine.EventSystems.IDeselectHandler
+{
+    private const float HoverScale = 1.1f;
+    private const float GrowSpeed = 1.5f; // scale per second
+
+    private TMP_Text _label;
+    private Image _bar;
+    private Button _button;
+    private Color _labelColor;
+    private bool _hovered, _selected, _showing;
+
+    private bool Highlighted => (_hovered || _selected) && _button != null && _button.IsInteractable();
+
+    public void SetLabel(TMP_Text label)
+    {
+        _label = label;
+        _bar = RuntimeUI.CreatePanel(transform, "Selection Bar", RuntimeUI.Gold);
+        _bar.raycastTarget = false;
+        var rt = _bar.rectTransform;
+        rt.anchorMin = new Vector2(0.14f, 0f);
+        rt.anchorMax = new Vector2(0.86f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(0f, 3f);
+        rt.anchoredPosition = new Vector2(0f, -1f);
+        _bar.enabled = false;
+    }
+
+    private void Awake() => _button = GetComponent<Button>();
+
+    private void OnDisable()
+    {
+        _hovered = _selected = false;
+        transform.localScale = Vector3.one;
+        ShowHighlight(false);
+    }
+
+    /// <summary>Only touches the colour on a change, so other code can still recolour an idle label.</summary>
+    private void ShowHighlight(bool on)
+    {
+        if (on == _showing || _label == null) return;
+        _showing = on;
+        if (_bar != null) _bar.enabled = on;
+        if (on) _labelColor = _label.color;
+        _label.color = on ? RuntimeUI.Gold : _labelColor;
+    }
+
+    public void OnPointerEnter(UnityEngine.EventSystems.PointerEventData e)
+    {
+        _hovered = true;
+        if (!_button.IsInteractable()) return;
+        ProceduralSfx.Play(ProceduralSfx.RadioBlip, 0.12f);
+        _button.Select();
+    }
+
+    public void OnPointerExit(UnityEngine.EventSystems.PointerEventData e) => _hovered = false;
+    public void OnSelect(UnityEngine.EventSystems.BaseEventData e) => _selected = true;
+    public void OnDeselect(UnityEngine.EventSystems.BaseEventData e) => _selected = false;
+
+    private void Update()
+    {
+        bool on = Highlighted;
+        float target = on ? HoverScale : 1f;
+        float scale = Mathf.MoveTowards(transform.localScale.x, target, GrowSpeed * Time.unscaledDeltaTime);
+        transform.localScale = new Vector3(scale, scale, 1f);
+        ShowHighlight(on);
     }
 }
 

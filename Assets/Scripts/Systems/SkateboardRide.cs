@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Skateboard power-up. A board appears on the road from time to time; when Claire runs over it she and AJ both
-/// ride for a few seconds, going faster, and the board takes the hit from one crash. Uses the board equipped in the shop.
+/// ride for a few seconds as a speed boost, and the board takes the hit from one crash. Uses the board equipped in the shop.
 /// </summary>
 public class SkateboardRide : MonoBehaviour
 {
@@ -27,7 +27,9 @@ public class SkateboardRide : MonoBehaviour
     public float spawnAhead = 42f;
     public float rideSeconds = 9f;
     public float longRideSeconds = 14f;
-    public float speedMultiplier = 1.35f;
+    public float speedMultiplier = 1.7f;
+    [Tooltip("Degrees the camera widens during the boost, for a sense of speed.")]
+    public float boostFieldOfView = 10f;
     public float boardLength = 1.15f;
     public float rideHeight = 0.16f;
     [Tooltip("Turn of the board around Y, so its nose points along the road.")]
@@ -47,6 +49,9 @@ public class SkateboardRide : MonoBehaviour
 
     private GameObject _hud;
     private Image _hudFill;
+    private Camera _camera;
+    private float _baseFieldOfView;
+    private Material _trailMaterial;
 
     private void Awake()
     {
@@ -55,7 +60,11 @@ public class SkateboardRide : MonoBehaviour
         BuildHud();
     }
 
-    private void OnDestroy() { if (Instance == this) Instance = null; }
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+        if (_trailMaterial != null) Destroy(_trailMaterial);
+    }
     private void OnEnable() => GameEvents.OnEvent += OnGameEvent;
     private void OnDisable() => GameEvents.OnEvent -= OnGameEvent;
 
@@ -65,6 +74,14 @@ public class SkateboardRide : MonoBehaviour
         _aj = FindFirstObjectByType<AIThiefLaneDodge>();
         var set = ShopSet.Active;
         if (set != null) _boardPrefab = set.EquippedBoardPrefab;
+        _camera = Camera.main;
+        if (_camera != null) _baseFieldOfView = _camera.fieldOfView;
+        var fx = Resources.Load<Material>("FxParticle");
+        if (fx != null)
+        {
+            _trailMaterial = new Material(fx);
+            _trailMaterial.SetColor("_BaseColor", new Color(0.2f, 0.9f, 1f, 0.8f));
+        }
         // Covers a run that started before this component's Start.
         if (_flow != null && _flow.State == GameStartFlow.RunState.Playing) _nextSpawnAt = Time.time + firstDelay;
     }
@@ -78,6 +95,9 @@ public class SkateboardRide : MonoBehaviour
     private void Update()
     {
         if (_claire == null || _boardPrefab == null || !GameStartFlow.IsGameplayActive) return;
+
+        if (_camera != null)
+            _camera.fieldOfView = Mathf.MoveTowards(_camera.fieldOfView, _baseFieldOfView + (IsRiding ? boostFieldOfView : 0f), 30f * Time.deltaTime);
 
         if (IsRiding)
         {
@@ -127,7 +147,7 @@ public class SkateboardRide : MonoBehaviour
         _pickup = go.transform;
     }
 
-    private static int PickClearLane(float z)
+    public static int PickClearLane(float z)
     {
         var blocked = new bool[LaneMath.SharedLaneCount];
         foreach (var o in FindObjectsByType<LaneObstacle>(FindObjectsSortMode.None))
@@ -162,7 +182,7 @@ public class SkateboardRide : MonoBehaviour
         _hud.SetActive(true);
         _hudFill.fillAmount = 1f;
         ProceduralSfx.Play(ProceduralSfx.Rescue, 0.7f);
-        if (_flow.hudController != null) _flow.hudController.ShowAlert("SKATEBOARD!");
+        if (_flow.hudController != null) _flow.hudController.ShowAlert("SPEED BOOST!");
     }
 
     private GameObject Mount(Transform rider)
@@ -173,6 +193,19 @@ public class SkateboardRide : MonoBehaviour
         board.transform.localPosition = new Vector3(0f, -rideHeight + 0.03f, 0f);
         board.transform.localRotation = Quaternion.Euler(0f, boardYaw, 0f);
         Play(rider, SkateState);
+        if (_trailMaterial != null)
+        {
+            foreach (float side in new[] { -0.18f, 0.18f })
+            {
+                var streak = new GameObject("Speed Streak").AddComponent<TrailRenderer>();
+                streak.transform.SetParent(board.transform, false);
+                streak.transform.position = rider.position + new Vector3(side, 0.05f - rideHeight, 0f);
+                streak.sharedMaterial = _trailMaterial;
+                streak.time = 0.3f;
+                streak.startWidth = 0.14f;
+                streak.endWidth = 0f;
+            }
+        }
         return board;
     }
 
@@ -236,7 +269,7 @@ public class SkateboardRide : MonoBehaviour
         var panel = RuntimeUI.CreateHudPanel(root, "SkateTimer (runtime)");
         RuntimeUI.Place(panel.rectTransform, new Vector2(0f, 0.5f), new Vector2(460f, 100f), new Vector2(16f, -160f));
         SidePopup.Attach(panel.rectTransform, fromRight: false);
-        var text = RuntimeUI.CreateText(panel.transform, "Text", "SKATEBOARD", 24f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
+        var text = RuntimeUI.CreateText(panel.transform, "Text", "SPEED BOOST", 24f, TextAlignmentOptions.Center, RuntimeUI.Accent, FontStyles.Bold);
         RuntimeUI.Place(text.rectTransform, new Vector2(0.5f, 1f), new Vector2(420f, 40f), new Vector2(0f, -12f));
         _hudFill = RuntimeUI.CreateBar(panel.transform, "Bar", new Color(0f, 0f, 0f, 0.55f), RuntimeUI.Accent);
         RuntimeUI.Place((RectTransform)_hudFill.transform.parent, new Vector2(0.5f, 0f), new Vector2(400f, 30f), new Vector2(0f, 16f));

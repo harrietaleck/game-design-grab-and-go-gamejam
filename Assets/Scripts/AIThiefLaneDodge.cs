@@ -175,8 +175,21 @@ public class AIThiefLaneDodge : MonoBehaviour
     {
         if (!_hopAnimating) return;
         _hopAnimating = false;
+        if (_caught) return; // the rescue is playing his hit or tired animation
         _animator.CrossFadeInFixedTime(RideHeight > 0f ? SkateState : RunState, 0.12f);
-        if (!_caught) _animator.speed = 1f; // the rescue freezes a caught AJ's animation
+        _animator.speed = 1f;
+    }
+
+    /// <summary>True during a jump or slide, or on the skateboard: those own the animator.</summary>
+    public bool AnimationBusy => _hopAnimating || RideHeight > 0f;
+
+    /// <summary>Back to his normal run (or ride) after a reaction animation.</summary>
+    public void ResumeRunAnimation()
+    {
+        if (_animator == null) _animator = GetComponentInChildren<Animator>();
+        if (_animator == null) return;
+        _animator.speed = 1f;
+        _animator.CrossFadeInFixedTime(RideHeight > 0f ? SkateState : RunState, 0.15f);
     }
 
     private void UpdateHeight()

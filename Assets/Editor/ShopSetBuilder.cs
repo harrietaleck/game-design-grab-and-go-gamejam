@@ -48,6 +48,25 @@ public static class ShopSetBuilder
         Debug.Log($"[ShopSetBuilder] {AssetPath} ready: {set.boards.Length} boards, {set.bags.Length} bags.");
     }
 
+    /// <summary>AJ's "hit" and "running tired" reactions, as Hit and Tired states on his animator.</summary>
+    [MenuItem("Grab & Go/Add AJ Reaction Animations")]
+    public static void AddAJReactions()
+    {
+        const string controller = "Assets/AJControllerAnimation.controller";
+        SetState(controller, "Hit", BakeInPlace("Hit By Car", "AJ Hit", keepHeight: true));
+
+        var tired = BakeInPlace("Running Tired", "AJ Tired", keepHeight: true);
+        if (tired != null)
+        {
+            var settings = AnimationUtility.GetAnimationClipSettings(tired);
+            settings.loopTime = true;
+            AnimationUtility.SetAnimationClipSettings(tired, settings);
+            EditorUtility.SetDirty(tired);
+        }
+        SetState(controller, "Tired", tired);
+        AssetDatabase.SaveAssets();
+    }
+
     private static GameObject[] LoadPrefabs(string folder, System.Func<string, bool> keep) =>
         AssetDatabase.FindAssets("t:Prefab", new[] { folder })
             .Select(AssetDatabase.GUIDToAssetPath)

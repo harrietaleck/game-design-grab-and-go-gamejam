@@ -23,6 +23,8 @@ public class LaneObstacle : MonoBehaviour
     public bool passableByRunners = false;
     [Tooltip("Claire clears this obstacle by sliding.")]
     public bool clearedByDodge = false;
+    [Tooltip("Roadblocks: reaching this ends the run. Hit protection and the skateboard do not help.")]
+    public bool catchesClaire = false;
 
     [Tooltip("If above 0, Claire clears this obstacle when at least this high. 0 = work it out from the object's name.")]
     public float clearHeight = 0f;
@@ -34,9 +36,11 @@ public class LaneObstacle : MonoBehaviour
         {
             if (clearHeight > 0f) return clearHeight;
             if (name.Contains("Trash")) return 0.5f;
-            return name.Contains("Van") ? 99f : 1.6f;
+            return name.Contains("Van") && !JumpBoost.Active ? 99f : 1.6f;
         }
     }
+
+    private const float BoostClearHeight = 0.25f;
 
     [Tooltip("Invoked when the obstacle is hit by the handler.")]
     public UnityEvent onHit;
@@ -78,10 +82,19 @@ public class LaneObstacle : MonoBehaviour
         }
         else
         {
-            if (handlerMovement.HeightAboveGround >= ClearHeight || (clearedByDodge && handlerMovement.IsDodging))
+            // A boosted jump only has to have left the ground: it is about to be high enough to clear traffic.
+            bool boostClears = JumpBoost.Active && clearHeight <= 0f && handlerMovement.HeightAboveGround >= BoostClearHeight;
+            if (boostClears || handlerMovement.HeightAboveGround >= ClearHeight || (clearedByDodge && handlerMovement.IsDodging))
             {
                 if (GameStartFlow.Instance != null) GameStartFlow.Instance.NearMissCount++;
                 return; // jumped or slid it
+            }
+
+            if (catchesClaire && GameStartFlow.Instance != null)
+            {
+                ProceduralSfx.Play(ProceduralSfx.Alarm, 0.7f);
+                GameStartFlow.Instance.EndRun(RunEndReason.CaughtAtRoadblock);
+                return;
             }
 
             if (GameStartFlow.Instance != null && GameStartFlow.Instance.IsClaireInvulnerable)

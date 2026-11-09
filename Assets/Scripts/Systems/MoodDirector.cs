@@ -21,6 +21,7 @@ public class MoodDirector : MonoBehaviour
     private PlayerLaneMovement _claire;
     private ParticleSystem _dust;
     private Transform _weather;
+    private Transform _drift;
     private Texture2D _softDot;
     private VolumeProfile _profile;
 
@@ -47,7 +48,7 @@ public class MoodDirector : MonoBehaviour
     private static readonly Look Night = new Look
     {
         sunAngles = new Vector3(42f, 210f, 0f), sunColor = new Color(0.5f, 0.62f, 1f), sunIntensity = 0.4f, shadowStrength = 0.5f,
-        fogColor = new Color(0.05f, 0.07f, 0.15f), fogDensity = 0.011f,
+        fogColor = new Color(0.17f, 0.21f, 0.32f), fogDensity = 0.014f, // a cold, snowy haze
         bloom = 0.75f, bloomThreshold = 1f, saturation = 6f, contrast = 16f, vignette = 0.34f, filter = new Color(0.88f, 0.92f, 1f)
     };
 
@@ -133,7 +134,8 @@ public class MoodDirector : MonoBehaviour
         if (IsNight) BuildNightLights();
         _softDot = CreateSoftDot();
         _dust = CreateDust(fx);
-        _weather = CreateLeaves(fx).transform;
+        _weather = (IsNight ? CreateSnow(fx) : CreateLeaves(fx)).transform;
+        if (IsNight) _drift = CreateGroundDrift(fx).transform;
     }
 
     private const float LampSpacing = 18f;
@@ -190,7 +192,8 @@ public class MoodDirector : MonoBehaviour
         Vector3 c = _claire.transform.position;
         if (_lamps != null) PlaceLamps(c.z);
         _dust.transform.position = new Vector3(c.x, c.y - _claire.RideHeight + 0.05f, c.z - 0.3f);
-        _weather.position = new Vector3(0f, c.y + 6f, c.z + 22f);
+        _weather.position = new Vector3(0f, c.y + (IsNight ? 9f : 6f), c.z + 22f);
+        if (_drift != null) _drift.position = new Vector3(0f, c.y - _claire.RideHeight + 0.2f, c.z + 20f);
         var emission = _dust.emission;
         emission.enabled = GameStartFlow.IsGameplayActive && _claire.HeightAboveGround <= 0f;
     }
@@ -225,7 +228,7 @@ public class MoodDirector : MonoBehaviour
 
     private ParticleSystem CreateDust(Material fx)
     {
-        var system = CreateSystem("Runner Dust", fx, IsNight ? new Color(0.45f, 0.48f, 0.6f, 0.2f) : new Color(0.85f, 0.78f, 0.66f, 0.3f));
+        var system = CreateSystem("Runner Dust", fx, IsNight ? new Color(0.85f, 0.9f, 1f, 0.4f) : new Color(0.85f, 0.78f, 0.66f, 0.3f));
         var main = system.main;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.startLifetime = 0.55f;
@@ -268,6 +271,62 @@ public class MoodDirector : MonoBehaviour
         drift.x = new ParticleSystem.MinMaxCurve(1.5f, 3.5f);
         drift.y = new ParticleSystem.MinMaxCurve(-0.6f, 0.2f);
         drift.z = new ParticleSystem.MinMaxCurve(-1.5f, 1.5f);
+        var fade = system.colorOverLifetime;
+        fade.enabled = true;
+        fade.color = Fade();
+        system.gameObject.SetActive(true);
+        return system;
+    }
+
+    /// <summary>Flakes falling through the street ahead of Claire.</summary>
+    private ParticleSystem CreateSnow(Material fx)
+    {
+        var system = CreateSystem("Snowfall", fx, new Color(0.92f, 0.96f, 1f, 0.95f));
+        var main = system.main;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.startLifetime = 5f;
+        main.startSpeed = 0f;
+        main.startSize = new ParticleSystem.MinMaxCurve(0.05f, 0.16f);
+        main.maxParticles = 1000;
+        var emission = system.emission;
+        emission.rateOverTime = 170f;
+        var shape = system.shape;
+        shape.shapeType = ParticleSystemShapeType.Box;
+        shape.scale = new Vector3(34f, 8f, 55f);
+        var drift = system.velocityOverLifetime;
+        drift.enabled = true;
+        drift.space = ParticleSystemSimulationSpace.World;
+        drift.x = new ParticleSystem.MinMaxCurve(0.2f, 1.6f);
+        drift.y = new ParticleSystem.MinMaxCurve(-3.4f, -2f);
+        drift.z = new ParticleSystem.MinMaxCurve(-1f, 1f);
+        var fade = system.colorOverLifetime;
+        fade.enabled = true;
+        fade.color = Fade();
+        system.gameObject.SetActive(true);
+        return system;
+    }
+
+    /// <summary>Loose snow blowing low across the road.</summary>
+    private ParticleSystem CreateGroundDrift(Material fx)
+    {
+        var system = CreateSystem("Ground Snow Drift", fx, new Color(0.85f, 0.9f, 1f, 0.22f));
+        var main = system.main;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.startLifetime = 2.5f;
+        main.startSpeed = 0f;
+        main.startSize = new ParticleSystem.MinMaxCurve(0.5f, 1.3f);
+        main.maxParticles = 150;
+        var emission = system.emission;
+        emission.rateOverTime = 45f;
+        var shape = system.shape;
+        shape.shapeType = ParticleSystemShapeType.Box;
+        shape.scale = new Vector3(30f, 0.3f, 50f);
+        var drift = system.velocityOverLifetime;
+        drift.enabled = true;
+        drift.space = ParticleSystemSimulationSpace.World;
+        drift.x = new ParticleSystem.MinMaxCurve(3f, 6f);
+        drift.y = new ParticleSystem.MinMaxCurve(0f, 0.2f);
+        drift.z = new ParticleSystem.MinMaxCurve(-0.5f, 0.5f);
         var fade = system.colorOverLifetime;
         fade.enabled = true;
         fade.color = Fade();

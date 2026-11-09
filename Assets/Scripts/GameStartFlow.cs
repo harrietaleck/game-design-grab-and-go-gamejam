@@ -353,6 +353,7 @@ public class GameStartFlow : MonoBehaviour
             case RunEndReason.ReachedVan: return "ESCAPED";
             case RunEndReason.ClaireOutOfHealth: return "CLAIRE DOWN";
             case RunEndReason.AJCaptured: return "BUSTED";
+            case RunEndReason.CaughtAtRoadblock: return "CAUGHT";
             case RunEndReason.TimeUpWhileCaught: return "TIME UP";
             default: return "ENDED";
         }
@@ -474,6 +475,18 @@ public class GameStartFlow : MonoBehaviour
     /// Removes a fraction of the current loot value (rounded down, so a single coin is kept) and returns how much
     /// was lost. Scores and stats are owned here; visuals and dialogue react to GameEventType.LootSpilled.
     /// </summary>
+    /// <summary>Spends up to this many picked-up coins (on healing AJ). Returns how many were actually spent.</summary>
+    public int SpendCoins(int amount)
+    {
+        int spent = Mathf.Clamp(amount, 0, Mathf.Min(CoinCount, LootValue));
+        if (spent <= 0) return 0;
+        CoinCount -= spent;
+        LootValue -= spent;
+        CollectiblePickup.SetRuntimeCollectedValue(LootValue);
+        LootChanged?.Invoke();
+        return spent;
+    }
+
     public int SpillLoot(float fraction)
     {
         if (!IsGameplayActive || LootValue <= 0) return 0;
