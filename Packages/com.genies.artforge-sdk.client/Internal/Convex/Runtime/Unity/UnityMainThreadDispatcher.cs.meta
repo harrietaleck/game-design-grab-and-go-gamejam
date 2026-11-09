@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8795797403b064da287b6c7bedc4bffc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Convex/Runtime/Unity/UnityMainThreadDispatcher.cs
+  uploadId: 900174

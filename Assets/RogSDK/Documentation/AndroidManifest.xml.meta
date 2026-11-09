@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d7f25c51506ab60428d95c7805068a58
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Documentation/AndroidManifest.xml
+  uploadId: 421878

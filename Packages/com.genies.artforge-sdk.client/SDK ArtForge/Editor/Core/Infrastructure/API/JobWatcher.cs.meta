@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 3511c09e3a3714bdda51c5a3d0b1ee04
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Core/Infrastructure/API/JobWatcher.cs
+  uploadId: 900174

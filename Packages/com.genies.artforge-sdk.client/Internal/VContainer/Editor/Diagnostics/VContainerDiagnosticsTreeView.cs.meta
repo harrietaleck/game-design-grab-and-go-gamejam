@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 0d65b5790cc048599cb6e65bb859e6aa
+timeCreated: 1632058224
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Editor/Diagnostics/VContainerDiagnosticsTreeView.cs
+  uploadId: 900174

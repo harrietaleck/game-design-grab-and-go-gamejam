@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d2855729a4b414ba1b12fc86eb9a5f52
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Prefabs/TwinView/SmallExplosion.prefab
+  uploadId: 421878

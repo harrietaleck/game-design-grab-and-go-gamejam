@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: de09c0668b6b34c35a513cc10c4c4b36
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Components/ModelGenerator/UI/BackendTypeSelectionSection.cs
+  uploadId: 900174

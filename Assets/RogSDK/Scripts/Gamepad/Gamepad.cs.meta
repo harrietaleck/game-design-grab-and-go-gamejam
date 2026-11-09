@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 994689cbe5e85b841992d78682a96351
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Scripts/Gamepad/Gamepad.cs
+  uploadId: 421878

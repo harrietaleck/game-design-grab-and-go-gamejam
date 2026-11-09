@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 890f74c4a6fb42db8340eb8f1a505330
+timeCreated: 1595654174
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/IInjectParameter.cs
+  uploadId: 900174

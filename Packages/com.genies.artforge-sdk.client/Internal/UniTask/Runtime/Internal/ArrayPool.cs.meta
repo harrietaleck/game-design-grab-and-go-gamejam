@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: f83ebad81fb89fb4882331616ca6d248
+timeCreated: 1532361008
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/Internal/ArrayPool.cs
+  uploadId: 900174

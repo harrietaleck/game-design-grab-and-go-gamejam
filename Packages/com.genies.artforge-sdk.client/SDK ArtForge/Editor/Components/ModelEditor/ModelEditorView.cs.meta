@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a8ccf6facb68e4abbb9d4e6f8f40b9e4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Components/ModelEditor/ModelEditorView.cs
+  uploadId: 900174

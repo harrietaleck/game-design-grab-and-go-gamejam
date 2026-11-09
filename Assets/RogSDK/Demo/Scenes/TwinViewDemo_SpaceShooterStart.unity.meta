@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 902844e84c840e14ab495e521f7b7fc6
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Scenes/TwinViewDemo_SpaceShooterStart.unity
+  uploadId: 421878

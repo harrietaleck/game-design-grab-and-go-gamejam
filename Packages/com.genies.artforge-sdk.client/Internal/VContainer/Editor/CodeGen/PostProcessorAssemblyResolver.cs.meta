@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 604706cf8c28420fbe06179a681ae5ed
+timeCreated: 1595520710
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Editor/CodeGen/PostProcessorAssemblyResolver.cs
+  uploadId: 900174

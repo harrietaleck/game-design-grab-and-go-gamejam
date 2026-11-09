@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: b290c6758aac46ebbe71afecc9d950f3
+timeCreated: 1693962670
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Runtime/Core/ServiceManager/Data/LazyService.cs
+  uploadId: 900174

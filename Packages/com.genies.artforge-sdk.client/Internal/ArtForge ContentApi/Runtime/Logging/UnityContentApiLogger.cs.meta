@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 785d061c1374a4ec7ab5d36fd932f754
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ArtForge ContentApi/Runtime/Logging/UnityContentApiLogger.cs
+  uploadId: 900174

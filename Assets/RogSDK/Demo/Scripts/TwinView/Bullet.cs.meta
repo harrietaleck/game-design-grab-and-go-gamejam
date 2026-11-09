@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c31ad7cfa0c6a4efea5395370637ca96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Scripts/TwinView/Bullet.cs
+  uploadId: 421878

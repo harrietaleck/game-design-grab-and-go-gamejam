@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 3ca26d0cd9373354c8cd147490f32c8e
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/Triggers/MonoBehaviourMessagesTriggers.tt
+  uploadId: 900174

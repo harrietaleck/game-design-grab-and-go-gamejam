@@ -109,6 +109,7 @@ public class AIThiefLaneDodge : MonoBehaviour
 
     /// <summary>Multiplied onto forward speed (the skateboard sets it).</summary>
     public float SpeedMultiplier { get; set; } = 1f;
+    public float ShoeSpeedMultiplier { get; set; } = 1f;
     /// <summary>Extra height while standing on a skateboard.</summary>
     public float RideHeight { get; set; }
 
@@ -224,7 +225,7 @@ public class AIThiefLaneDodge : MonoBehaviour
             return;
 
         if (moveForward)
-            transform.position += new Vector3(0f, 0f, CurrentForwardSpeed() * SpeedMultiplier * Time.deltaTime);
+            transform.position += new Vector3(0f, 0f, CurrentForwardSpeed() * SpeedMultiplier * ShoeSpeedMultiplier * Time.deltaTime);
 
         // Urgent: obstacle very close ahead in current lane - dodge immediately (no cooldown, no random skip).
         if (IsLaneBlocked(_currentLane, urgentLookAheadZ))

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 18108e9feb2ec40498df573cfef2ea15
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/Linq/MinMax.tt
+  uploadId: 900174

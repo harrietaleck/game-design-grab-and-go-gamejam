@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b1053c85b3f0794488b10e6de53e9c02
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/UnityAsyncExtensions.tt
+  uploadId: 900174

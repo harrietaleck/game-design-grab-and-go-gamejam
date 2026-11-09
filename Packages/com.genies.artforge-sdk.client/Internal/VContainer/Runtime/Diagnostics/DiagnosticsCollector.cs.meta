@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 689fb82515a24c2887f2693a3a11010b
+timeCreated: 1632059581
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/Diagnostics/DiagnosticsCollector.cs
+  uploadId: 900174

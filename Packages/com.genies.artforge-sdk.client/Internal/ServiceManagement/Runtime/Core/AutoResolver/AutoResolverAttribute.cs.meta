@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: d155747094ce4fb8b1a0cba29429d9eb
+timeCreated: 1694738200
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Runtime/Core/AutoResolver/AutoResolverAttribute.cs
+  uploadId: 900174

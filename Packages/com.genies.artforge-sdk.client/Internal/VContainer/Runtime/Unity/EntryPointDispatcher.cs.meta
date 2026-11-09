@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: e8b5d8a26f2d409fb1de359daa251bde
+timeCreated: 1614397266
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/Unity/EntryPointDispatcher.cs
+  uploadId: 900174

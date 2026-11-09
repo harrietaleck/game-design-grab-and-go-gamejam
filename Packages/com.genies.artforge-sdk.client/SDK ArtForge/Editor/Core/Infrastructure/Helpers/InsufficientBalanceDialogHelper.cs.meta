@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 1c2c977402294ae9a99cff9f79f5efd6
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Core/Infrastructure/Helpers/InsufficientBalanceDialogHelper.cs
+  uploadId: 900174

@@ -96,10 +96,10 @@ public class DifficultyApplier : MonoBehaviour
             var k9 = GetComponent<PoliceDirector>();
             if (k9 != null)
             {
-                k9.maxDogs = 2;
-                k9.dogPackGapSeconds = 4f;
-                k9.dogFirstDelay = 18f;
-                k9.dogRespawnSeconds = 12f;
+                k9.maxDogs = 3;
+                k9.dogPackGapSeconds = 3f;
+                k9.dogFirstDelay = 15f;
+                k9.dogRespawnSeconds = 9f;
             }
             return;
         }
@@ -111,13 +111,13 @@ public class DifficultyApplier : MonoBehaviour
             police.pursuerCatchChance = easy ? 0.1f : 0.4f;
             police.pursuerRespawnSeconds = easy ? 14f : 5f;
             police.spawnIntervalRange *= easy ? 1.4f : 0.75f;
-            police.dogRespawnSeconds = easy ? 28f : 7f;
+            police.dogRespawnSeconds = easy ? 28f : 5f;
             if (!easy)
             {
-                police.maxDogs = 3;
-                police.dogPackGapSeconds = 2f;
+                police.maxDogs = 5;
+                police.dogPackGapSeconds = 1.5f;
                 police.dogBiteDamage = 15f;
-                police.dogFirstDelay = 10f;
+                police.dogFirstDelay = 8f;
             }
         }
 

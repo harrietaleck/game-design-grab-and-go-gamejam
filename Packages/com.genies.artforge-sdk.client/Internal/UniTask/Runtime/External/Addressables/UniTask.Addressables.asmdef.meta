@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 593a5b492d29ac6448b1ebf7f035ef33
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/External/Addressables/UniTask.Addressables.asmdef
+  uploadId: 900174

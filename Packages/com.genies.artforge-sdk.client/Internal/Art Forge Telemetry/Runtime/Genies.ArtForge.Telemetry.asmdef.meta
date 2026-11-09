@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ad56aea4ce619437e9488080e233627e
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Art Forge Telemetry/Runtime/Genies.ArtForge.Telemetry.asmdef
+  uploadId: 900174

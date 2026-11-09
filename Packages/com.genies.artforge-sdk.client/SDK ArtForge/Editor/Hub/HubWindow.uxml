@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <!-- Root container -->
+    <ui:VisualElement name="root" class="hub-root">
+        
+        <!-- Main content area (sidebar + content) -->
+        <ui:VisualElement name="main-area" class="main-area">
+            
+            <!-- Left sidebar navigation -->
+            <ui:VisualElement name="sidebar" class="sidebar">
+                <ui:Label text="GeniesArtForge" class="sidebar-title" />
+                
+                <ui:VisualElement class="sidebar-spacer" />
+                
+                <!-- Navigation buttons (built dynamically) -->
+                <ui:VisualElement name="nav-buttons" class="nav-buttons" />
+                
+                <ui:VisualElement class="sidebar-spacer-flex" />
+                
+                <!-- Bottom info -->
+                <ui:VisualElement name="sidebar-footer" class="sidebar-footer">
+                    <ui:Label text="Genies Inc." class="sidebar-footer-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <!-- Content area (where views load) -->
+            <ui:VisualElement name="content-area" class="content-area">
+                <ui:Label text="Select a component from the sidebar" class="placeholder-text" />
+            </ui:VisualElement>
+            
+        </ui:VisualElement>
+        
+        <!-- Right queue panel -->
+        <ui:VisualElement name="queue-panel" class="queue-panel">
+            <!-- Queue header -->
+            <ui:VisualElement name="queue-header" class="queue-header">
+                <ui:VisualElement name="queue-header-row" class="queue-header-row">
+                    <ui:Label text="Queue" class="queue-title" />
+                    <ui:VisualElement name="balance-container" class="balance-container">
+                        <ui:Button name="balance-button" class="balance-button">
+                            <ui:VisualElement name="balance-button-content" class="balance-button-content">
+                                <ui:Label name="balance-label" text="Balance: --" class="balance-label" />
+                                <ui:Label name="balance-warning-icon" text="⚠" class="balance-warning-icon" />
+                            </ui:VisualElement>
+                        </ui:Button>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <!-- Overall progress -->
+            <ui:VisualElement name="queue-progress-container" class="queue-progress-container">
+                <ui:ProgressBar name="overall-progress" class="overall-progress-bar" value="0" />
+                <ui:Label name="progress-label" text="0/0 jobs" class="progress-label" />
+            </ui:VisualElement>
+            
+            <!-- Queue items list -->
+            <ui:ScrollView name="queue-items" class="queue-scroll" mode="Vertical">
+                <ui:Label name="empty-queue-label" text="No jobs in queue" class="empty-queue-label" />
+            </ui:ScrollView>
+            
+            <!-- Queue footer buttons -->
+            <ui:VisualElement name="queue-footer" class="queue-footer">
+                <ui:Button name="clear-completed-btn" text="Clear Done" class="queue-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: da1a74df3eab442e81879a0b2e6fac0e
+timeCreated: 1606668004
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/Unity/UnityEngineObjectListBuffer.cs
+  uploadId: 900174

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b9d78cd029eaa418ca9887871173b23d
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Art Forge Telemetry/LICENSE.md
+  uploadId: 900174

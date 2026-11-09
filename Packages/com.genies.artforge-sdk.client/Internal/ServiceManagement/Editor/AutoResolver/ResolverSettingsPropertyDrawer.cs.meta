@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 7d51ca0c5c534995978fc41899dd7605
+timeCreated: 1694896132
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Editor/AutoResolver/ResolverSettingsPropertyDrawer.cs
+  uploadId: 900174

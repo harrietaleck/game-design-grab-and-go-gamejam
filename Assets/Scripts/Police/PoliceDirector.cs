@@ -152,6 +152,7 @@ public class PoliceDirector : MonoBehaviour
     public void OnBulletHitClaire()
     {
         if (_flow == null || !GameStartFlow.IsGameplayActive) return;
+        if (!_flow.IsClaireInvulnerable && BulletJacket.Instance != null && BulletJacket.Instance.TryBlockBullet()) return;
         _flow.ApplyClaireDamage(bulletDamage, GameStartFlow.ShotDamageDetail);
         ProceduralSfx.Play(ProceduralSfx.BulletHit, 0.8f);
         if (_flow.hudController != null) _flow.hudController.ShowAlert("YOU'RE HIT!");
@@ -257,6 +258,7 @@ public class PoliceDirector : MonoBehaviour
         if (Time.time < _nextPursuerAt || !ThreatWindowOpen || (maxDogs <= 1 && AnyDogDangerous)) return;
 
         var pos = Claire.transform.position;
+        pos.y = Claire.GroundY;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
         pos.z -= pursuerSpawnBehind;
         _pursuer = Spawn(PoliceOfficer.Kind.Pursuer, Claire.CurrentLane, pos, 0f);
@@ -275,9 +277,11 @@ public class PoliceDirector : MonoBehaviour
         if (maxDogs <= 1 && _pursuer != null && _pursuer.IsDangerous) return;
 
         var pos = Claire.transform.position;
+        pos.y = Claire.GroundY;
         pos.x = LaneMath.SharedLaneX(Claire.CurrentLane);
         pos.z -= dogSpawnBehind;
         _dogs.Add(Spawn(PoliceOfficer.Kind.Dog, Claire.CurrentLane, pos, 0f, _dogTemplate));
+        DogBarks.ChaseBark();
         _nextDogAt = Time.time + dogPackGapSeconds;
     }
 
@@ -285,7 +289,7 @@ public class PoliceDirector : MonoBehaviour
     public bool SpawnGuard(int lane, float z)
     {
         if (_templates.Count == 0 || Claire == null) return false;
-        Spawn(PoliceOfficer.Kind.Guard, lane, new Vector3(LaneMath.SharedLaneX(lane), Claire.transform.position.y, z), 0f);
+        Spawn(PoliceOfficer.Kind.Guard, lane, new Vector3(LaneMath.SharedLaneX(lane), Claire.GroundY, z), 0f);
         return true;
     }
 
@@ -306,20 +310,20 @@ public class PoliceDirector : MonoBehaviour
         switch (kind)
         {
             case PoliceOfficer.Kind.Chaser:
-                Spawn(kind, Claire.CurrentLane, new Vector3(LaneMath.SharedLaneX(Claire.CurrentLane), Claire.transform.position.y, cz - chaserSpawnBehind), 0f);
+                Spawn(kind, Claire.CurrentLane, new Vector3(LaneMath.SharedLaneX(Claire.CurrentLane), Claire.GroundY, cz - chaserSpawnBehind), 0f);
                 break;
             case PoliceOfficer.Kind.Interceptor:
             {
                 float z = cz + interceptorSpawnAhead;
                 int lane = PickFairLane(z);
                 if (lane < 0) return;
-                Spawn(kind, lane, new Vector3(LaneMath.SharedLaneX(lane), Claire.transform.position.y, z), 0f);
+                Spawn(kind, lane, new Vector3(LaneMath.SharedLaneX(lane), Claire.GroundY, z), 0f);
                 break;
             }
             case PoliceOfficer.Kind.Sidewalk:
             {
                 float side = Random.value < 0.5f ? -1f : 1f;
-                Spawn(kind, -1, new Vector3(side * SidewalkX, Claire.transform.position.y, cz + sidewalkSpawnAhead), side * SidewalkX);
+                Spawn(kind, -1, new Vector3(side * SidewalkX, Claire.GroundY, cz + sidewalkSpawnAhead), side * SidewalkX);
                 break;
             }
         }
@@ -341,6 +345,64 @@ public class PoliceDirector : MonoBehaviour
     {
         _officers.Remove(o);
         if (o != null) Destroy(o.gameObject);
+    }
+
+    private const float CarLookAhead = 6f;
+    private const float ClearLaneLookAhead = 14f;
+    private const float RunnerHalfWidth = 0.55f;
+    private const float CarListRefreshSeconds = 0.25f;
+    private readonly List<Bounds> _carBounds = new();
+    private float _carListAt = float.MinValue;
+
+    /// <summary>Solid traffic and roadblock cars, re-read a few times a second rather than once per officer per frame.</summary>
+    private void RefreshCars()
+    {
+        if (Time.time < _carListAt + CarListRefreshSeconds) return;
+        _carListAt = Time.time;
+        _carBounds.Clear();
+        foreach (var obstacle in FindObjectsByType<LaneObstacle>(FindObjectsSortMode.None))
+        {
+            if (obstacle.passableByRunners) continue;
+            var col = obstacle.GetComponentInChildren<Collider>();
+            if (col != null) _carBounds.Add(col.bounds);
+        }
+    }
+
+    private bool CarInPath(float x, float z, float dir, float distance, out float farEdgeZ)
+    {
+        RefreshCars();
+        float a = Mathf.Min(z, z + dir * distance), b = Mathf.Max(z, z + dir * distance);
+        bool found = false;
+        farEdgeZ = z;
+        foreach (var car in _carBounds)
+        {
+            if (car.max.z < a || car.min.z > b || x + RunnerHalfWidth < car.min.x || x - RunnerHalfWidth > car.max.x) continue;
+            float edge = dir > 0f ? car.max.z : car.min.z;
+            if (!found || (edge - farEdgeZ) * dir > 0f) farEdgeZ = edge;
+            found = true;
+        }
+        return found;
+    }
+
+    /// <summary>True if a car is close ahead of an officer running at this X. Reports where the car ends.</summary>
+    public bool FindCarAhead(float x, float z, float dir, out float carEndZ) => CarInPath(x, z, dir, CarLookAhead, out carEndZ);
+
+    /// <summary>The nearest lane with no car for a good distance ahead.</summary>
+    public bool FindClearLane(float x, float z, float dir, out float clearX)
+    {
+        clearX = x;
+        float best = float.MaxValue;
+        bool found = false;
+        for (int i = 0; i < LaneMath.SharedLaneCount; i++)
+        {
+            float laneX = LaneMath.SharedLaneX(i);
+            float away = Mathf.Abs(laneX - x);
+            if (away >= best || CarInPath(laneX, z, dir, ClearLaneLookAhead, out _)) continue;
+            best = away;
+            clearX = laneX;
+            found = true;
+        }
+        return found;
     }
 
     private int PickFairLane(float z)
@@ -410,6 +472,7 @@ public class PoliceDirector : MonoBehaviour
     {
         if (_flow == null || !GameStartFlow.IsGameplayActive) return;
         bool dog = o != null && o.kind == PoliceOfficer.Kind.Dog;
+        if (dog) DogBarks.BiteBark();
         _flow.ApplyClaireDamage(dog ? dogBiteDamage : claireGrabDamage); // raises ClaireCollision -> pressure, flash, shake, dialogue
         if (_flow.hudController != null) _flow.hudController.ShowAlert(dog ? "K9 BITE!" : "OFFICER GRAB!");
     }

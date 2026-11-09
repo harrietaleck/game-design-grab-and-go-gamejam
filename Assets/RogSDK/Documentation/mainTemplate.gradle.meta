@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a969ce37fc430f443bea7ddea99f4faf
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Documentation/mainTemplate.gradle
+  uploadId: 421878

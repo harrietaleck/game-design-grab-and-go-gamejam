@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c55b0b1f69b8d4d76b106405e1abb01b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Core/Domain/Helpers/JobStepFormatter.cs
+  uploadId: 900174

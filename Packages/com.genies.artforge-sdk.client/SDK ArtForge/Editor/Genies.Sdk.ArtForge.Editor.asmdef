@@ -1,0 +1,29 @@
+{
+    "name": "Genies.Sdk.ArtForge.Editor",
+    "rootNamespace": "Genies.Sdk.ArtForge.Editor",
+    "references": [
+        "GUID:a814d79356ddd47e7afbf74f407b773d",
+        "GUID:a4c9277795a6b44da9a129df1b58b5d5",
+        "GUID:0f9e8f73c69964f1e8176f9a0b86f9b2",
+        "GUID:2b82e46c4ca0a4eb697ab8ccdfb39af1"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.genies.sdk.artforge",
+            "expression": "",
+            "define": "GENIES_SDK_INTERNAL"
+        }
+    ],
+    "noEngineReferences": false
+}

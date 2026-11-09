@@ -109,7 +109,9 @@ public class PoliceOfficer : MonoBehaviour
         {
             case State.Approaching:
             case State.InLane:
+                Vector3 before = p;
                 Behave(ref p, claire, dt);
+                AvoidCars(before, ref p, dt);
                 break;
             case State.Stunned:
                 if (Time.time >= _stunUntil) ReturnToDuty();
@@ -122,12 +124,15 @@ public class PoliceOfficer : MonoBehaviour
                 break;
             case State.Leaving:
                 // Outrun: keeps chasing in the runners' direction, drifting clear of the lanes as it falls behind.
+                Vector3 leavingFrom = p;
                 p.x = Mathf.MoveTowards(p.x, _leaveSideX, 1.5f * dt);
                 p.z += _director.leaveSpeed * dt;
+                AvoidCars(leavingFrom, ref p, dt);
                 Face(0f);
                 break;
         }
         transform.position = p;
+        UpdateCameraVisibility(p);
 
         // Grabs: only while dangerous and only in normal play. During the rescue window (AJCaught) police
         // contact is suspended, so the rescue can never be interrupted or re-triggered by another grab.
@@ -160,7 +165,64 @@ public class PoliceOfficer : MonoBehaviour
             _director.Despawn(this);
     }
 
-    private bool CanCatchAJ => kind != Kind.Chaser && kind != Kind.Dog && (kind != Kind.Pursuer || _chasingAJ);
+    private const float AvoidSideSpeed = 9f;
+    private const float AvoidPastMargin = 1.5f;
+    private bool _avoiding;
+    private float _avoidX, _avoidEndZ;
+
+    /// <summary>
+    /// Police are moved by script, so physics would not stop them at a car. Instead they look ahead and
+    /// sidestep into a clear lane, holding it until they are past. With nowhere to go they wait.
+    /// </summary>
+    private void AvoidCars(Vector3 from, ref Vector3 p, float dt)
+    {
+        float moved = p.z - from.z;
+        if (Mathf.Abs(moved) < 0.0001f) return;
+        float dir = Mathf.Sign(moved);
+
+        if (_avoiding && (p.z - _avoidEndZ) * dir >= 0f) _avoiding = false;
+
+        if (_director.FindCarAhead(_avoiding ? _avoidX : p.x, p.z, dir, out float carEndZ))
+        {
+            if (!_director.FindClearLane(p.x, p.z, dir, out float clearX))
+            {
+                p = from;
+                return;
+            }
+            _avoiding = true;
+            _avoidX = clearX;
+            _avoidEndZ = carEndZ + dir * AvoidPastMargin;
+        }
+
+        if (_avoiding) p.x = Mathf.MoveTowards(from.x, _avoidX, AvoidSideSpeed * dt);
+    }
+
+    private const float CameraClearAhead = 2.2f;
+    private const float CameraClearSide = 3.5f;
+    private Renderer[] _bodyRenderers;
+    private bool _hiddenByCamera;
+
+    /// <summary>Police running past the camera would fill the screen, so they stay hidden until they are clear of the lens.</summary>
+    private void UpdateCameraVisibility(Vector3 p)
+    {
+        var cam = Camera.main;
+        if (cam == null) return;
+        Vector3 c = cam.transform.position;
+        bool hide = p.z < c.z + CameraClearAhead && Mathf.Abs(p.x - c.x) < CameraClearSide;
+        if (hide == _hiddenByCamera) return;
+        _hiddenByCamera = hide;
+
+        if (_bodyRenderers == null)
+        {
+            var all = new System.Collections.Generic.List<Renderer>();
+            foreach (var r in GetComponentsInChildren<Renderer>(true))
+                if (r.enabled && r != _muzzleFlash && !(r is LineRenderer)) all.Add(r); // the shooting code owns those; parts hidden on purpose stay hidden
+            _bodyRenderers = all.ToArray();
+        }
+        foreach (var r in _bodyRenderers) if (r != null) r.enabled = !hide;
+    }
+
+    private bool CanCatchAJ =>kind != Kind.Chaser && kind != Kind.Dog && (kind != Kind.Pursuer || _chasingAJ);
 
     private void Behave(ref Vector3 p, PlayerLaneMovement claire, float dt)
     {

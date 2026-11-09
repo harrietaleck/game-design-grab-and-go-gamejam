@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: bd82f9a4f6615488bb3653d8baff3f5b
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Hub/WelcomePopupWindow.cs
+  uploadId: 900174

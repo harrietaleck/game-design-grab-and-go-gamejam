@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7bce08a00b4d54cd694096abadbb897e
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Editor/VContainer.Editor.asmdef
+  uploadId: 900174

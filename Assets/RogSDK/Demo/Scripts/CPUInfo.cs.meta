@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: deea7f9c6c9064c49aa8c8ccaa5cae0d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Scripts/CPUInfo.cs
+  uploadId: 421878

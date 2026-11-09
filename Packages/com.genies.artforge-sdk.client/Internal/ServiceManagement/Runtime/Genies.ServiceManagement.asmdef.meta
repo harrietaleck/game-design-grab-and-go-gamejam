@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a5ad1e7e455634f3ab7f5faab80a7850
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Runtime/Genies.ServiceManagement.asmdef
+  uploadId: 900174

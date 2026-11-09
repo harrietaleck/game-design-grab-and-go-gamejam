@@ -8,6 +8,7 @@ public static class ShopStore
     public const string DoubleJump = "doublejump";
     public const string ExtraCharge = "charge";
     public const string LongRide = "longride";
+    public const string Jacket = "jacket";
 
     public const float SprintMultiplier = 1.1f;
 
@@ -15,6 +16,7 @@ public static class ShopStore
     private const string KeyOwned = "gg_owned";
     private const string KeyBoard = "gg_board";
     private const string KeyBag = "gg_bag";
+    private const string KeyShoes = "gg_shoes";
 
     public static int Points => PlayerPrefs.GetInt(KeyPoints, 0);
 
@@ -46,6 +48,12 @@ public static class ShopStore
     {
         get => PlayerPrefs.GetInt(KeyBoard, 0);
         set { PlayerPrefs.SetInt(KeyBoard, value); PlayerPrefs.Save(); }
+    }
+
+    public static int EquippedShoes
+    {
+        get => PlayerPrefs.GetInt(KeyShoes, 0);
+        set { PlayerPrefs.SetInt(KeyShoes, value); PlayerPrefs.Save(); }
     }
 
     /// <summary>Index into ShopSet.bags, or -1 for Claire's original bag.</summary>

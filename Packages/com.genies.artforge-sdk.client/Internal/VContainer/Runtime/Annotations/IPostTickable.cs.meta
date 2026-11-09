@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 968f5691c67f4f64b8deed98e6a62cc2
+timeCreated: 1612009893
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/Annotations/IPostTickable.cs
+  uploadId: 900174

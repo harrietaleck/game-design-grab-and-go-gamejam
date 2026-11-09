@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e5736ee3e0b8f4ffbb84a678a19a0aba
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Convex/Runtime/Transport/TransportMessage.cs
+  uploadId: 900174

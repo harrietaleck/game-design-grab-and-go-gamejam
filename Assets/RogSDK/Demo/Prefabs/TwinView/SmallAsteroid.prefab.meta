@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dbc804f0e09d14c66bd13caa57547267
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Prefabs/TwinView/SmallAsteroid.prefab
+  uploadId: 421878

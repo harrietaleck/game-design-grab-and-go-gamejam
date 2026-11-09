@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public static class ProceduralSfx
 {
+    private static AudioClip s_radioOpen, s_radioClose, s_radioStatic;
     private static AudioClip s_blip, s_pulse, s_alarm, s_rescue, s_gunshot, s_hit, s_helicopter, s_jump, s_dodge;
     private static AudioSource s_source;
 
@@ -14,7 +15,11 @@ public static class ProceduralSfx
     public static AudioClip Alarm => s_alarm ??= TwoTone("Alarm", 880f, 660f, 0.6f, 0.35f);
     public static AudioClip Rescue => s_rescue ??= Sweep("Rescue", 400f, 1200f, 0.3f, 0.45f, square: false);
 
-    public static AudioClip Gunshot => s_gunshot ??= Noise("Gunshot", 0.22f, 0.9f, 28f, 0.35f);
+    public static AudioClip RadioOpen => s_radioOpen ??= RadioBurst("RadioOpen", 0.16f, 1150f, 16f);
+    public static AudioClip RadioClose => s_radioClose ??= RadioBurst("RadioClose", 0.24f, 760f, 9f);
+    public static AudioClip RadioStatic => s_radioStatic ??= Static("RadioStatic", 2f);
+
+    public static AudioClip Gunshot =>s_gunshot ??= Noise("Gunshot", 0.22f, 0.9f, 28f, 0.35f);
     public static AudioClip BulletHit => s_hit ??= Noise("BulletHit", 0.12f, 0.8f, 40f, 0.12f);
 
     public static AudioClip Jump => s_jump ??= Sweep("Jump", 280f, 760f, 0.16f, 0.4f, square: false);
@@ -50,6 +55,55 @@ public static class ProceduralSfx
             float thump = Mathf.Sin(2f * Mathf.PI * 110f * t) * Mathf.Exp(-t * 35f);
             data[i] = Mathf.Clamp((low * Mathf.Exp(-t * decay) + thump * 0.7f) * volume, -1f, 1f);
         }
+        var clip = AudioClip.Create(name, n, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
+    }
+
+    /// <summary>A walkie-talkie squelch: a click, a short square tone and a burst of hiss.</summary>
+    private static AudioClip RadioBurst(string name, float seconds, float toneHz, float decay)
+    {
+        const int rate = 44100;
+        int n = Mathf.CeilToInt(rate * seconds);
+        var data = new float[n];
+        float low = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            float t = i / (float)rate;
+            float raw = Random.Range(-1f, 1f);
+            low = Mathf.Lerp(raw, low, 0.7f);
+            float hiss = (raw - low) * Mathf.Exp(-t * decay);
+            float tone = (Mathf.Sin(2f * Mathf.PI * toneHz * t) >= 0f ? 0.3f : -0.3f) * Mathf.Exp(-t * 26f);
+            float click = i < 90 ? 0.8f * (1f - i / 90f) : 0f;
+            float fadeOut = Mathf.Clamp01((n - i) / 300f);
+            data[i] = Mathf.Clamp((hiss * 0.9f + tone + click) * fadeOut, -1f, 1f);
+        }
+        var clip = AudioClip.Create(name, n, 1, rate, false);
+        clip.SetData(data, 0);
+        return clip;
+    }
+
+    /// <summary>A seamless loop of narrow-band radio hiss with a wavering level and random crackles.</summary>
+    private static AudioClip Static(string name, float seconds)
+    {
+        const int rate = 44100;
+        int n = Mathf.CeilToInt(rate * seconds);
+        var data = new float[n];
+        float lowA = 0f, lowB = 0f, crackle = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            float raw = Random.Range(-1f, 1f);
+            lowA = Mathf.Lerp(raw, lowA, 0.45f);
+            lowB = Mathf.Lerp(raw, lowB, 0.9f);
+            if (Random.value < 0.0006f) crackle = Random.Range(-1f, 1f);
+            crackle *= 0.985f;
+            // Whole cycles, so the waver joins up at the loop point.
+            float waver = 0.75f + 0.25f * Mathf.Sin(2f * Mathf.PI * 3f * i / n) * Mathf.Sin(2f * Mathf.PI * 7f * i / n);
+            data[i] = Mathf.Clamp((lowA - lowB) * 1.5f * waver + crackle * 0.6f, -1f, 1f);
+        }
+        const int fade = 800;
+        for (int i = 0; i < fade; i++)
+            data[i] = Mathf.Lerp(data[n - fade + i], data[i], i / (float)fade);
         var clip = AudioClip.Create(name, n, 1, rate, false);
         clip.SetData(data, 0);
         return clip;

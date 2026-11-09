@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 71c2c0bce7543454c8ef545083e18170
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/UniTask.WhenAny.Generated.tt
+  uploadId: 900174

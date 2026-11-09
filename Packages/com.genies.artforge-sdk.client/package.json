@@ -1,0 +1,31 @@
+{
+  "name": "com.genies.artforge-sdk.client",
+  "version": "1.20.0",
+  "displayName": "Genies Art Forge SDK",
+  "maintainers": [
+    "nikita-genies"
+  ],
+  "description": "AI-powered 3D asset generation tool",
+  "unity": "2022.3",
+  "unityRelease": "32f1",
+  "keywords": [
+    "ai",
+    "asset",
+    "generation",
+    "3d",
+    "model",
+    "texture",
+    "openai",
+    "rodin"
+  ],
+  "dependencies": {
+    "com.unity.addressables": "1.19.19",
+    "com.unity.cloud.gltfast": "6.14.1",
+    "com.unity.ext.nunit": "1.0.6",
+    "com.unity.formats.fbx": "5.1.5",
+    "com.unity.nuget.mono-cecil": "1.10.1",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.test-framework": "1.1.33",
+    "com.unity.textmeshpro": "3.0.9"
+  }
+}

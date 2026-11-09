@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4129704b5a1a13841ba16f230bf24a57
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Editor/UniTask.Editor.asmdef
+  uploadId: 900174

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b1b8cfa9d17af814a971ee2224aaaaa2
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/Linq/CombineLatest.tt
+  uploadId: 900174

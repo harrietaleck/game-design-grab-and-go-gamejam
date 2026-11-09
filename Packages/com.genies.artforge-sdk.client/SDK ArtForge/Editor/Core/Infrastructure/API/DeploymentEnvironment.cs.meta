@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b7d4f2a1e83c9b5d6e0f1a2b3c4d5e6f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Core/Infrastructure/API/DeploymentEnvironment.cs
+  uploadId: 900174

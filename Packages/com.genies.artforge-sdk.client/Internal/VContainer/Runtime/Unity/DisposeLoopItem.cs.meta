@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 792f76fbc1dd409887297cdfe8aa3aa9
+timeCreated: 1653803074
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Runtime/Unity/DisposeLoopItem.cs
+  uploadId: 900174

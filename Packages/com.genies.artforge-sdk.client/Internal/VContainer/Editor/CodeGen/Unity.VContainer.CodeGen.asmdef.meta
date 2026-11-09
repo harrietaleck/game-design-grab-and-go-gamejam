@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 785872fffe145415dab38c4e07086c55
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/Editor/CodeGen/Unity.VContainer.CodeGen.asmdef
+  uploadId: 900174

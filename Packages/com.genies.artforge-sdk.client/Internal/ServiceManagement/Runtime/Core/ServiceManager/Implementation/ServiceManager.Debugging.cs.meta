@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: d0265b643e96456389cb04dd09b84d3b
+timeCreated: 1695855498
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Runtime/Core/ServiceManager/Implementation/ServiceManager.Debugging.cs
+  uploadId: 900174

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4b1f9cad0a8fbce40a99baf75b44897f
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Scenes/GamepadDemo.unity
+  uploadId: 421878

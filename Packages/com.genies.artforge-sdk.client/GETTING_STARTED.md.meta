@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 44556af83571acf4da4f1ac42a7389ae
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/GETTING_STARTED.md
+  uploadId: 900174

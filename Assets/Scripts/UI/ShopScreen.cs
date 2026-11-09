@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>Spend points on skateboards, bags and permanent upgrades. Boards and bags show as a spinning 3D preview.</summary>
 public class ShopScreen : MonoBehaviour
 {
-    private enum Tab { Boards, Bags, Upgrades }
+    private enum Tab { Boards, Bags, Shoes, Upgrades }
 
     private class Item
     {
@@ -23,6 +23,7 @@ public class ShopScreen : MonoBehaviour
         (ShopStore.BigBag, "BIGGER BAG", "A larger bag. Crashes spill 15% of your loot instead of 25%.", 160),
         (ShopStore.ExtraCharge, "EXTRA DISTRACTION", "One more Distraction Pulse every run.", 120),
         (ShopStore.LongRide, "LONG RIDE", "Skateboard rides last 14 seconds instead of 9.", 130),
+        (ShopStore.Jacket, "BULLETPROOF JACKET", "Start every run wearing a jacket that stops 3 bullets. Jackets on the road refill it.", 220),
     };
 
     private Tab _tab = Tab.Boards;
@@ -40,9 +41,10 @@ public class ShopScreen : MonoBehaviour
         _points = RuntimeUI.CreateText(card.transform, "Points", "", 34f, TextAlignmentOptions.Right, RuntimeUI.Gold, FontStyles.Bold);
         RuntimeUI.Place(_points.rectTransform, new Vector2(1f, 1f), new Vector2(500f, 70f), new Vector2(-50f, -44f));
 
-        AddTab(card.transform, "BOARDS", Tab.Boards, -380f);
-        AddTab(card.transform, "BAGS", Tab.Bags, 0f);
-        AddTab(card.transform, "UPGRADES", Tab.Upgrades, 380f);
+        AddTab(card.transform, "BOARDS", Tab.Boards, -420f);
+        AddTab(card.transform, "BAGS", Tab.Bags, -140f);
+        AddTab(card.transform, "SHOES", Tab.Shoes, 140f);
+        AddTab(card.transform, "UPGRADES", Tab.Upgrades, 420f);
 
         _grid = RuntimeUI.CreateRect(card.transform, "Items");
         RuntimeUI.Place(_grid, new Vector2(0.5f, 1f), new Vector2(1120f, 700f), new Vector2(0f, -230f));
@@ -63,7 +65,7 @@ public class ShopScreen : MonoBehaviour
     private void AddTab(Transform parent, string label, Tab tab, float x)
     {
         var button = RuntimeUI.CreateButton(parent, label + " Tab", label, () => Show(tab));
-        RuntimeUI.Place((RectTransform)button.transform, new Vector2(0.5f, 1f), new Vector2(340f, 78f), new Vector2(x, -135f));
+        RuntimeUI.Place((RectTransform)button.transform, new Vector2(0.5f, 1f), new Vector2(280f, 78f), new Vector2(x, -135f));
     }
 
     private void OnEnable()
@@ -97,6 +99,14 @@ public class ShopScreen : MonoBehaviour
             foreach (var u in Upgrades)
                 items.Add(new Item { id = u.id, name = u.name, description = u.description, price = u.price });
         }
+        else if (tab == Tab.Shoes)
+        {
+            for (int i = 0; i < SpeedShoes.Pairs.Length; i++)
+            {
+                var pair = SpeedShoes.Pairs[i];
+                items.Add(new Item { id = "shoes" + i, name = pair.name, description = $"Grab a shoe on the road to wear these for a speed boost lasting {pair.seconds:0.#} seconds.", price = pair.price, model = SpeedShoes.PreviewTemplate(i), equipIndex = i });
+            }
+        }
         else if (tab == Tab.Boards && set != null && set.boards != null)
         {
             for (int i = 0; i < set.boards.Length; i++)
@@ -116,7 +126,12 @@ public class ShopScreen : MonoBehaviour
     private bool IsEquipped(Item item)
     {
         if (item.equipIndex == int.MinValue) return false;
-        return _tab == Tab.Boards ? ShopStore.EquippedBoard == item.equipIndex : ShopStore.EquippedBag == item.equipIndex;
+        switch (_tab)
+        {
+            case Tab.Boards: return ShopStore.EquippedBoard == item.equipIndex;
+            case Tab.Shoes: return ShopStore.EquippedShoes == item.equipIndex;
+            default: return ShopStore.EquippedBag == item.equipIndex;
+        }
     }
 
     private void Refresh()
@@ -157,6 +172,7 @@ public class ShopScreen : MonoBehaviour
         if (item.equipIndex != int.MinValue)
         {
             if (_tab == Tab.Boards) ShopStore.EquippedBoard = item.equipIndex;
+            else if (_tab == Tab.Shoes) ShopStore.EquippedShoes = item.equipIndex;
             else ShopStore.EquippedBag = item.equipIndex;
         }
         Refresh();
@@ -172,6 +188,7 @@ public class ShopScreen : MonoBehaviour
         if (item.model == null || Camera.main == null) return;
 
         var go = Instantiate(item.model, Camera.main.transform);
+        go.SetActive(true); // the shoe previews are stored inactive
         foreach (var c in go.GetComponentsInChildren<Collider>(true)) Destroy(c);
         go.transform.localPosition = new Vector3(1.75f, 0.35f, 4.2f);
 

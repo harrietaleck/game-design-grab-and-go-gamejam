@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: a4bf1f776f034ae1b7b0dbd258b5b025
+timeCreated: 1658358215
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/CrashReporting/Runtime/ICrashLogger.cs
+  uploadId: 900174

@@ -1,0 +1,18 @@
+{
+    "name": "Genies.ArtForge.Telemetry",
+    "rootNamespace": "Genies.ArtForge.Telemetry",
+    "references": [
+        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:a5ad1e7e455634f3ab7f5faab80a7850"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

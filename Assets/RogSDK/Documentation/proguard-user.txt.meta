@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8625262164b6684429ff842e32f69d6e
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Documentation/proguard-user.txt
+  uploadId: 421878

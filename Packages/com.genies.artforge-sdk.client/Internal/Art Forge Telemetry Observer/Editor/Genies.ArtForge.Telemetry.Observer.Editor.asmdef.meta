@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 370874b3fb81e4aa59a8d1a6b6c48d09
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Art Forge Telemetry
+    Observer/Editor/Genies.ArtForge.Telemetry.Observer.Editor.asmdef
+  uploadId: 900174

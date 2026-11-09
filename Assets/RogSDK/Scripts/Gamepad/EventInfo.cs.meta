@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 8eabd3dc77455ba4ab6b074a1086741f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Scripts/Gamepad/EventInfo.cs
+  uploadId: 421878

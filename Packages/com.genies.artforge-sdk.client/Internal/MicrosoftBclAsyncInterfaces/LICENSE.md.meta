@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 00011643daaa6467faa6072be2877d3e
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/MicrosoftBclAsyncInterfaces/LICENSE.md
+  uploadId: 900174

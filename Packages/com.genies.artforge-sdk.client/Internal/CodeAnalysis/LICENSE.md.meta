@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 690b2af1e03804b1d82b6c9a84fbfa7b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/CodeAnalysis/LICENSE.md
+  uploadId: 900174

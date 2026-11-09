@@ -46,6 +46,8 @@ public class PlayerLaneMovement : MonoBehaviour
     public float SpeedMultiplier { get; set; } = 1f;
     /// <summary>Temporary slowdown from hazards such as tear gas; separate from the skateboard's multiplier.</summary>
     public float HazardSpeedMultiplier { get; set; } = 1f;
+    /// <summary>Speed Shoes boost; separate from the skateboard's multiplier.</summary>
+    public float ShoeSpeedMultiplier { get; set; } = 1f;
     /// <summary>Extra height while standing on a skateboard.</summary>
     public float RideHeight { get; set; }
 
@@ -54,6 +56,8 @@ public class PlayerLaneMovement : MonoBehaviour
     public event System.Action BoostedJump;
 
     public float HeightAboveGround => _jumpHeightNow;
+    /// <summary>Claire's height with feet on the road, whatever she is doing. Use this to place things on the ground.</summary>
+    public float GroundY => _groundY;
     public bool IsDodging => Time.time < _dodgeUntil;
     /// <summary>True when bullets and grabs miss: mid-jump or mid-slide.</summary>
     public bool IsEvading => IsDodging || _jumpHeightNow > 0.35f
@@ -164,7 +168,7 @@ public class PlayerLaneMovement : MonoBehaviour
         // Auto-move forward so the runner/prototype advances without player input.
         if (moveForward)
         {
-            transform.position += new Vector3(0f, 0f, forwardSpeed * SpeedMultiplier * HazardSpeedMultiplier * Time.deltaTime);
+            transform.position += new Vector3(0f, 0f, forwardSpeed * SpeedMultiplier * ShoeSpeedMultiplier * HazardSpeedMultiplier * Time.deltaTime);
         }
 
         MovePlayer();

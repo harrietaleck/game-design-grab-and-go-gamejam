@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2a5a85fa4c6e942439de5e80c54c730b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Components/ModelGenerator/UI/BasicInfoPanel.cs
+  uploadId: 900174

@@ -1,0 +1,309 @@
+/* GeniesArtForge Hub Window Styles */
+
+/* Root */
+.hub-root {
+    flex-grow: 1;
+    flex-direction: row;
+    background-color: rgb(30, 30, 30);
+}
+
+/* Main Area */
+.main-area {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: rgb(45, 45, 45);
+    border-right-width: 1px;
+    border-right-color: rgb(30, 30, 30);
+    padding-top: 15px;
+    padding-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.sidebar-title {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: rgb(220, 220, 220);
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 5px;
+}
+
+.sidebar-version {
+    font-size: 11px;
+    color: rgb(140, 140, 140);
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 10px;
+}
+
+.sidebar-spacer {
+    height: 20px;
+}
+
+.sidebar-spacer-flex {
+    flex-grow: 1;
+}
+
+/* Navigation */
+.nav-buttons {
+    flex-grow: 0;
+}
+
+.nav-button {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    border-radius: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    -unity-text-align: middle-left;
+    color: rgb(200, 200, 200);
+    font-size: 13px;
+}
+
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.nav-button:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-button.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgb(255, 255, 255);
+}
+
+.nav-parent {
+    -unity-font-style: bold;
+    color: rgb(220, 220, 220);
+}
+
+.nav-child {
+    -unity-font-style: normal;
+    color: rgb(180, 180, 180);
+    font-size: 12px;
+}
+
+.nav-children {
+    flex-direction: column;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    border-top-width: 1px;
+    border-top-color: rgb(30, 30, 30);
+}
+
+.sidebar-footer-label {
+    font-size: 10px;
+    color: rgb(120, 120, 120);
+}
+
+/* Content Area */
+.content-area {
+    flex-grow: 1;
+    background-color: rgb(30, 30, 30);
+    padding: 0;
+}
+
+.placeholder-text {
+    align-self: center;
+    -unity-text-align: middle-center;
+    flex-grow: 1;
+    font-size: 14px;
+    color: rgb(120, 120, 120);
+}
+
+/* Queue Panel */
+.queue-panel {
+    width: 300px;
+    background-color: rgb(40, 40, 40);
+    border-left-width: 1px;
+    border-left-color: rgb(30, 30, 30);
+    flex-shrink: 0;
+    flex-direction: column;
+}
+
+.queue-header {
+    padding: 15px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(30, 30, 30);
+    flex-shrink: 0;
+}
+
+.queue-header-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.queue-title {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: rgb(220, 220, 220);
+}
+
+.balance-container {
+    flex-direction: row;
+    align-items: center;
+}
+
+.balance-button-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.balance-label {
+    color: rgb(220, 220, 220);
+    font-size: 11px;
+    margin-top: 0;
+    margin-bottom: 0;
+    -unity-text-align: middle-left;
+}
+
+.balance-warning-icon {
+    display: none;
+    color: rgb(245, 190, 60);
+    font-size: 12px;
+    margin-left: 3px;
+}
+
+.balance-button {
+    height: 24px;
+    min-width: 96px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 11px;
+    color: rgb(220, 220, 220);
+    background-color: rgb(52, 52, 52);
+    border-color: rgb(75, 75, 75);
+    cursor: link;
+    align-items: center;
+    justify-content: center;
+}
+
+.balance-button:hover {
+    background-color: rgb(65, 65, 65);
+}
+
+.queue-progress-container {
+    padding: 10px 15px;
+    background-color: rgb(35, 35, 35);
+    flex-shrink: 0;
+}
+
+.overall-progress-bar {
+    height: 8px;
+    margin-bottom: 5px;
+}
+
+.progress-label {
+    font-size: 10px;
+    color: rgb(160, 160, 160);
+    -unity-text-align: middle-center;
+}
+
+.queue-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    padding: 10px;
+}
+
+.empty-queue-label {
+    font-size: 12px;
+    color: rgb(120, 120, 120);
+    -unity-text-align: middle-center;
+    margin-top: 20px;
+}
+
+.queue-footer {
+    flex-direction: row;
+    padding: 8px 10px 10px 10px;
+    border-top-width: 1px;
+    border-top-color: rgb(30, 30, 30);
+    background-color: rgb(35, 35, 35);
+    flex-shrink: 0;
+}
+
+.queue-btn {
+    flex-grow: 1;
+    margin: 0;
+    height: 28px;
+    font-size: 11px;
+    background-color: rgb(60, 60, 60);
+    border-color: rgb(80, 80, 80);
+    color: rgb(200, 200, 200);
+}
+
+.queue-btn:hover {
+    background-color: rgb(70, 70, 70);
+}
+
+.queue-job-item {
+    background-color: rgb(45, 45, 45);
+    border-width: 1px;
+    border-color: rgb(60, 60, 60);
+    border-radius: 3px;
+    margin-bottom: 8px;
+    padding: 8px;
+    flex-direction: column;
+}
+
+.queue-job-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.queue-job-name {
+    font-size: 11px;
+    -unity-font-style: bold;
+    color: rgb(220, 220, 220);
+    flex-grow: 1;
+}
+
+.queue-job-status {
+    font-size: 10px;
+    color: rgb(160, 160, 160);
+    margin-bottom: 5px;
+}
+
+.queue-job-progress {
+    height: 4px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.queue-job-actions {
+    flex-direction: row;
+    margin-top: 5px;
+    margin-left: 0;
+}
+
+.queue-job-action-btn {
+    height: 20px;
+    font-size: 10px;
+    margin-left: 0;
+    margin-right: 4px;
+    padding: 0 8px;
+}

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 89c93534e8ba64932a75c976ecf5e848
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Prefabs/TwinView/Asteroid.prefab
+  uploadId: 421878

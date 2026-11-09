@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: ca56812f160c45d0bacb4339819edf1a
+timeCreated: 1694133666
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/UniTask/Runtime/Linq/Merge.cs
+  uploadId: 900174

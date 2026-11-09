@@ -1,0 +1,31 @@
+{
+    "name": "Genies.ArtForge.Telemetry.Observer.Editor",
+    "rootNamespace": "Genies.ArtForge.Telemetry.Observer.Editor",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:2a0b63e0936f14ce686768f9492ce2d2",
+        "GUID:ad56aea4ce619437e9488080e233627e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.genies.sdk.artforge",
+            "expression": "",
+            "define": "GENIES_ARTFORGE_INTERNAL"
+        },
+        {
+            "name": "com.genies.artforge-sdk.client",
+            "expression": "",
+            "define": "GENIES_ARTFORGE_CLIENT"
+        }
+    ],
+    "noEngineReferences": false
+}

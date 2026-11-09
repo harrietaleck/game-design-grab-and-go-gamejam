@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: c492e83f619fe4bde837da2fcfef7732
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Core/Infrastructure/Processing/TransparencyProcessor.cs
+  uploadId: 900174

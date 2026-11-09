@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a4c9277795a6b44da9a129df1b58b5d5
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Convex/Runtime/Genies.Convex.asmdef
+  uploadId: 900174

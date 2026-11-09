@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d7dd0cf9c69614a54b035ec96d900c5b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/VContainer/ThirdPartyNotices
+  uploadId: 900174

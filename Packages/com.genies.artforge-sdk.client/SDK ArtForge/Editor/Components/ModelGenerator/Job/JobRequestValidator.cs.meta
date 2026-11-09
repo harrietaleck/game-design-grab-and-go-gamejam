@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9012f2c73a97e4c9498a1932c7d12069
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/SDK ArtForge/Editor/Components/ModelGenerator/Job/JobRequestValidator.cs
+  uploadId: 900174

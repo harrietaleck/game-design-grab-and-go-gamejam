@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: cf2fc7131eb84e29aeb9e191aeffa747
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Runtime/Core/AutoResolver/Settings/AutoResolverSettingsHandler.cs
+  uploadId: 900174

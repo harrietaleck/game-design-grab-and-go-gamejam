@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 114fa965b3814d2d9b7ddd4324820917
+timeCreated: 1693941252
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/ServiceManagement/Editor/LifetimeScopeRestrictor.cs
+  uploadId: 900174

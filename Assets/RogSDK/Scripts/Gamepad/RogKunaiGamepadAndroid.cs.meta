@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5aa3578f4f4930e4ca588c6772ae6207
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Scripts/Gamepad/RogKunaiGamepadAndroid.cs
+  uploadId: 421878

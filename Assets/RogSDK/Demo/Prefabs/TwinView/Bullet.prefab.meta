@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7229edca6cfd44fef8f8ca7faa35c414
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162973
+  packageName: ROG Phone SDK
+  packageVersion: 1.5
+  assetPath: Assets/RogSDK/Demo/Prefabs/TwinView/Bullet.prefab
+  uploadId: 421878

@@ -1,0 +1,566 @@
+{
+    "name": "DemoInputMap",
+    "maps": [
+        {
+            "name": "DemoActionMap",
+            "id": "6b16ad30-066a-43e4-8e77-93b115615de8",
+            "actions": [
+                {
+                    "name": "LT1",
+                    "type": "Button",
+                    "id": "fd33b9e6-1956-43c1-842f-821dd15d5f5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RT1",
+                    "type": "Button",
+                    "id": "26a2ad56-8b12-441a-bf6d-9083851a158d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LT2",
+                    "type": "Button",
+                    "id": "10ba5004-7950-4ca7-89d5-c3965d84f62e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RT2",
+                    "type": "Button",
+                    "id": "94c2999b-01d6-44da-9c56-7ba277b08efd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Button X",
+                    "type": "Button",
+                    "id": "1d6ea50b-9328-4f44-8f1b-0fa662a340e4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Button Y",
+                    "type": "Button",
+                    "id": "c31f6bec-ef23-4c32-88c4-7640f2909da5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Button A",
+                    "type": "Button",
+                    "id": "85189450-c25e-4e0a-a1b0-9097f2dcaa33",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Button B",
+                    "type": "Button",
+                    "id": "eaf04b9a-0954-4104-8f0c-ec9303031762",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Dpad Up",
+                    "type": "Button",
+                    "id": "87454940-2c95-4ee1-a049-7b52f5403ff3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Dpad Down",
+                    "type": "Button",
+                    "id": "8340461b-0ed2-4261-8083-eb2bd3860a76",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Dpad Left",
+                    "type": "Button",
+                    "id": "53bf2d7e-6cf8-4f81-b853-55b642739447",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Dpad Right",
+                    "type": "Button",
+                    "id": "ccdfef27-e2a8-4de0-a3b7-dd3660023581",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LeftStick Press",
+                    "type": "Button",
+                    "id": "d261c5c2-60e2-42c4-ae7d-570ecd264f5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightStick Press",
+                    "type": "Button",
+                    "id": "aa1a7925-bfbd-4d7f-93e8-22350cdf2469",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LeftStick Move",
+                    "type": "Value",
+                    "id": "33195217-8af2-4737-9b44-fcc37cf1b135",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightStick Move",
+                    "type": "Value",
+                    "id": "dcce69a8-8c0d-495d-9b9a-674a180ee8aa",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "M1",
+                    "type": "Button",
+                    "id": "f713a423-ad25-4e0d-b13a-91559557843b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "M2",
+                    "type": "Button",
+                    "id": "56b2f440-202c-4d54-9760-0f33236d0e78",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "M3",
+                    "type": "Button",
+                    "id": "e63185e5-c233-4edd-97db-1cd927f5f2f6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "M4",
+                    "type": "Button",
+                    "id": "9ecfd551-d81a-461d-842a-77bfc506b136",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "986e6dc0-a96b-42a3-a14c-ec35a79ef02e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Start",
+                    "type": "Button",
+                    "id": "2edb8d8a-f8a9-4b68-bd6a-694d1ae44c17",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Profile",
+                    "type": "Button",
+                    "id": "5b3eea0b-a8c0-4121-bdcb-8abb614d9748",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Function",
+                    "type": "Button",
+                    "id": "c5b0a369-bcc0-49df-bb84-bbeab7e9622d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Mode",
+                    "type": "Button",
+                    "id": "e7950404-1b8f-4489-85c1-031b95afe881",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "db6a60c5-c8f1-4450-93cb-1ef4b5d14a3d",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LT1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3aa7148f-e905-41fd-b2c6-7eab07626f8e",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RT1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17e7944c-75f2-43d7-9585-c461b9dfe492",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LT2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8824bfcd-d55d-4dad-bc9d-709fd166cbc8",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RT2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "987dab31-e068-4bd0-9819-5045a04720b5",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button X",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7c4ca61c-d799-4097-9797-55d6843a4189",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button Y",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "df352444-d260-47c9-a3ca-c0a156d58b15",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c011eb1-f641-421c-acc8-bd84331d7cfd",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Button B",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd3faef6-1ee4-455b-a7aa-a8e00e9f67aa",
+                    "path": "<Gamepad>/dpad/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dpad Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c240501d-4d3e-4959-a944-213d4499bf28",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dpad Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97781321-00f7-426f-a951-532e22bad3c0",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dpad Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "108a817a-83b1-46ae-b8bb-05e75178d00b",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dpad Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6d96dd7-4a89-4bff-9585-ead156b674c2",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b0f9a8e-4bc4-4d2c-b5b4-5c2543fe7057",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightStick Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "292bd78c-975e-4097-b750-ecc9a6c25960",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftStick Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64f7341c-cc87-43a7-a711-54c0c836e123",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightStick Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44b8c61d-ab37-461b-8a69-fb56d0ac8521",
+                    "path": "<RogKunaiGamepad>/M1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31e30f6d-85b3-47db-8a52-0ee99c591860",
+                    "path": "<RogKunai3Gamepad>/M1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "29eb1f78-dfc7-4374-8013-908db2d3b86c",
+                    "path": "<RogKunai3GamepadKeyboard>/M1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "23b7a051-efa0-4365-8148-396eeb42fb68",
+                    "path": "<RogKunaiGamepad>/M2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "993c1de6-dbb0-4122-9a1f-3043bee2ea1e",
+                    "path": "<RogKunai3Gamepad>/M2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4c76a062-5422-4c71-b226-c9443b874661",
+                    "path": "<RogKunai3GamepadKeyboard>/M2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebccb1f8-198f-432a-88e6-1d6e295ed701",
+                    "path": "<RogKunaiGamepad>/M3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "41534d0a-cf14-47f1-a254-de3d7147189f",
+                    "path": "<RogKunaiGamepad>/M4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "M4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b16441ce-7f3b-4139-a72b-4e5802fb6b85",
+                    "path": "<RogKunaiGamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b8835e4-1cb9-493c-9bac-0ed6b0ae45c7",
+                    "path": "<RogKunaiGamepadKeyboard>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6009f9d6-0d9d-4300-b1e0-86f006be65ef",
+                    "path": "<RogKunai3Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f2d3ff5-7279-4c7a-a47a-9e993e844d5e",
+                    "path": "<RogKunaiGamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "42d1c79b-8d3d-4918-8b2f-92ad7db9a080",
+                    "path": "<RogKunai3Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17cbd156-ce85-4d14-bc7a-c71d294a09f4",
+                    "path": "<RogKunaiGamepad>/profile",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Profile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e27f0402-91c7-480c-9b69-d0aa391c19c9",
+                    "path": "<RogKunaiGamepad>/function",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Function",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "067abfa7-1c9a-4777-9ced-1ff8afb98a05",
+                    "path": "<RogKunai3Gamepad>/mode",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

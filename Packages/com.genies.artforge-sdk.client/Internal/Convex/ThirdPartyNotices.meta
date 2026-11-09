@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f9fae8ea03cb8475cbff82816b1044b1
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 363056
+  packageName: Genies Art Forge SDK
+  packageVersion: 1.20.0
+  assetPath: Packages/com.genies.artforge-sdk.client/Internal/Convex/ThirdPartyNotices
+  uploadId: 900174
